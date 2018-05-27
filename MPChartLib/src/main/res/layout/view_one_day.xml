@@ -1,34 +1,42 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.github.mikephil.charting.myChart.TimeLineChart
-        android:id="@+id/line_chart"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_above="@+id/bar_chart"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <com.github.mikephil.charting.myChart.TimeBarChart
-        android:id="@id/bar_chart"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"/>
+        <com.github.mikephil.charting.stockChart.TimeLineChart
+            android:id="@+id/line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+
+        <com.github.mikephil.charting.stockChart.TimeBarChart
+            android:id="@+id/bar_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/circle_frame_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible">
+
         <ImageView
             android:id="@+id/anim_view"
-            android:src="@mipmap/ring"
             android:layout_width="15dp"
-            android:layout_height="15dp" />
+            android:layout_height="15dp"
+            android:src="@mipmap/ring" />
+
         <ImageView
-            android:src="@mipmap/dot"
             android:layout_width="15dp"
-            android:layout_height="15dp" />
+            android:layout_height="15dp"
+            android:src="@mipmap/dot" />
     </FrameLayout>
-</RelativeLayout>
+</FrameLayout>

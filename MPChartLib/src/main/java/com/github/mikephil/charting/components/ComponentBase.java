@@ -41,7 +41,7 @@ public abstract class ComponentBase {
     /**
      * the text color to use for the labels
      */
-    protected int mTextColor = Color.BLACK;
+    protected int mTextColor = Color.GRAY;
 
 
     public ComponentBase() {

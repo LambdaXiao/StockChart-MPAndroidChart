@@ -5,27 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context="com.android.stockapp.ui.main.MainActivity">
 
-    <fragment
-        android:id="@+id/fragment_time"
-        android:name="com.android.stockapp.ui.market.fragment.ChartTimeFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="20dp"
-        android:layout_weight="4" />
 
-    <fragment
-        android:id="@+id/fragment_kline"
-        android:name="com.android.stockapp.ui.market.fragment.ChartKLineFragment"
+    <Button
+        android:id="@+id/btn_test"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="4" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:text="图表测试" />
 
 </LinearLayout>

@@ -1,12 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="280dp"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.github.mikephil.charting.myChart.view.OneDayView
+    <com.github.mikephil.charting.stockChart.view.OneDayView
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="280dp"/>
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

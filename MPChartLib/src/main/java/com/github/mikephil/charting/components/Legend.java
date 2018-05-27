@@ -4,7 +4,6 @@ package com.github.mikephil.charting.components;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.FSize;
 import com.github.mikephil.charting.utils.Utils;
@@ -113,7 +112,7 @@ public class Legend extends ComponentBase {
     /**
      * the shape/form the legend colors are drawn in
      */
-    private LegendForm mShape = LegendForm.SQUARE;
+    private LegendForm mShape = LegendForm.CIRCLE;
 
     /**
      * the size of the legend forms/shapes

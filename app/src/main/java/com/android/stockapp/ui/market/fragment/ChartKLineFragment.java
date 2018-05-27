@@ -1,6 +1,8 @@
 package com.android.stockapp.ui.market.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +10,10 @@ import android.view.ViewGroup;
 import com.android.stockapp.R;
 import com.android.stockapp.common.data.Constant;
 import com.android.stockapp.ui.base.BaseFragment;
-import com.github.mikephil.charting.myChart.data.KLineData;
-import com.github.mikephil.charting.myChart.view.KLineView;
+import com.android.stockapp.ui.market.activity.StockDetailLandActivity;
+import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
+import com.github.mikephil.charting.stockChart.data.KLineData;
+import com.github.mikephil.charting.stockChart.view.KLineView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by ly on 2016/11/8.
+ * K线
  */
 public class ChartKLineFragment extends BaseFragment {
 
@@ -28,8 +32,20 @@ public class ChartKLineFragment extends BaseFragment {
     KLineView combinedchart;
     Unbinder unbinder;
 
+    private int mType;//日K：1；周K：7；月K：30；年K：365
+    private boolean land;//是否横屏
     private KLineData kLineData;
     private JSONObject object;
+
+    public static ChartKLineFragment newInstance(int type,boolean land){
+        ChartKLineFragment fragment = new ChartKLineFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", type);
+        bundle.putBoolean("landscape",land);
+        fragment.setArguments(bundle);
+        return fragment;
+
+    }
 
     @Override
     protected int setLayoutId() {
@@ -47,8 +63,38 @@ public class ChartKLineFragment extends BaseFragment {
         }
         kLineData.parseKlineData(object);
         combinedchart.setDataToChart(kLineData);
+
+        combinedchart.getGestureListenerCandle().setCoupleClick(new CoupleChartGestureListener.CoupleClick() {
+            @Override
+            public void singleClickListener() {
+                if(land) {
+                    combinedchart.doCandleChartSwitch();
+                }else {
+                    Intent intent = new Intent(getActivity(), StockDetailLandActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            }
+        });
+
+        combinedchart.getGestureListenerBar().setCoupleClick(new CoupleChartGestureListener.CoupleClick() {
+            @Override
+            public void singleClickListener() {
+                if(land) {
+                    combinedchart.doBarChartSwitch();
+                }else {
+                    Intent intent = new Intent(getActivity(), StockDetailLandActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            }
+        });
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mType = getArguments().getInt("type");
+        land = getArguments().getBoolean("landscape");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

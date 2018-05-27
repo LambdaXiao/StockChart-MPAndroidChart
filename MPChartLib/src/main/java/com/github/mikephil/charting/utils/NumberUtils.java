@@ -53,6 +53,20 @@ public class NumberUtils {
     }
 
     /**
+     * 对float类型的数值保留指定位数的小数。<br>
+     * 该方法舍入模式：向“最接近的”数字舍入，如果与两个相邻数字的距离相等，则为向上舍入的舍入模式。<br>
+     * <b>注意：</b>如果精度要求比较精确请使用 keepPrecision(String number, int precision)方法
+     *
+     * @param number    要保留小数的数字
+     * @param precision 小数位数
+     * @return float 如果数值较大，则使用科学计数法表示
+     */
+    public static float keepPrecision(float number, int precision) {
+        BigDecimal bg = new BigDecimal(number);
+        return bg.setScale(precision, BigDecimal.ROUND_HALF_UP).floatValue();
+    }
+
+    /**
      * 用于计算
      * 对double类型的数值保留指定位数的小数。<br>
      * 该方法舍入模式：向“最接近的”数字舍入，如果与两个相邻数字的距离相等，则为向上舍入的舍入模式。<br>
@@ -92,22 +106,8 @@ public class NumberUtils {
         return mFormat.format(number);
     }
 
-    /**
-     * 对float类型的数值保留指定位数的小数。<br>
-     * 该方法舍入模式：向“最接近的”数字舍入，如果与两个相邻数字的距离相等，则为向上舍入的舍入模式。<br>
-     * <b>注意：</b>如果精度要求比较精确请使用 keepPrecision(String number, int precision)方法
-     *
-     * @param number    要保留小数的数字
-     * @param precision 小数位数
-     * @return float 如果数值较大，则使用科学计数法表示
-     */
-    public static float keepPrecision(float number, int precision) {
-        BigDecimal bg = new BigDecimal(number);
-        return bg.setScale(precision, BigDecimal.ROUND_HALF_UP).floatValue();
-    }
 
     public static void limitDecimal(CharSequence s, EditText view, int limitLen) {
-//        KLog.e("数据长度 "+s + "  "+limitLen + "  " +s.toString().indexOf("."));
         if (s.toString().contains(".")) {
             if (s.length() - 1 - s.toString().indexOf(".") > limitLen) {
                 s = s.toString().subSequence(0, s.toString().indexOf(".") + limitLen + 1);

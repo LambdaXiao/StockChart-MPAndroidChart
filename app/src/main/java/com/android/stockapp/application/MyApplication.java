@@ -1,12 +1,8 @@
 package com.android.stockapp.application;
 
-import android.app.Application;
-
 import com.android.stockapp.ui.base.BaseApp;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.cache.converter.SerializableDiskConverter;
-import com.zhouyou.http.model.HttpHeaders;
-import com.zhouyou.http.model.HttpParams;
 
 
 public class MyApplication extends BaseApp {
@@ -20,7 +16,7 @@ public class MyApplication extends BaseApp {
         EasyHttp.init(this);
 
         //这里涉及到安全我把url去掉了，demo都是调试通的
-        String Url = "http://39.108.11.106:9001";
+        String Url = "";
 
 
         //设置请求头
