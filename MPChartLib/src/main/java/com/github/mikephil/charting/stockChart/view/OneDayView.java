@@ -75,7 +75,7 @@ public class OneDayView extends BaseView {
 
     private CoupleChartGestureListener gestureListenerLine;
     private CoupleChartGestureListener gestureListenerBar;
-
+    private boolean landscape = false;
 
     public OneDayView(Context context) {
         this(context, null);
@@ -93,16 +93,14 @@ public class OneDayView extends BaseView {
 
         playHeartbeatAnimation(cirCleView.findViewById(R.id.anim_view));
 
-        initChart();
-
     }
 
     /**
      * 初始化图表属性
      */
-    private void initChart() {
+    public void initChart(boolean landscape) {
+        this.landscape = landscape;
         //主图
-//        lineChart.resetViewPortOffsets();
         lineChart.setScaleEnabled(false);
         lineChart.setDrawBorders(true);
         lineChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
@@ -112,7 +110,6 @@ public class OneDayView extends BaseView {
         lineChartLegend.setEnabled(false);
         lineChart.setDescription(null);
         //副图
-//        barChart.resetViewPortOffsets();
         barChart.setScaleEnabled(false);
         barChart.setDrawBorders(true);
         barChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
@@ -138,7 +135,7 @@ public class OneDayView extends BaseView {
         axisLeftLine.setValueLineInside(true);
         axisLeftLine.setDrawTopBottomGridLine(false);
         axisLeftLine.setDrawAxisLine(false);
-        axisLeftLine.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisLeftLine.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisLeftLine.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
         axisLeftLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
         axisLeftLine.setValueFormatter(new IAxisValueFormatter() {
@@ -156,7 +153,7 @@ public class OneDayView extends BaseView {
         axisRightLine.enableGridDashedLine(CommonUtil.dip2px(mContext, 4), CommonUtil.dip2px(mContext, 3), 0);
         axisRightLine.setDrawAxisLine(false);
         axisRightLine.setValueLineInside(true);
-        axisRightLine.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisRightLine.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisRightLine.setAxisLineColor(ContextCompat.getColor(mContext, R.color.grid_color));
         axisRightLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
         axisRightLine.setValueFormatter(new IAxisValueFormatter() {
@@ -181,7 +178,7 @@ public class OneDayView extends BaseView {
         axisLeftBar.setDrawGridLines(false);
         axisLeftBar.setDrawAxisLine(false);
         axisLeftBar.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
-        axisLeftBar.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisLeftBar.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisLeftBar.setDrawLabels(true);
         axisLeftBar.setLabelCount(2, true);
         axisLeftBar.setAxisMinimum(0);
@@ -208,8 +205,14 @@ public class OneDayView extends BaseView {
         axisRightBar.enableGridDashedLine(CommonUtil.dip2px(mContext, 4), CommonUtil.dip2px(mContext, 3), 0);
 
         //设置图表偏移边距
-        lineChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
-        barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), 0, CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
+        int left_right = 0;
+        if(landscape){
+            left_right = CommonUtil.dip2px(mContext, 50);
+        }else {
+            left_right = CommonUtil.dip2px(mContext, 5);
+        }
+        lineChart.setViewPortOffsets(left_right, CommonUtil.dip2px(mContext, 5), left_right, CommonUtil.dip2px(mContext, 15));
+        barChart.setViewPortOffsets(left_right, 0, left_right, CommonUtil.dip2px(mContext, 15));
 
         //手势联动监听
         gestureListenerLine = new CoupleChartGestureListener(lineChart, new Chart[]{barChart});

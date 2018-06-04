@@ -5,7 +5,6 @@
     android:orientation="vertical">
     <com.github.mikephil.charting.stockChart.view.KLineView
         android:id="@+id/combinedchart"
-        android:layout_above="@id/bar_chart_frame"
         android:layout_width="match_parent"
-        android:layout_height="280dp"/>
+        android:layout_height="match_parent"/>
 </RelativeLayout>

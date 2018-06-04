@@ -55,7 +55,7 @@ public class ChartKLineFragment extends BaseFragment {
     @Override
     protected void initBase(View view) {
         kLineData = new KLineData(getActivity());
-
+        combinedchart.initChart(land);
         try {
             object = new JSONObject(Constant.KLINEDATA);
         } catch (JSONException e) {

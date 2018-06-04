@@ -53,6 +53,7 @@ public class ChartTimeFragment extends BaseFragment {
     @Override
     public void initBase(View view) {
 
+        chart.initChart(land);
         //测试数据
         try {
             object = new JSONObject(Constant.TIMEDATA);

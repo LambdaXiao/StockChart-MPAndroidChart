@@ -60,6 +60,7 @@ public class KLineView extends BaseView {
     private KLineData kLineData;
     private CoupleChartGestureListener gestureListenerCandle;
     private CoupleChartGestureListener gestureListenerBar;
+    private boolean landscape = false;
 
     public Handler handler = new Handler() {
         @Override
@@ -86,14 +87,13 @@ public class KLineView extends BaseView {
         barChart = (MyCombinedChart) findViewById(R.id.barchart);
         chartTypeDes = (TextView) findViewById(R.id.chart_type_des);
 
-        initChart();
-
     }
 
     /**
      * 初始化图表数据
      */
-    public void initChart() {
+    public void initChart(boolean landscape) {
+        this.landscape = landscape;
         //蜡烛图
         candleChart.setDrawBorders(true);
         candleChart.setBorderWidth(0.7f);
@@ -129,6 +129,7 @@ public class KLineView extends BaseView {
         xAxisK.setDrawLabels(true);
         xAxisK.setDrawGridLines(false);
         xAxisK.setDrawAxisLine(false);
+        xAxisK.setLabelCount(4);
         xAxisK.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
         xAxisK.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxisK.setAvoidFirstLastClipping(true);
@@ -145,7 +146,7 @@ public class KLineView extends BaseView {
         axisLeftK.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
         axisLeftK.setValueLineInside(true);
         axisLeftK.setDrawTopBottomGridLine(false);
-        axisLeftK.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisLeftK.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisLeftK.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -158,7 +159,7 @@ public class KLineView extends BaseView {
         axisRightK.setDrawLabels(false);
         axisRightK.setDrawGridLines(false);
         axisRightK.setDrawAxisLine(false);
-        axisRightK.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisRightK.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisRightK.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
 
         //副图X轴
@@ -181,7 +182,7 @@ public class KLineView extends BaseView {
         axisLeftBar.setDrawLabels(true);
         axisLeftBar.setLabelCount(2, true);
         axisLeftBar.setValueLineInside(true);
-        axisLeftBar.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisLeftBar.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisLeftBar.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -200,8 +201,14 @@ public class KLineView extends BaseView {
         axisRightBar.setDrawAxisLine(false);
 
         //设置图表边距
-        candleChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
-        barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
+        int left_right = 0;
+        if(landscape){
+            left_right = CommonUtil.dip2px(mContext, 50);
+        }else {
+            left_right = CommonUtil.dip2px(mContext, 5);
+        }
+        candleChart.setViewPortOffsets(left_right, CommonUtil.dip2px(mContext, 5), left_right, CommonUtil.dip2px(mContext, 15));
+        barChart.setViewPortOffsets(left_right, CommonUtil.dip2px(mContext, 5), left_right, CommonUtil.dip2px(mContext, 15));
 
         //手势联动监听
         gestureListenerCandle = new CoupleChartGestureListener(candleChart, new Chart[]{barChart});
