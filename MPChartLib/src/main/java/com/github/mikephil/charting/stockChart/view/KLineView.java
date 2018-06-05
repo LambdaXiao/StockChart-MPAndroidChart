@@ -24,6 +24,7 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.VolFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet;
@@ -183,16 +184,6 @@ public class KLineView extends BaseView {
         axisLeftBar.setLabelCount(2, true);
         axisLeftBar.setValueLineInside(true);
         axisLeftBar.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
-        axisLeftBar.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                if (value == 0) {
-                    return "";
-                } else {
-                    return (int) value + "";
-                }
-            }
-        });
 
         //副图右Y轴
         axisRightBar = barChart.getAxisRight();
@@ -290,6 +281,8 @@ public class KLineView extends BaseView {
                 }
             }
         });
+
+        axisLeftBar.setValueFormatter(new VolFormatter());
 
 //        float maxScale = calMaxScale(1000, kLineData.getxVals().size());
 //        float xScale = maxScale / 4;

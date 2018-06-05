@@ -2,6 +2,7 @@
 package com.github.mikephil.charting.renderer;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -342,7 +343,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
         /*if (mChart.getCandleData().getYValCount() < mChart.getMaxVisibleCount()
          * mViewPortHandler.getScaleX()) {*/
         List<ICandleDataSet> dataSets = mChart.getCandleData().getDataSets();
-
+        mValuePaint.setColor(Color.parseColor("#ff8c0d"));
         for (int i = 0; i < dataSets.size(); i++) {
 
             ICandleDataSet dataSet = dataSets.get(i);
@@ -418,7 +419,6 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 float[] tPosition = new float[2];
                 tPosition[1] = minValue;
                 trans.pointValuesToPixel(tPosition);
-                mValuePaint.setColor(dataSet.getValueTextColor(minIndex / 2));
                 c.drawText(highString, x + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
             } else {
                 //画左边
@@ -428,12 +428,10 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 int highStringWidth = Utils.calcTextWidth(mValuePaint, highString);
                 int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
 
-                    /*mValuePaint.setColor(dataSet.getValueTextColor(minIndex / 2));
-                    c.drawText(highString, x-highStringWidth/2, y+yOffset, mValuePaint);*/
                 float[] tPosition = new float[2];
                 tPosition[1] = minValue;
                 trans.pointValuesToPixel(tPosition);
-                mValuePaint.setColor(dataSet.getValueTextColor(minIndex / 2));
+
                 c.drawText(highString, x - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
             }
 
@@ -452,12 +450,8 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 tPosition[1] = maxEntry == null ? 0f : maxEntry.getHigh();
                 trans.pointValuesToPixel(tPosition);
 
-                mValuePaint.setColor(dataSet.getValueTextColor(maxIndex / 2));
-                //c.drawText(highString, x+highStringWidth , y-yOffset, mValuePaint);
                 c.drawText(highString, tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
 
-                    /*mValuePaint.setColor(dataSet.getValueTextColor(maxIndex / 2));
-                    c.drawText(highString, x - highStringWidth, y-yOffset, mValuePaint);*/
             } else {
                 //画右边
                 String highString = "← " + Float.toString(maxValue);
@@ -471,8 +465,6 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 tPosition[1] = maxEntry == null ? 0f : maxEntry.getHigh();
                 trans.pointValuesToPixel(tPosition);
 
-                mValuePaint.setColor(dataSet.getValueTextColor(maxIndex / 2));
-                //c.drawText(highString, x+highStringWidth , y-yOffset, mValuePaint);
                 c.drawText(highString, tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
             }
         }

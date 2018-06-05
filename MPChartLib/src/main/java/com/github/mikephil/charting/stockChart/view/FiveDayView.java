@@ -57,7 +57,7 @@ import java.util.List;
 /**
  * 当日分时图view
  */
-public class OneDayView extends BaseView {
+public class FiveDayView extends BaseView {
 
     private Context mContext;
     TimeLineChart lineChart;
@@ -81,11 +81,11 @@ public class OneDayView extends BaseView {
     private int maxCount = 242;//最大可见数量，即分时一天最大数据点数
     private SparseArray<String> xLabels = new SparseArray<>();//X轴刻度label
 
-    public OneDayView(Context context) {
+    public FiveDayView(Context context) {
         this(context, null);
     }
 
-    public OneDayView(Context context, @Nullable AttributeSet attrs) {
+    public FiveDayView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.view_time, this);
@@ -125,6 +125,7 @@ public class OneDayView extends BaseView {
 
         //主图X轴
         xAxisLine = (TimeXAxis) lineChart.getXAxis();
+        xAxisLine.setCenterAxisLabels(true);
         xAxisLine.setDrawAxisLine(false);
         xAxisLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
         xAxisLine.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -302,8 +303,9 @@ public class OneDayView extends BaseView {
             lineJJEntries.add(new Entry(i, (float) mData.getDatas().get(i).getAveragePrice()));
             barEntries.add(new BarEntry(i, mData.getDatas().get(i).getVolume()));
         }
-        d1 = new LineDataSet(lineCJEntries, "oneday");
+        d1 = new LineDataSet(lineCJEntries, "fiveday");
         d2 = new LineDataSet(lineJJEntries, "均价");
+        d1.setXLabels(getXLabels());
         d1.setDrawCircleDashMarker(true);
         d2.setDrawCircleDashMarker(false);
         d1.setDrawValues(false);
@@ -423,7 +425,7 @@ public class OneDayView extends BaseView {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUserEvent(BaseEvent event) {
-        if(event.method == 1) {
+        if(event.method == 5) {
             CirclePositionTime position = (CirclePositionTime) event.obj;
             cirCleView.setX(position.cx - CommonUtil.dip2px(mContext, 7));
             cirCleView.setY(position.cy - CommonUtil.dip2px(mContext, 9));

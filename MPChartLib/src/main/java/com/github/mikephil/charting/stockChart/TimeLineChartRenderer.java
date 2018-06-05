@@ -1,5 +1,6 @@
 package com.github.mikephil.charting.stockChart;
 
+import android.app.usage.UsageEvents;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -11,6 +12,7 @@ import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.stockChart.event.BaseEvent;
 import com.github.mikephil.charting.stockChart.model.CirclePositionTime;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.utils.NumberUtils;
@@ -165,9 +167,14 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                         mLineBuffer[j++] = e2.getX();
                         mLineBuffer[j++] = e1.getY() * phaseY;
                     }
-
-                    mLineBuffer[j++] = e2.getX();
-                    mLineBuffer[j++] = e2.getY() * phaseY;
+                    //这些点与点之间不连接，用于五日分时
+                    if ("fiveday".equals(dataSet.getLabel()) && dataSet.getXLabels().indexOfKey(x == 0 ? 0 : (x - 1)) > 0) {
+                        mLineBuffer[j++] = e1.getX();
+                        mLineBuffer[j++] = e1.getY() * phaseY;
+                    } else {
+                        mLineBuffer[j++] = e2.getX();
+                        mLineBuffer[j++] = e2.getY() * phaseY;
+                    }
                 }
 
                 if (j > 0) {
@@ -184,7 +191,7 @@ public class TimeLineChartRenderer extends LineChartRenderer {
             }
         }
 
-        if (dataSet.getLabel().equals("成交价")) {//这个地方做了限制，一般是不会绘制的
+        if (dataSet.isDrawCircleDashMarkerEnabled()) {//这个地方做了限制，一般是不会绘制的
             drawCircleDashMarker(canvas, dataSet, entryCount);//画虚线圆点和MarkerView
         }
 
@@ -234,14 +241,16 @@ public class TimeLineChartRenderer extends LineChartRenderer {
             }
         }
         mRenderPaint.setColor(Color.RED);
-        postPosition(mLineBuffer[pointOffset - 2], mLineBuffer[pointOffset - 1]);
+        postPosition(dataSet, mLineBuffer[pointOffset - 2], mLineBuffer[pointOffset - 1]);
     }
 
-    public void postPosition(float x, float y) {
+    public void postPosition(ILineDataSet dataSet, float x, float y) {
         CirclePositionTime position = new CirclePositionTime();
         position.cx = x;
         position.cy = y;
-        EventBus.getDefault().post(position);
+        BaseEvent event = new BaseEvent("oneday".equals(dataSet.getLabel()) ? 1 : 5);
+        event.obj = position;
+        EventBus.getDefault().post(event);
     }
 
 }

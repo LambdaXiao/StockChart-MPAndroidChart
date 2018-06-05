@@ -3,6 +3,7 @@ package com.android.stockapp.ui.market.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,29 +26,28 @@ import butterknife.Unbinder;
 /**
  * 分时页
  */
-public class ChartTimeFragment extends BaseFragment {
+public class ChartOneDayFragment extends BaseFragment {
 
     @BindView(R.id.chart)
     OneDayView chart;
     Unbinder unbinder;
 
-    private int mType;//当日分时：1；5日分时：5
     private boolean land;//是否横屏
     private KTimeData kTimeData = new KTimeData();
     private JSONObject object;
 
-    public static ChartTimeFragment newInstance(int type,boolean land){
-        ChartTimeFragment fragment = new ChartTimeFragment();
+    public static ChartOneDayFragment newInstance(boolean land) {
+        ChartOneDayFragment fragment = new ChartOneDayFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("type", type);
-        bundle.putBoolean("landscape",land);
+        bundle.putBoolean("landscape", land);
         fragment.setArguments(bundle);
         return fragment;
 
     }
+
     @Override
     public int setLayoutId() {
-        return R.layout.fragment_time;
+        return R.layout.fragment_one_day;
     }
 
     @Override
@@ -60,11 +60,13 @@ public class ChartTimeFragment extends BaseFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
         kTimeData.parseTimeData(object);
         chart.setDataToChart(kTimeData);
 
         //非横屏页单击转横屏页
-        if(!land) {
+        if (!land) {
             chart.getGestureListenerLine().setCoupleClick(new CoupleChartGestureListener.CoupleClick() {
                 @Override
                 public void singleClickListener() {
@@ -85,7 +87,6 @@ public class ChartTimeFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mType = getArguments().getInt("type");
         land = getArguments().getBoolean("landscape");
     }
 

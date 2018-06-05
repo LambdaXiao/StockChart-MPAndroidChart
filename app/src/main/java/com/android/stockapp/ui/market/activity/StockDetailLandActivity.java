@@ -8,8 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import com.android.stockapp.R;
 import com.android.stockapp.common.adapter.SimpleFragmentPagerAdapter;
 import com.android.stockapp.common.viewpager.NoTouchScrollViewpager;
+import com.android.stockapp.ui.market.fragment.ChartFiveDayFragment;
 import com.android.stockapp.ui.market.fragment.ChartKLineFragment;
-import com.android.stockapp.ui.market.fragment.ChartTimeFragment;
+import com.android.stockapp.ui.market.fragment.ChartOneDayFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +31,7 @@ public class StockDetailLandActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stock_detail_land);
         ButterKnife.bind(this);
 
-        Fragment[] fragments = {ChartTimeFragment.newInstance(1,true), ChartTimeFragment.newInstance(5,true),
+        Fragment[] fragments = {ChartOneDayFragment.newInstance(true), ChartFiveDayFragment.newInstance(true),
                 ChartKLineFragment.newInstance(1,true), ChartKLineFragment.newInstance(7,true),
                 ChartKLineFragment.newInstance(30,true)};
         String[] titles = {"分时", "五日", "日K", "周K", "月K"};

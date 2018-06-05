@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.github.mikephil.charting.formatter.DefaultFillFormatter;
 import com.github.mikephil.charting.formatter.IFillFormatter;
@@ -64,6 +65,9 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
 
     private boolean mDrawCircleHole = true;
 
+    private boolean mDrawCircleDashMarker = true;
+
+    private SparseArray<String> xLabels;
 
     public LineDataSet(List<Entry> yVals, String label) {
         super(yVals, label);
@@ -387,6 +391,23 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     @Override
     public boolean isDrawCircleHoleEnabled() {
         return mDrawCircleHole;
+    }
+
+    public void setDrawCircleDashMarker(boolean enabled) {
+        mDrawCircleDashMarker = enabled;
+    }
+
+    @Override
+    public SparseArray<String> getXLabels(){
+        return xLabels;
+    }
+
+    public void setXLabels(SparseArray<String> xLabels){
+        this.xLabels = xLabels;
+    }
+    @Override
+    public boolean isDrawCircleDashMarkerEnabled() {
+        return mDrawCircleDashMarker;
     }
 
     /**

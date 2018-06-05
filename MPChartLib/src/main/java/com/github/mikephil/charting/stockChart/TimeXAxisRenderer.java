@@ -29,7 +29,12 @@ public class TimeXAxisRenderer extends XAxisRenderer {
         for (int i = 0; i < count; i++) {
             /*获取label对应key值，也就是x轴坐标0,60,121,182,242*/
             int ix = mXAxis.getXLabels().keyAt(i);
-            position[0] = ix;
+            if (mXAxis.isCenterAxisLabelsEnabled()) {
+                float offset = mXAxis.getXLabels().keyAt(count - 1) / (count - 1);
+                position[0] = ix + offset / 2;
+            } else {
+                position[0] = ix;
+            }
             /*在图表中的x轴转为像素，方便绘制text*/
             mTrans.pointValuesToPixel(position);
             /*x轴越界*/
@@ -43,7 +48,7 @@ public class TimeXAxisRenderer extends XAxisRenderer {
             } else if ((position[0] - labelWidth / 2) < mChart.getViewPortHandler().contentLeft()) {//左出界
                 position[0] = mChart.getViewPortHandler().contentLeft() + labelWidth / 2;
             }
-            c.drawText(label, position[0], pos + Utils.convertPixelsToDp(mChart.getViewPortHandler().offsetBottom()+10),
+            c.drawText(label, position[0], pos + Utils.convertPixelsToDp(mChart.getViewPortHandler().offsetBottom() + 10),
                     mAxisLabelPaint);
 //            }
         }
