@@ -32,7 +32,7 @@ public class ChartKLineFragment extends BaseFragment {
     KLineView combinedchart;
     Unbinder unbinder;
 
-    private int mType;//日K：1；周K：7；月K：30；年K：365
+    private int mType;//日K：1；周K：7；月K：30
     private boolean land;//是否横屏
     private KLineData kLineData;
     private JSONObject object;
@@ -57,7 +57,13 @@ public class ChartKLineFragment extends BaseFragment {
         kLineData = new KLineData(getActivity());
         combinedchart.initChart(land);
         try {
-            object = new JSONObject(Constant.KLINEDATA);
+            if(mType == 1){
+                object = new JSONObject(Constant.KLINEDATA);
+            }else if(mType == 7){
+                object = new JSONObject(Constant.KLINEWEEKDATA);
+            }else if(mType == 30){
+                object = new JSONObject(Constant.KLINEMONTHDATA);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

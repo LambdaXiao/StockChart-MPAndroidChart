@@ -284,9 +284,9 @@ public class KLineView extends BaseView {
 
         axisLeftBar.setValueFormatter(new VolFormatter());
 
-//        float maxScale = calMaxScale(1000, kLineData.getxVals().size());
+//        float maxScale = calMaxScale(candleChart.getWidth(), kLineData.getxVals().size());
 //        float xScale = maxScale / 4;
-
+//
         ViewPortHandler viewPortHandlerCombin = candleChart.getViewPortHandler();
         viewPortHandlerCombin.setMinMaxScaleX(3, 40);
         Matrix touchMatrix = viewPortHandlerCombin.getMatrixTouch();
@@ -296,6 +296,8 @@ public class KLineView extends BaseView {
         viewPortHandlerBar.setMinMaxScaleX(3, 40);
         Matrix touchBar = viewPortHandlerBar.getMatrixTouch();
         touchBar.setScale(5, 1f);
+        candleChart.zoom(3,0,0,0);
+        barChart.zoom(3,0,0,0);
 
         CombinedData combinedKlineData = new CombinedData();
         combinedKlineData.setData(new CandleData(kLineData.getCandleDataSet()));
