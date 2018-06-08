@@ -36,6 +36,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
     protected Paint mShadowPaint;
     protected Paint mBarBorderPaint;
+    protected float offSet = 0.5f;
 
     public BarChartRenderer(BarDataProvider chart, ChartAnimator animator,
                             ViewPortHandler viewPortHandler) {
@@ -113,7 +114,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
                 BarEntry e = dataSet.getEntryForIndex(i);
 
-                x = e.getX();
+                x = e.getX() + offSet;
 
                 mBarShadowRectBuffer.left = x - barWidthHalf;
                 mBarShadowRectBuffer.right = x + barWidthHalf;
@@ -472,7 +473,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                     y2 = 0.f;
                 }
 
-                prepareBarHighlight(e.getX(), y1, y2, barData.getBarWidth() / 2f, trans);
+                prepareBarHighlight(e.getX() + offSet, y1, y2, barData.getBarWidth() / 2f, trans);
 
                 setHighlightDrawPos(high, mBarRect);
 

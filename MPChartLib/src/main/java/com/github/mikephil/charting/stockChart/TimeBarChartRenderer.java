@@ -52,7 +52,7 @@ public class TimeBarChartRenderer extends BarChartRenderer {
 
                 BarEntry e = dataSet.getEntryForIndex(i);
 
-                x = e.getX();
+                x = e.getX() + offSet;
 
                 mBarShadowRectBuffer.left = x - barWidthHalf;
                 mBarShadowRectBuffer.right = x + barWidthHalf;

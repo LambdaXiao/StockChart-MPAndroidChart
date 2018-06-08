@@ -42,7 +42,7 @@ public class KTimeData {
                         permaxmin = 0;
                         volMaxTimeLine = 0;
                         if (baseValue == 0) {
-                            baseValue = timeDatamodel.getNowPrice();
+                            baseValue = timeDatamodel.getPreClose();
                         }
                     } else {
                         mAllVolume += timeDatamodel.getVolume();

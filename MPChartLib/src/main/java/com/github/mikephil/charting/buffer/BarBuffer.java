@@ -10,7 +10,7 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
     protected int mDataSetCount = 1;
     protected boolean mContainsStacks = false;
     protected boolean mInverted = false;
-
+    protected float offSet = 0.5f;
     /**
      * width of the bar on the x-axis, in values (not pixels)
      */
@@ -56,7 +56,7 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                 continue;
             }
 
-            float x = e.getX();
+            float x = e.getX() + offSet;
             float y = e.getY();
             float[] vals = e.getYVals();
 

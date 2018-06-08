@@ -109,7 +109,7 @@ public class OneDayView extends BaseView {
         lineChart.setDrawBorders(true);
         lineChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
         lineChart.setBorderWidth(0.7f);
-        lineChart.setNoDataText("暂无数据");
+        lineChart.setNoDataText("加载中...");
         Legend lineChartLegend = lineChart.getLegend();
         lineChartLegend.setEnabled(false);
         lineChart.setDescription(null);
@@ -118,7 +118,7 @@ public class OneDayView extends BaseView {
         barChart.setDrawBorders(true);
         barChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
         barChart.setBorderWidth(0.7f);
-        barChart.setNoDataText("暂无数据");
+        barChart.setNoDataText("加载中...");
         Legend barChartLegend = barChart.getLegend();
         barChartLegend.setEnabled(false);
         barChart.setDescription(null);
@@ -262,6 +262,8 @@ public class OneDayView extends BaseView {
 
         if (mData.getDatas().size() == 0) {
             cirCleView.setVisibility(View.GONE);
+            lineChart.setNoDataText("暂无数据");
+            barChart.setNoDataText("暂无数据");
             return;
         } else {
             cirCleView.setVisibility(View.VISIBLE);

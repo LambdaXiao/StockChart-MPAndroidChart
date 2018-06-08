@@ -25,7 +25,7 @@ import java.util.List;
 public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
     protected CandleDataProvider mChart;
-
+    private float offSet = 0.5f;
     private float[] mShadowBuffers = new float[8];
     private float[] mBodyBuffers = new float[4];
     private float[] mRangeBuffers = new float[4];
@@ -84,7 +84,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 continue;
             }
 
-            final float xPos = e.getX();
+            final float xPos = e.getX() + offSet;
 
             final float open = e.getOpen();
             final float close = e.getClose();
@@ -156,10 +156,10 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
                 // calculate the body
 
-                mBodyBuffers[0] = xPos - 0.5f + barSpace;
+                mBodyBuffers[0] = xPos - offSet + barSpace;
 //                mBodyBuffers[0] = xPos + barSpace;
                 mBodyBuffers[1] = close * phaseY;
-                mBodyBuffers[2] = (xPos + 0.5f - barSpace);
+                mBodyBuffers[2] = (xPos + offSet - barSpace);
 //                mBodyBuffers[2] = (xPos - barSpace);
                 mBodyBuffers[3] = open * phaseY;
 
@@ -215,12 +215,12 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 mRangeBuffers[2] = xPos;
                 mRangeBuffers[3] = low * phaseY;
 
-                mOpenBuffers[0] = xPos - 0.5f + barSpace;
+                mOpenBuffers[0] = xPos - offSet + barSpace;
                 mOpenBuffers[1] = open * phaseY;
                 mOpenBuffers[2] = xPos;
                 mOpenBuffers[3] = open * phaseY;
 
-                mCloseBuffers[0] = xPos + 0.5f - barSpace;
+                mCloseBuffers[0] = xPos + offSet - barSpace;
                 mCloseBuffers[1] = close * phaseY;
                 mCloseBuffers[2] = xPos;
                 mCloseBuffers[3] = close * phaseY;
@@ -339,10 +339,9 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
     @Override
     public void drawValues(Canvas c) {
-        // if values are drawn
-        /*if (mChart.getCandleData().getYValCount() < mChart.getMaxVisibleCount()
-         * mViewPortHandler.getScaleX()) {*/
+
         List<ICandleDataSet> dataSets = mChart.getCandleData().getDataSets();
+
         mValuePaint.setColor(Color.parseColor("#ff8c0d"));
         for (int i = 0; i < dataSets.size(); i++) {
 
@@ -405,8 +404,6 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
             }
 
             //绘制最大值和最小值
-            float x = positions[minIndex];
-            float y = positions[minIndex + 1];
             if (maxIndex > minIndex) {
                 //画右边
                 String highString = "← " + Float.toString(minValue);
@@ -417,9 +414,14 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
 
                 float[] tPosition = new float[2];
-                tPosition[1] = minValue;
+                tPosition[0] = minEntry == null ? 0f : minEntry.getX() + offSet;
+                tPosition[1] = minEntry == null ? 0f : minEntry.getLow();
                 trans.pointValuesToPixel(tPosition);
-                c.drawText(highString, x + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                if (tPosition[0] + highStringWidth / 2 > mViewPortHandler.contentRight()) {
+                    c.drawText(Float.toString(minValue) + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                } else {
+                    c.drawText("← " + Float.toString(minValue), tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                }
             } else {
                 //画左边
                 String highString = Float.toString(minValue) + " →";
@@ -429,14 +431,17 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
 
                 float[] tPosition = new float[2];
-                tPosition[1] = minValue;
+                tPosition[0] = minEntry == null ? 0f : minEntry.getX() + offSet;
+                tPosition[1] = minEntry == null ? 0f : minEntry.getLow();
                 trans.pointValuesToPixel(tPosition);
-
-                c.drawText(highString, x - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                if (tPosition[0] - highStringWidth / 2 < mViewPortHandler.contentLeft()) {
+                    c.drawText("← " + Float.toString(minValue), tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                } else {
+                    c.drawText(Float.toString(minValue) + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                }
             }
 
-            x = positions[maxIndex];
-            y = positions[maxIndex + 1];
+
             //这里画的是上面两个点
             if (maxIndex > minIndex) {
                 //画左边
@@ -446,12 +451,14 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
 
                 float[] tPosition = new float[2];
-                tPosition[0] = maxEntry == null ? 0f : maxEntry.getX();
+                tPosition[0] = maxEntry == null ? 0f : maxEntry.getX() + offSet;
                 tPosition[1] = maxEntry == null ? 0f : maxEntry.getHigh();
                 trans.pointValuesToPixel(tPosition);
-
-                c.drawText(highString, tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
-
+                if ((tPosition[0] - highStringWidth / 2) < mViewPortHandler.contentLeft()) {
+                    c.drawText("← " + Float.toString(maxValue), tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                } else {
+                    c.drawText(Float.toString(maxValue) + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                }
             } else {
                 //画右边
                 String highString = "← " + Float.toString(maxValue);
@@ -461,14 +468,17 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
 
                 float[] tPosition = new float[2];
-                tPosition[0] = maxEntry == null ? 0f : maxEntry.getX();
+                tPosition[0] = maxEntry == null ? 0f : maxEntry.getX() + offSet;
                 tPosition[1] = maxEntry == null ? 0f : maxEntry.getHigh();
                 trans.pointValuesToPixel(tPosition);
-
-                c.drawText(highString, tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                if (tPosition[0] + highStringWidth / 2 > mViewPortHandler.contentRight()) {
+                    c.drawText(Float.toString(maxValue) + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                } else {
+                    c.drawText("← " + Float.toString(maxValue), tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                }
             }
         }
-        //}
+
     }
 
 
@@ -500,7 +510,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 //            float y = (lowValue + highValue) / 2f;
             float y = e.getClose() * mAnimator.getPhaseY();
 
-            MPPointD pix = mChart.getTransformer(set.getAxisDependency()).getPixelForValues(e.getX(), y);
+            MPPointD pix = mChart.getTransformer(set.getAxisDependency()).getPixelForValues(e.getX() + offSet, y);
 
             high.setDraw((float) pix.x, (float) pix.y);
 

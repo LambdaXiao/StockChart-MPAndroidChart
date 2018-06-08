@@ -17,8 +17,10 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CandleData;
+import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
@@ -43,6 +45,7 @@ import com.github.mikephil.charting.utils.NumberUtils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * K线view
@@ -61,7 +64,8 @@ public class KLineView extends BaseView {
     private KLineData kLineData;
     private CoupleChartGestureListener gestureListenerCandle;
     private CoupleChartGestureListener gestureListenerBar;
-    private boolean landscape = false;
+    private boolean landscape = false;//是否横屏
+    private int maxVisibleXCount = 100;
 
     public Handler handler = new Handler() {
         @Override
@@ -77,7 +81,7 @@ public class KLineView extends BaseView {
     };
 
     public KLineView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public KLineView(Context context, @Nullable AttributeSet attrs) {
@@ -108,7 +112,7 @@ public class KLineView extends BaseView {
         candleChart.setDragDecelerationEnabled(true);
         candleChart.setDragDecelerationFrictionCoef(0.1f);//0.92持续滚动时的速度快慢，[0,1) 0代表立即停止。
         candleChart.setDoubleTapToZoomEnabled(false);
-        candleChart.setNoDataText("暂无数据");
+        candleChart.setNoDataText("加载中...");
 
         //副图
         barChart.setDrawBorders(true);
@@ -123,7 +127,7 @@ public class KLineView extends BaseView {
         barChart.setDragDecelerationEnabled(true);
         barChart.setDragDecelerationFrictionCoef(0.1f);//设置太快，切换滑动源滑动不同步
         barChart.setDoubleTapToZoomEnabled(false);
-        barChart.setNoDataText("暂无数据");
+        barChart.setNoDataText("加载中...");
 
         //蜡烛图X轴
         xAxisK = candleChart.getXAxis();
@@ -147,7 +151,7 @@ public class KLineView extends BaseView {
         axisLeftK.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
         axisLeftK.setValueLineInside(true);
         axisLeftK.setDrawTopBottomGridLine(false);
-        axisLeftK.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisLeftK.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisLeftK.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -160,7 +164,7 @@ public class KLineView extends BaseView {
         axisRightK.setDrawLabels(false);
         axisRightK.setDrawGridLines(false);
         axisRightK.setDrawAxisLine(false);
-        axisRightK.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisRightK.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisRightK.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
 
         //副图X轴
@@ -171,7 +175,6 @@ public class KLineView extends BaseView {
         xAxisBar.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
         xAxisBar.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxisBar.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
-        xAxisBar.setAxisMinimum(0);
         xAxisBar.setAvoidFirstLastClipping(true);
 
         //副图左Y轴
@@ -183,7 +186,7 @@ public class KLineView extends BaseView {
         axisLeftBar.setDrawLabels(true);
         axisLeftBar.setLabelCount(2, true);
         axisLeftBar.setValueLineInside(true);
-        axisLeftBar.setPosition(landscape?YAxis.YAxisLabelPosition.OUTSIDE_CHART:YAxis.YAxisLabelPosition.INSIDE_CHART);
+        axisLeftBar.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
 
         //副图右Y轴
         axisRightBar = barChart.getAxisRight();
@@ -193,9 +196,9 @@ public class KLineView extends BaseView {
 
         //设置图表边距
         int left_right = 0;
-        if(landscape){
+        if (landscape) {
             left_right = CommonUtil.dip2px(mContext, 50);
-        }else {
+        } else {
             left_right = CommonUtil.dip2px(mContext, 5);
         }
         candleChart.setViewPortOffsets(left_right, CommonUtil.dip2px(mContext, 5), left_right, CommonUtil.dip2px(mContext, 15));
@@ -251,6 +254,11 @@ public class KLineView extends BaseView {
      */
     public void setDataToChart(KLineData data) {
         kLineData = data;
+        if (kLineData.getKLineDatas().size() == 0) {
+            candleChart.setNoDataText("暂无数据");
+            barChart.setNoDataText("暂无数据");
+            return;
+        }
         setMarkerView(kLineData);
         setBottomMarkerView(kLineData);
 
@@ -284,35 +292,66 @@ public class KLineView extends BaseView {
 
         axisLeftBar.setValueFormatter(new VolFormatter());
 
-//        float maxScale = calMaxScale(candleChart.getWidth(), kLineData.getxVals().size());
-//        float xScale = maxScale / 4;
-//
+        float xScale = calMaxScale(1020, kLineData.getxVals().size());
+
         ViewPortHandler viewPortHandlerCombin = candleChart.getViewPortHandler();
         viewPortHandlerCombin.setMinMaxScaleX(3, 40);
         Matrix touchMatrix = viewPortHandlerCombin.getMatrixTouch();
-        touchMatrix.setScale(5, 1f);
+        touchMatrix.setScale(xScale, 1f);
 
         ViewPortHandler viewPortHandlerBar = barChart.getViewPortHandler();
         viewPortHandlerBar.setMinMaxScaleX(3, 40);
         Matrix touchBar = viewPortHandlerBar.getMatrixTouch();
-        touchBar.setScale(5, 1f);
-        candleChart.zoom(3,0,0,0);
-        barChart.zoom(3,0,0,0);
+        touchBar.setScale(xScale, 1f);
+//        candleChart.setVisibleXRange(60,1);
+//        barChart.setVisibleXRange(60,1);
+//        candleChart.zoom(3,0,0,0);
+//        barChart.zoom(3,0,0,0);
 
         CombinedData combinedKlineData = new CombinedData();
-        combinedKlineData.setData(new CandleData(kLineData.getCandleDataSet()));
+        //数据少于一屏是填充一屏
+        if (!kLineData.getKLineDatas().isEmpty() && kLineData.getKLineDatas().size() < maxVisibleXCount) {
+            ArrayList<CandleEntry> paddingEntries = new ArrayList<>();
+            for (int i = kLineData.getKLineDatas().size(); i < maxVisibleXCount; i++) {
+                kLineData.getxVals().add("");
+                paddingEntries.add(new CandleEntry(i + 0.5f, 0, 0, 0, 0));
+            }
+            CandleDataSet paddingDataSet = new CandleDataSet(paddingEntries, "");
+            paddingDataSet.setHighlightEnabled(false);
+            paddingDataSet.setDrawHorizontalHighlightIndicator(false);
+            paddingDataSet.setDrawValues(false);
+            paddingDataSet.setVisible(false);
+            combinedKlineData.setData(new CandleData(kLineData.getCandleDataSet(), paddingDataSet));
+        } else {
+            combinedKlineData.setData(new CandleData(kLineData.getCandleDataSet()));
+        }
         combinedKlineData.setData(new LineData(kLineData.getLineDataMA()));
         candleChart.setData(combinedKlineData);
 
         CombinedData combinedChartsData = new CombinedData();
-        combinedChartsData.setData(new BarData(kLineData.getVolumeDataSet()));
+        //数据少于一屏是填充一屏
+        if (!kLineData.getKLineDatas().isEmpty() && kLineData.getKLineDatas().size() < maxVisibleXCount) {
+            ArrayList<BarEntry> paddingEntries = new ArrayList<>();
+            for (int i = kLineData.getKLineDatas().size(); i < maxVisibleXCount; i++) {
+                paddingEntries.add(new BarEntry(i + 0.5f, 0));
+            }
+            BarDataSet paddingDataSet = new BarDataSet(paddingEntries, "");
+            paddingDataSet.setHighlightEnabled(false);
+            paddingDataSet.setVisible(false);
+            paddingDataSet.setDrawValues(false);
+            combinedChartsData.setData(new BarData(kLineData.getVolumeDataSet(), paddingDataSet));
+        } else {
+            combinedChartsData.setData(new BarData(kLineData.getVolumeDataSet()));
+        }
         combinedChartsData.setData(new LineData());
         barChart.setData(combinedChartsData);
 
         candleChart.getXAxis().setAxisMaximum(combinedKlineData.getXMax() + kLineData.getOffSet());
         barChart.getXAxis().setAxisMaximum(combinedChartsData.getXMax() + kLineData.getOffSet());
-        candleChart.moveViewToX(kLineData.getKLineDatas().size() - 1);
-        barChart.moveViewToX(kLineData.getKLineDatas().size() - 1);
+        if (kLineData.getKLineDatas().size() > maxVisibleXCount) {
+            candleChart.moveViewToX(kLineData.getKLineDatas().size() - 1);
+            barChart.moveViewToX(kLineData.getKLineDatas().size() - 1);
+        }
         handler.sendEmptyMessageDelayed(0, 0);
 
     }
@@ -536,8 +575,8 @@ public class KLineView extends BaseView {
     }
 
     public void setMarkerView(KLineData kLineData) {
-        LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview,new DecimalFormat("#0.00"));
-        KRightMarkerView rightMarkerView = new KRightMarkerView(mContext, R.layout.my_markerview,new DecimalFormat("#0.00"));
+        LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview, new DecimalFormat("#0.00"));
+        KRightMarkerView rightMarkerView = new KRightMarkerView(mContext, R.layout.my_markerview, new DecimalFormat("#0.00"));
         candleChart.setMarker(leftMarkerView, rightMarkerView, kLineData);
     }
 
@@ -547,13 +586,13 @@ public class KLineView extends BaseView {
     }
 
     public float calMaxScale(float viewPortWidth, float count) {
-        float maxScale = 1;
-        if (count >= 73) {
-            maxScale = 56 / (viewPortWidth / count);
+        float xScale = 1;
+        if (count >= 180) {
+            xScale = 20 / (viewPortWidth / count);
         } else {
-            maxScale = 56 / (viewPortWidth / count) / 4;
+            xScale = 20 / (viewPortWidth / count);
         }
-        return maxScale;
+        return xScale;
     }
 
     public void addAData(KLineData kLineData) {
@@ -660,11 +699,11 @@ public class KLineView extends BaseView {
         }
     }
 
-    public CoupleChartGestureListener getGestureListenerCandle(){
+    public CoupleChartGestureListener getGestureListenerCandle() {
         return gestureListenerCandle;
     }
 
-    public CoupleChartGestureListener getGestureListenerBar(){
+    public CoupleChartGestureListener getGestureListenerBar() {
         return gestureListenerBar;
     }
 }
