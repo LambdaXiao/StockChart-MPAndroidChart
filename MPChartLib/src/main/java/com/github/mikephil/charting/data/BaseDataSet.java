@@ -90,7 +90,8 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      * flag that indicates if the DataSet is visible or not
      */
     protected boolean mVisible = true;
-
+    //数值的精确度位数
+    protected int precision = 2;
     /**
      * Default constructor.
      */
@@ -429,6 +430,15 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
         mAxisDependency = dependency;
     }
 
+    //设置数据的精确度位数
+    @Override
+    public void setPrecision(int precision){
+        this.precision = precision;
+    };
+    @Override
+    public int getPrecision(){
+        return precision;
+    }
 
     /**
      * ###### ###### DATA RELATED METHODS ###### ######

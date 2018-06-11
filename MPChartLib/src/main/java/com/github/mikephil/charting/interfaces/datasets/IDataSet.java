@@ -482,4 +482,8 @@ public interface IDataSet<T extends Entry> {
      * @return
      */
     boolean isVisible();
+    //设置数据的精确度位数
+    void setPrecision(int precision);
+
+    int getPrecision();
 }

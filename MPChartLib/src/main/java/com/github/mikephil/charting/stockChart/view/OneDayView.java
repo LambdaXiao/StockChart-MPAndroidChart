@@ -413,7 +413,7 @@ public class OneDayView extends BaseView {
     }
 
     private void setMarkerView(KTimeData mData) {
-        LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview, new DecimalFormat("#0.00"));
+        LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview, 2);
         TimeRightMarkerView rightMarkerView = new TimeRightMarkerView(mContext, R.layout.my_markerview);
         lineChart.setMarker(leftMarkerView, rightMarkerView, mData);
     }

@@ -39,7 +39,7 @@ import java.util.List;
 public class KLineData {
     private Context mContext;
     private ArrayList<KLineDataModel> kDatas = new ArrayList<>();
-    private float offSet = 0.5f;
+    private float offSet = 0.99f;//K线图最右边偏移量
 
     //MA参数
     private int N1 = 5;
@@ -121,7 +121,7 @@ public class KLineData {
             kDatas.clear();
 
             JSONArray data = object.optJSONArray("data");
-            if (data !=null) {
+            if (data != null) {
                 for (int i = 0; i < data.length(); i++) {
                     KLineDataModel klineDatamodel = new KLineDataModel();
                     klineDatamodel.setDateMills(data.optJSONArray(i).optLong(0, 0L));
@@ -332,16 +332,17 @@ public class KLineData {
         candleDataSet.setDrawHorizontalHighlightIndicator(true);
         candleDataSet.setHighlightEnabled(true);
         candleDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
-//        candleDataSet.setValueTextSize(10f);
+        candleDataSet.setValueTextSize(10f);
         candleDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-//        candleDataSet.setShadowWidth(0.7f);
+        candleDataSet.setPrecision(2);
         candleDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
         candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
         candleDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
         candleDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
         candleDataSet.setValueTextSize(10);
         candleDataSet.setDrawValues(true);
-//        candleDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
+        candleDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
+        candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
         candleDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
         candleDataSet.setShadowColorSameAsCandle(true);
         candleDataSet.setHighlightLineWidth(0.5f);

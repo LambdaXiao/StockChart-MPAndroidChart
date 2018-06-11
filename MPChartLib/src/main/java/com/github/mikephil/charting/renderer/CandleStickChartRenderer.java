@@ -16,6 +16,7 @@ import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointD;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.NumberUtils;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
@@ -263,79 +264,6 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
         }
     }
 
-//    @Override
-//    public void drawValues(Canvas c) {
-//        // if values are drawn
-//        if (isDrawingValuesAllowed(mChart)) {
-//
-//            List<ICandleDataSet> dataSets = mChart.getCandleData().getDataSets();
-//
-//            for (int i = 0; i < dataSets.size(); i++) {
-//
-//                ICandleDataSet dataSet = dataSets.get(i);
-//
-//                if (!shouldDrawValues(dataSet))
-//                    continue;
-//
-//                // apply the text-styling defined by the DataSet
-//                applyValueTextStyle(dataSet);
-//
-//                Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
-//
-//                mXBounds.set(mChart, dataSet);
-//
-//                float[] positions = trans.generateTransformedValuesCandle(
-//                        dataSet, mAnimator.getPhaseX(), mAnimator.getPhaseY(), mXBounds.min, mXBounds.max);
-//
-//                float yOffset = Utils.convertDpToPixel(5f);
-//
-//                MPPointF iconsOffset = MPPointF.getInstance(dataSet.getIconsOffset());
-//                iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
-//                iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
-//
-//                for (int j = 0; j < positions.length; j += 2) {
-//
-//                    float x = positions[j];
-//                    float y = positions[j + 1];
-//
-//                    if (!mViewPortHandler.isInBoundsRight(x))
-//                        break;
-//
-//                    if (!mViewPortHandler.isInBoundsLeft(x) || !mViewPortHandler.isInBoundsY(y))
-//                        continue;
-//
-//                    CandleEntry entry = dataSet.getEntryForIndex(j / 2 + mXBounds.min);
-//
-//                    if (dataSet.isDrawValuesEnabled()) {
-//                        drawValue(c,
-//                                dataSet.getValueFormatter(),
-//                                entry.getHigh(),
-//                                entry,
-//                                i,
-//                                x,
-//                                y - yOffset,
-//                                dataSet
-//                                        .getValueTextColor(j / 2));
-//                    }
-//
-//                    if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
-//
-//                        Drawable icon = entry.getIcon();
-//
-//                        Utils.drawImage(
-//                                c,
-//                                icon,
-//                                (int)(x + iconsOffset.x),
-//                                (int)(y + iconsOffset.y),
-//                                icon.getIntrinsicWidth(),
-//                                icon.getIntrinsicHeight());
-//                    }
-//                }
-//
-//                MPPointF.recycleInstance(iconsOffset);
-//            }
-//        }
-//    }
 
     @Override
     public void drawValues(Canvas c) {
@@ -406,38 +334,38 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
             //绘制最大值和最小值
             if (maxIndex > minIndex) {
                 //画右边
-                String highString = "← " + Float.toString(minValue);
+                String highString = NumberUtils.keepPrecisionR(minValue, dataSet.getPrecision());
 
                 //计算显示位置
                 //计算文本宽度
-                int highStringWidth = Utils.calcTextWidth(mValuePaint, highString);
-                int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
+                int highStringWidth = Utils.calcTextWidth(mValuePaint, "← " + highString);
+                int highStringHeight = Utils.calcTextHeight(mValuePaint, "← " + highString);
 
                 float[] tPosition = new float[2];
                 tPosition[0] = minEntry == null ? 0f : minEntry.getX() + offSet;
                 tPosition[1] = minEntry == null ? 0f : minEntry.getLow();
                 trans.pointValuesToPixel(tPosition);
                 if (tPosition[0] + highStringWidth / 2 > mViewPortHandler.contentRight()) {
-                    c.drawText(Float.toString(minValue) + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                    c.drawText(highString + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
                 } else {
-                    c.drawText("← " + Float.toString(minValue), tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                    c.drawText("← " + highString, tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
                 }
             } else {
                 //画左边
-                String highString = Float.toString(minValue) + " →";
+                String highString = NumberUtils.keepPrecisionR(minValue, dataSet.getPrecision());
 
                 //计算显示位置
-                int highStringWidth = Utils.calcTextWidth(mValuePaint, highString);
-                int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
+                int highStringWidth = Utils.calcTextWidth(mValuePaint, highString + " →");
+                int highStringHeight = Utils.calcTextHeight(mValuePaint, highString + " →");
 
                 float[] tPosition = new float[2];
                 tPosition[0] = minEntry == null ? 0f : minEntry.getX() + offSet;
                 tPosition[1] = minEntry == null ? 0f : minEntry.getLow();
                 trans.pointValuesToPixel(tPosition);
                 if (tPosition[0] - highStringWidth / 2 < mViewPortHandler.contentLeft()) {
-                    c.drawText("← " + Float.toString(minValue), tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                    c.drawText("← " + highString, tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
                 } else {
-                    c.drawText(Float.toString(minValue) + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                    c.drawText(highString + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
                 }
             }
 
@@ -445,36 +373,36 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
             //这里画的是上面两个点
             if (maxIndex > minIndex) {
                 //画左边
-                String highString = Float.toString(maxValue) + " →";
+                String highString = NumberUtils.keepPrecisionR(maxValue, dataSet.getPrecision());
 
-                int highStringWidth = Utils.calcTextWidth(mValuePaint, highString);
-                int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
+                int highStringWidth = Utils.calcTextWidth(mValuePaint, highString + " →");
+                int highStringHeight = Utils.calcTextHeight(mValuePaint, highString + " →");
 
                 float[] tPosition = new float[2];
                 tPosition[0] = maxEntry == null ? 0f : maxEntry.getX() + offSet;
                 tPosition[1] = maxEntry == null ? 0f : maxEntry.getHigh();
                 trans.pointValuesToPixel(tPosition);
                 if ((tPosition[0] - highStringWidth / 2) < mViewPortHandler.contentLeft()) {
-                    c.drawText("← " + Float.toString(maxValue), tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                    c.drawText("← " + highString, tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
                 } else {
-                    c.drawText(Float.toString(maxValue) + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                    c.drawText(highString + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
                 }
             } else {
                 //画右边
-                String highString = "← " + Float.toString(maxValue);
+                String highString = NumberUtils.keepPrecisionR(maxValue, dataSet.getPrecision());
 
                 //计算显示位置
-                int highStringWidth = Utils.calcTextWidth(mValuePaint, highString);
-                int highStringHeight = Utils.calcTextHeight(mValuePaint, highString);
+                int highStringWidth = Utils.calcTextWidth(mValuePaint, "← " + highString);
+                int highStringHeight = Utils.calcTextHeight(mValuePaint, "← " + highString);
 
                 float[] tPosition = new float[2];
                 tPosition[0] = maxEntry == null ? 0f : maxEntry.getX() + offSet;
                 tPosition[1] = maxEntry == null ? 0f : maxEntry.getHigh();
                 trans.pointValuesToPixel(tPosition);
                 if (tPosition[0] + highStringWidth / 2 > mViewPortHandler.contentRight()) {
-                    c.drawText(Float.toString(maxValue) + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                    c.drawText(highString + " →", tPosition[0] - highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
                 } else {
-                    c.drawText("← " + Float.toString(maxValue), tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
+                    c.drawText("← " + highString, tPosition[0] + highStringWidth / 2, tPosition[1] + highStringHeight / 2, mValuePaint);
                 }
             }
         }

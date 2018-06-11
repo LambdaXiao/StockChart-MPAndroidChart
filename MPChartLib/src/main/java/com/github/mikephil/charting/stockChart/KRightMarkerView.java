@@ -8,6 +8,7 @@ import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.NumberUtils;
 
 
 import java.text.DecimalFormat;
@@ -21,11 +22,11 @@ public class KRightMarkerView extends MarkerView {
      */
     private TextView markerTv;
     private float num;
-    private DecimalFormat mFormat;
+    private int precision;
 
-    public KRightMarkerView(Context context, int layoutResource,DecimalFormat format) {
+    public KRightMarkerView(Context context, int layoutResource,int precision) {
         super(context, layoutResource);
-        mFormat = format;
+        this.precision = precision;
         markerTv = (TextView) findViewById(R.id.marker_tv);
         markerTv.setTextSize(10);
 
@@ -37,7 +38,7 @@ public class KRightMarkerView extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        markerTv.setText(mFormat.format(num));
+        markerTv.setText(NumberUtils.keepPrecisionR(num,precision));
     }
 
     @Override

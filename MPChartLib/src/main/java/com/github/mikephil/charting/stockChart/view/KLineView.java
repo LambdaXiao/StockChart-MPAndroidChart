@@ -575,8 +575,8 @@ public class KLineView extends BaseView {
     }
 
     public void setMarkerView(KLineData kLineData) {
-        LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview, new DecimalFormat("#0.00"));
-        KRightMarkerView rightMarkerView = new KRightMarkerView(mContext, R.layout.my_markerview, new DecimalFormat("#0.00"));
+        LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview, 2);
+        KRightMarkerView rightMarkerView = new KRightMarkerView(mContext, R.layout.my_markerview, 2);
         candleChart.setMarker(leftMarkerView, rightMarkerView, kLineData);
     }
 
