@@ -2,8 +2,10 @@
 package com.github.mikephil.charting.data;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,32 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      * the overall entry count, including counting each stack-value individually
      */
     private int mEntryCountStacks = 0;
+    /**
+     * paint style when open < close
+     * increasing candlesticks are traditionally hollow
+     */
+    private Paint.Style mIncreasingPaintStyle = Paint.Style.STROKE;
 
+    /**
+     * paint style when open > close
+     * descreasing candlesticks are traditionally filled
+     */
+    private Paint.Style mDecreasingPaintStyle = Paint.Style.FILL;
+
+    /**
+     * color for open == close
+     */
+    private int mNeutralColor = ColorTemplate.COLOR_NONE;
+
+    /**
+     * color for open < close
+     */
+    private int mIncreasingColor = ColorTemplate.COLOR_NONE;
+
+    /**
+     * color for open > close
+     */
+    private int mDecreasingColor = ColorTemplate.COLOR_NONE;
     /**
      * array of labels used to describe the different values of the stacked bars
      */
@@ -68,6 +95,11 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         copied.mStackLabels = mStackLabels;
         copied.mHighLightColor = mHighLightColor;
         copied.mHighLightAlpha = mHighLightAlpha;
+        copied.mNeutralColor = mNeutralColor;
+        copied.mIncreasingColor = mIncreasingColor;
+        copied.mDecreasingColor = mDecreasingColor;
+        copied.mIncreasingPaintStyle = mIncreasingPaintStyle;
+        copied.mDecreasingPaintStyle = mDecreasingPaintStyle;
 
         return copied;
     }
@@ -240,5 +272,78 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     @Override
     public String[] getStackLabels() {
         return mStackLabels;
+    }
+
+    /**
+     * Sets the one and ONLY color that should be used for this DataSet when
+     * open == close.
+     *
+     * @param color
+     */
+    public void setNeutralColor(int color) {
+        mNeutralColor = color;
+    }
+
+    @Override
+    public int getNeutralColor() {
+        return mNeutralColor;
+    }
+
+    /**
+     * Sets the one and ONLY color that should be used for this DataSet when
+     * open <= close.
+     *
+     * @param color
+     */
+    public void setIncreasingColor(int color) {
+        mIncreasingColor = color;
+    }
+
+    @Override
+    public int getIncreasingColor() {
+        return mIncreasingColor;
+    }
+
+    /**
+     * Sets the one and ONLY color that should be used for this DataSet when
+     * open > close.
+     *
+     * @param color
+     */
+    public void setDecreasingColor(int color) {
+        mDecreasingColor = color;
+    }
+
+    @Override
+    public int getDecreasingColor() {
+        return mDecreasingColor;
+    }
+
+    @Override
+    public Paint.Style getIncreasingPaintStyle() {
+        return mIncreasingPaintStyle;
+    }
+
+    /**
+     * Sets paint style when open < close
+     *
+     * @param paintStyle
+     */
+    public void setIncreasingPaintStyle(Paint.Style paintStyle) {
+        this.mIncreasingPaintStyle = paintStyle;
+    }
+
+    @Override
+    public Paint.Style getDecreasingPaintStyle() {
+        return mDecreasingPaintStyle;
+    }
+
+    /**
+     * Sets paint style when open > close
+     *
+     * @param decreasingPaintStyle
+     */
+    public void setDecreasingPaintStyle(Paint.Style decreasingPaintStyle) {
+        this.mDecreasingPaintStyle = decreasingPaintStyle;
     }
 }

@@ -341,8 +341,6 @@ public class KLineData {
         candleDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
         candleDataSet.setValueTextSize(10);
         candleDataSet.setDrawValues(true);
-        candleDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
-        candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
         candleDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
         candleDataSet.setShadowColorSameAsCandle(true);
         candleDataSet.setHighlightLineWidth(0.5f);
@@ -397,10 +395,11 @@ public class KLineData {
         //barDataSet.setHighLightAlpha(255);
         barDataSet.setValueTextSize(10);
         barDataSet.setDrawValues(false);
-        List<Integer> list = new ArrayList<>();
-        list.add(ContextCompat.getColor(mContext, R.color.up_color));
-        list.add(ContextCompat.getColor(mContext, R.color.down_color));
-        barDataSet.setColors(list);
+        barDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
+        barDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
+        barDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
+        barDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
+        barDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
         return barDataSet;
     }
 

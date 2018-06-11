@@ -92,6 +92,7 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     protected boolean mVisible = true;
     //数值的精确度位数
     protected int precision = 2;
+
     /**
      * Default constructor.
      */
@@ -100,7 +101,7 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
         mValueColors = new ArrayList<Integer>();
 
         // default color
-        mColors.add(Color.rgb(140, 234, 255));
+        mColors.add(Color.parseColor("#696969"));
         mValueColors.add(Color.BLACK);
     }
 
@@ -431,12 +432,14 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     //设置数据的精确度位数
-    @Override
-    public void setPrecision(int precision){
+    public void setPrecision(int precision) {
         this.precision = precision;
-    };
+    }
+
+    ;
+
     @Override
-    public int getPrecision(){
+    public int getPrecision() {
         return precision;
     }
 

@@ -1,5 +1,7 @@
 package com.github.mikephil.charting.interfaces.datasets;
 
+import android.graphics.Paint;
+
 import com.github.mikephil.charting.data.BarEntry;
 
 /**
@@ -61,4 +63,38 @@ public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry
      * @return
      */
     String[] getStackLabels();
+    /**
+     * Returns the neutral color (for open == close)
+     *
+     * @return
+     */
+    int getNeutralColor();
+
+    /**
+     * Returns the increasing color (for open < close).
+     *
+     * @return
+     */
+    int getIncreasingColor();
+
+    /**
+     * Returns the decreasing color (for open > close).
+     *
+     * @return
+     */
+    int getDecreasingColor();
+
+    /**
+     * Returns paint style when open < close
+     *
+     * @return
+     */
+    Paint.Style getIncreasingPaintStyle();
+
+    /**
+     * Returns paint style when open > close
+     *
+     * @return
+     */
+    Paint.Style getDecreasingPaintStyle();
 }

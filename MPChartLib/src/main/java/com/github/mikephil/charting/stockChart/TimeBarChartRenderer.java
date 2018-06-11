@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.renderer.BarChartRenderer;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
@@ -85,12 +86,6 @@ public class TimeBarChartRenderer extends BarChartRenderer {
 
         trans.pointValuesToPixel(buffer.buffer);
 
-        final boolean isSingleColor = dataSet.getColors().size() == 1;
-
-        if (isSingleColor) {
-            mRenderPaint.setColor(dataSet.getColor());
-        }
-
         for (int j = 0; j < buffer.size(); j += 4) {
 
             if (!mViewPortHandler.isInBoundsLeft(buffer.buffer[j + 2])) {
@@ -101,39 +96,54 @@ public class TimeBarChartRenderer extends BarChartRenderer {
                 break;
             }
 
-            if (!isSingleColor) {
-                // Set the color for the currently drawn value. If the index
-                // is out of bounds, reuse colors.
-                mRenderPaint.setColor(dataSet.getColor(j / 4));
+
+            // Set the color for the currently drawn value. If the index
+            // is out of bounds, reuse colors.
+            mRenderPaint.setColor(dataSet.getColor(j / 4));
 
 
-                int i = j / 4;
+            int i = j / 4;
 //                if (i > 0) {
-                Object openClose = dataSet.getEntryForIndex(i).getData();
-                if (openClose == null) {
-                    if (i > 0) {
-                        if (dataSet.getEntryForIndex(i).getY() > dataSet.getEntryForIndex(i - 1).getY()) {
-                            mRenderPaint.setColor(Color.parseColor("#E9403C"));
-                            mRenderPaint.setStyle(Paint.Style.FILL);
-                        } else {
-                            mRenderPaint.setColor(Color.parseColor("#30A52F"));
-                            mRenderPaint.setStyle(Paint.Style.FILL);
-                        }
+            Object openClose = dataSet.getEntryForIndex(i).getData();
+            if (openClose == null) {
+                if (i > 0) {
+                    if (dataSet.getEntryForIndex(i).getY() > dataSet.getEntryForIndex(i - 1).getY()) {
+                        mRenderPaint.setColor(dataSet.getIncreasingColor() == ColorTemplate.COLOR_NONE ?
+                                dataSet.getColor(j) :
+                                dataSet.getIncreasingColor());
+                        mRenderPaint.setStyle(dataSet.getIncreasingPaintStyle());
                     } else {
-                        mRenderPaint.setColor(Color.RED);
-                        mRenderPaint.setStyle(Paint.Style.FILL);
+                        mRenderPaint.setColor(dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE ?
+                                dataSet.getColor(j) :
+                                dataSet.getDecreasingColor());
+                        mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
                     }
-                } else {//根据开平判断柱状图的颜色填充
-                    float value = (Float) openClose;
-                    if (value > 0) {
-                        mRenderPaint.setColor(Color.parseColor("#E9403C"));
-                        mRenderPaint.setStyle(Paint.Style.FILL);
-                    } else if (value <= 0) {//表示增加
-                        mRenderPaint.setColor(Color.parseColor("#30A52F"));
-                        mRenderPaint.setStyle(Paint.Style.FILL);
-                    }
+                } else {
+                    mRenderPaint.setColor(dataSet.getIncreasingColor() == ColorTemplate.COLOR_NONE ?
+                            dataSet.getColor(j) :
+                            dataSet.getIncreasingColor());
+                    mRenderPaint.setStyle(dataSet.getIncreasingPaintStyle());
+                }
+            } else {//根据开平判断柱状图的颜色填充
+                float value = (Float) openClose;
+                if (value > 0) {//表示增加
+                    mRenderPaint.setColor(dataSet.getIncreasingColor() == ColorTemplate.COLOR_NONE ?
+                            dataSet.getColor(j) :
+                            dataSet.getIncreasingColor());
+                    mRenderPaint.setStyle(dataSet.getIncreasingPaintStyle());
+                } else if (value < 0) {
+                    mRenderPaint.setColor(dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE ?
+                            dataSet.getColor(j) :
+                            dataSet.getDecreasingColor());
+                    mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
+                }else if (value == 0) {
+                    mRenderPaint.setColor(dataSet.getNeutralColor() == ColorTemplate.COLOR_NONE ?
+                            dataSet.getColor(j) :
+                            dataSet.getNeutralColor());
+                    mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
                 }
             }
+
 
             c.drawRect(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],
                     buffer.buffer[j + 3], mRenderPaint);

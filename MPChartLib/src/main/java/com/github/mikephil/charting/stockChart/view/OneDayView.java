@@ -1,6 +1,7 @@
 package com.github.mikephil.charting.stockChart.view;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -330,10 +331,11 @@ public class OneDayView extends BaseView {
         barDataSet = new BarDataSet(barEntries, "成交量");
         barDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
         barDataSet.setDrawValues(false);
-        List<Integer> list = new ArrayList<>();
-        list.add(ContextCompat.getColor(mContext, R.color.up_color));
-        list.add(ContextCompat.getColor(mContext, R.color.down_color));
-        barDataSet.setColors(list);
+        barDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
+        barDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
+        barDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
+        barDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
+        barDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
         BarData barData = new BarData(barDataSet);
         barChart.setData(barData);
 
