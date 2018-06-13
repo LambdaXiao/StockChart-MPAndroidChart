@@ -54,6 +54,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Baseclass of all Chart-Views.
@@ -168,6 +169,10 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * object responsible for animations
      */
     protected ChartAnimator mAnimator;
+
+    private boolean mIsDescriptionCustom = false;
+    private int[] mDescriptionColors;
+    private String[] mDescriptionLabels;
 
     /**
      * Extra offsets to be appended to the viewport
@@ -427,26 +432,49 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         // check if description should be drawn
         if (mDescription != null && mDescription.isEnabled()) {
-
             MPPointF position = mDescription.getPosition();
-
             mDescPaint.setTypeface(mDescription.getTypeface());
             mDescPaint.setTextSize(mDescription.getTextSize());
             mDescPaint.setColor(mDescription.getTextColor());
             mDescPaint.setTextAlign(mDescription.getTextAlign());
 
-            float x, y;
+            if (mIsDescriptionCustom) {
+                if (position == null) {
+                    for (int i = 0; i < mDescriptionLabels.length; i++) {
+                        mDescPaint.setColor(mDescriptionColors[i]);
+                        c.drawText(mDescriptionLabels[i], getWidth() - mViewPortHandler.offsetRight() - mDescription.getXOffset() * 2,
+                                mViewPortHandler.contentTop() + Utils.calcTextHeight(mDescPaint, mDescription.toString()) + 10, mDescPaint);
+                    }
 
-            // if no position specified, draw on default position
-            if (position == null) {
-                x = getWidth() - mViewPortHandler.offsetRight() - mDescription.getXOffset();
-                y = getHeight() - mViewPortHandler.offsetBottom() - mDescription.getYOffset();
-            } else {
-                x = position.x;
-                y = position.y;
+                } else {
+                    for (int i = 0; i < mDescriptionLabels.length; i++) {
+                        mDescPaint.setColor(mDescriptionColors[i]);
+                        c.drawText(mDescriptionLabels[i], position.x, position.y, mDescPaint);
+                    }
+                }
+            } else if (!"".equals(mDescription.getText())) {
+
+                if (position == null) {
+                    c.drawText(mDescription.getText(), getWidth() - mViewPortHandler.offsetRight() - mDescription.getXOffset() * 2,
+                            mViewPortHandler.contentTop() + Utils.calcTextHeight(mDescPaint, mDescription.getText()) + 10, mDescPaint);
+                } else {
+                    c.drawText(mDescription.getText(), position.x, position.y, mDescPaint);
+                }
             }
 
-            c.drawText(mDescription.getText(), x, y, mDescPaint);
+
+//            float x, y;
+//
+//            // if no position specified, draw on default position
+//            if (position == null) {
+//                x = getWidth() - mViewPortHandler.offsetRight() - mDescription.getXOffset()*2;
+//                y = mViewPortHandler.contentTop() + mViewPortHandler.offsetTop() + mDescription.getYOffset()*2;
+//            } else {
+//                x = position.x;
+//                y = position.y;
+//            }
+//
+//            c.drawText(mDescription.getText(), x, y, mDescPaint);
         }
     }
 
@@ -1258,6 +1286,39 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public Description getDescription() {
         return mDescription;
+    }
+
+    public void setDescriptionCustom(int[] colors, String[] labels) {
+
+        if (colors.length != labels.length) {
+            throw new IllegalArgumentException(
+                    "colors array and labels array need to be of same size");
+        }
+
+        mDescriptionLabels = labels;
+        mDescriptionColors = colors;
+        mIsDescriptionCustom = true;
+    }
+
+
+    public void setDescriptionCustom(List<Integer> colors, List<String> labels) {
+
+        if (colors.size() != labels.size()) {
+            throw new IllegalArgumentException(
+                    "colors array and labels array need to be of same size");
+        }
+
+        mDescriptionColors = Utils.convertIntegers(colors);
+        mDescriptionLabels = Utils.convertStrings(labels);
+        mIsDescriptionCustom = true;
+    }
+
+    public void resetDescriptionCustom() {
+        mIsDescriptionCustom = false;
+    }
+
+    public boolean isDescriptionCustom() {
+        return mIsDescriptionCustom;
     }
 
     /**

@@ -131,17 +131,18 @@ public class TimeBarChartRenderer extends BarChartRenderer {
                             dataSet.getColor(j) :
                             dataSet.getIncreasingColor());
                     mRenderPaint.setStyle(dataSet.getIncreasingPaintStyle());
-                } else if (value < 0) {
+                } else if (value <= 0) {
                     mRenderPaint.setColor(dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE ?
                             dataSet.getColor(j) :
                             dataSet.getDecreasingColor());
                     mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
-                }else if (value == 0) {
-                    mRenderPaint.setColor(dataSet.getNeutralColor() == ColorTemplate.COLOR_NONE ?
-                            dataSet.getColor(j) :
-                            dataSet.getNeutralColor());
-                    mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
                 }
+//                else if (value == 0) {
+//                    mRenderPaint.setColor(dataSet.getNeutralColor() == ColorTemplate.COLOR_NONE ?
+//                            dataSet.getColor(j) :
+//                            dataSet.getNeutralColor());
+//                    mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
+//                }
             }
 
 

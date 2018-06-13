@@ -41,8 +41,8 @@ public class CandleEntry extends Entry {
      * @param open    The open value
      * @param close   The close value
      */
-    public CandleEntry(float x, float shadowH, float shadowL, float open, float close) {
-        super(x, (shadowH + shadowL) / 2f);
+    public CandleEntry(int mXIndex, float x, float shadowH, float shadowL, float open, float close) {
+        super(mXIndex, x, (shadowH + shadowL) / 2f);
 
         this.mShadowHigh = shadowH;
         this.mShadowLow = shadowL;
@@ -60,9 +60,9 @@ public class CandleEntry extends Entry {
      * @param close
      * @param data    Spot for additional data this Entry represents
      */
-    public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
+    public CandleEntry(int mXIndex, float x, float shadowH, float shadowL, float open, float close,
                        Object data) {
-        super(x, (shadowH + shadowL) / 2f, data);
+        super(mXIndex, x, (shadowH + shadowL) / 2f, data);
 
         this.mShadowHigh = shadowH;
         this.mShadowLow = shadowL;
@@ -80,9 +80,9 @@ public class CandleEntry extends Entry {
      * @param close
      * @param icon    Icon image
      */
-    public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
+    public CandleEntry(int mXIndex, float x, float shadowH, float shadowL, float open, float close,
                        Drawable icon) {
-        super(x, (shadowH + shadowL) / 2f, icon);
+        super(mXIndex, x, (shadowH + shadowL) / 2f, icon);
 
         this.mShadowHigh = shadowH;
         this.mShadowLow = shadowL;
@@ -101,9 +101,9 @@ public class CandleEntry extends Entry {
      * @param icon    Icon image
      * @param data    Spot for additional data this Entry represents
      */
-    public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
+    public CandleEntry(int mXIndex, float x, float shadowH, float shadowL, float open, float close,
                        Drawable icon, Object data) {
-        super(x, (shadowH + shadowL) / 2f, icon, data);
+        super(mXIndex, x, (shadowH + shadowL) / 2f, icon, data);
 
         this.mShadowHigh = shadowH;
         this.mShadowLow = shadowL;
@@ -142,7 +142,7 @@ public class CandleEntry extends Entry {
     @Override
     public CandleEntry copy() {
 
-        CandleEntry c = new CandleEntry(getX(), mShadowHigh, mShadowLow, mOpen,
+        CandleEntry c = new CandleEntry(getXIndex(), getX(), mShadowHigh, mShadowLow, mOpen,
                 mClose, getData());
 
         return c;

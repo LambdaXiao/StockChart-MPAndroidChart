@@ -42,31 +42,31 @@ public class KLineData {
     private float offSet = 0.99f;//K线图最右边偏移量
 
     //MA参数
-    private int N1 = 5;
-    private int N2 = 20;
-    private int N3 = 30;
+    public int N1 = 5;
+    public int N2 = 20;
+    public int N3 = 30;
     //EMA参数
-    private int EMAN1 = 5;
-    private int EMAN2 = 10;
-    private int EMAN3 = 30;
+    public int EMAN1 = 5;
+    public int EMAN2 = 10;
+    public int EMAN3 = 30;
     //SMA参数
-    private int SMAN = 14;
+    public int SMAN = 14;
     //BOLL参数
-    private int BOLLN = 26;
+    public int BOLLN = 26;
 
     //MACD参数
-    private int SHORT = 12;
-    private int LONG = 26;
-    private int M = 9;
+    public int SHORT = 12;
+    public int LONG = 26;
+    public int M = 9;
     //KDJ参数
-    private int KDJN = 9;
-    private int KDJM1 = 3;
-    private int KDJM2 = 3;
+    public int KDJN = 9;
+    public int KDJM1 = 3;
+    public int KDJM2 = 3;
     //CCI参数
-    private int CCIN = 14;
+    public int CCIN = 14;
     //RSI参数
-    private int RSIN1 = 7;
-    private int RSIN2 = 14;
+    public int RSIN1 = 7;
+    public int RSIN2 = 14;
 
     //X轴数据
     private ArrayList<String> xVal = new ArrayList<>();
@@ -151,7 +151,7 @@ public class KLineData {
         ArrayList<CandleEntry> candleEntries = new ArrayList<>();
         for (int i = 0; i < getKLineDatas().size(); i++) {
             xVal.add(DataTimeUtil.secToDate(getKLineDatas().get(i).getDateMills()));
-            candleEntries.add(new CandleEntry(i + offSet, (float) getKLineDatas().get(i).getHigh(), (float) getKLineDatas().get(i).getLow(), (float) getKLineDatas().get(i).getOpen(), (float) getKLineDatas().get(i).getClose()));
+            candleEntries.add(new CandleEntry(i,i + offSet, (float) getKLineDatas().get(i).getHigh(), (float) getKLineDatas().get(i).getLow(), (float) getKLineDatas().get(i).getOpen(), (float) getKLineDatas().get(i).getClose()));
         }
         candleDataSet = setACandle(candleEntries);
     }
@@ -166,28 +166,28 @@ public class KLineData {
         ArrayList<Entry> line20Entries = new ArrayList<>();
         if (kDataSize >= N1) {
             sum = getSum(0, N1 - 1);
-            line5Entries.add(new Entry(N1 - 1 + offSet, sum / N1));
+            line5Entries.add(new Entry(N1 - 1, N1 - 1 + offSet, sum / N1));
             for (int i = N1; i < kDataSize; i++) {
                 sum = (float) (sum - getKLineDatas().get(i - N1).getClose() + getKLineDatas().get(i).getClose());
-                line5Entries.add(new Entry(i + offSet, sum / N1));
+                line5Entries.add(new Entry(i, i + offSet, sum / N1));
             }
             lineDataMA.add(setALine(ColorType.blue, line5Entries, false));
         }
         if (kDataSize >= N2) {
             sum = getSum(0, N2 - 1);
-            line10Entries.add(new Entry(N2 - 1 + offSet, sum / N2));
+            line10Entries.add(new Entry(N2 - 1, N2 - 1 + offSet, sum / N2));
             for (int i = N2; i < kDataSize; i++) {
                 sum = (float) (sum - getKLineDatas().get(i - N2).getClose() + getKLineDatas().get(i).getClose());
-                line10Entries.add(new Entry(i + offSet, sum / N2));
+                line10Entries.add(new Entry(i, i + offSet, sum / N2));
             }
             lineDataMA.add(setALine(ColorType.yellow, line10Entries, false));
         }
         if (kDataSize >= N3) {
             sum = getSum(0, N3 - 1);
-            line20Entries.add(new Entry(N3 - 1 + offSet, sum / N3));
+            line20Entries.add(new Entry(N3 - 1, N3 - 1 + offSet, sum / N3));
             for (int i = N3; i < kDataSize; i++) {
                 sum = (float) (sum - getKLineDatas().get(i - N3).getClose() + getKLineDatas().get(i).getClose());
-                line20Entries.add(new Entry(i + offSet, sum / N3));
+                line20Entries.add(new Entry(i, i + offSet, sum / N3));
             }
             lineDataMA.add(setALine(ColorType.purple, line20Entries, false));
         }
@@ -205,9 +205,9 @@ public class KLineData {
         emaDataN2 = new ArrayList<>();
         emaDataN3 = new ArrayList<>();
         for (int i = 0; i < emaEntity5.getEXPMAs().size(); i++) {
-            emaDataN1.add(new Entry(i + offSet, emaEntity5.getEXPMAs().get(i)));
-            emaDataN2.add(new Entry(i + offSet, emaEntity10.getEXPMAs().get(i)));
-            emaDataN3.add(new Entry(i + offSet, emaEntity20.getEXPMAs().get(i)));
+            emaDataN1.add(new Entry(i, i + offSet, emaEntity5.getEXPMAs().get(i)));
+            emaDataN2.add(new Entry(i, i + offSet, emaEntity10.getEXPMAs().get(i)));
+            emaDataN3.add(new Entry(i, i + offSet, emaEntity20.getEXPMAs().get(i)));
         }
         lineDataEMA.add(setALine(ColorType.blue, emaDataN1, false));
         lineDataEMA.add(setALine(ColorType.yellow, emaDataN2, false));
@@ -222,7 +222,7 @@ public class KLineData {
         smaData = new ArrayList<>();
 
         for (int i = 0; i < getKLineDatas().size(); i++) {
-            smaData.add(new Entry(i + offSet, smaEntity.getSMAs().get(i)));
+            smaData.add(new Entry(i, i + offSet, smaEntity.getSMAs().get(i)));
         }
         lineDataSMA.add(setALine(ColorType.blue, smaData));
     }
@@ -236,9 +236,9 @@ public class KLineData {
         bollDataMB = new ArrayList<>();
         bollDataDN = new ArrayList<>();
         for (int i = 0; i < bollEntity.getUPs().size(); i++) {
-            bollDataUP.add(new Entry(i + offSet, bollEntity.getUPs().get(i)));
-            bollDataMB.add(new Entry(i + offSet, bollEntity.getMBs().get(i)));
-            bollDataDN.add(new Entry(i + offSet, bollEntity.getDNs().get(i)));
+            bollDataUP.add(new Entry(i, i + offSet, bollEntity.getUPs().get(i)));
+            bollDataMB.add(new Entry(i, i + offSet, bollEntity.getMBs().get(i)));
+            bollDataDN.add(new Entry(i, i + offSet, bollEntity.getDNs().get(i)));
         }
         lineDataBOLL.add(setALine(ColorType.blue, bollDataUP, false));
         lineDataBOLL.add(setALine(ColorType.yellow, bollDataMB, false));
@@ -254,7 +254,7 @@ public class KLineData {
 //            xVals.add(TradeCalculateUtil.secToTimeShort(mData.getKLineDatas().get(i).m_nStartTime));//mData.getKLineDatas().get(i).getM_szDate()
 //            barEntries.add(new BarEntry(mData.getKLineDatas().get(i).m_nVolume, i));
             float color = getKLineDatas().get(i).getOpen() > getKLineDatas().get(i).getClose() ? 0f : 1f;//这里耗时10毫秒
-            barEntries.add(new BarEntry(i + offSet, getKLineDatas().get(i).getVolume(), color));
+            barEntries.add(new BarEntry(i,i + offSet, getKLineDatas().get(i).getVolume(), color));
         }
         volumeDataSet = setABar(barEntries, "成交量");
     }
@@ -269,9 +269,9 @@ public class KLineData {
         deaData = new ArrayList<>();
         difData = new ArrayList<>();
         for (int i = 0; i < macdEntity.getMACD().size(); i++) {
-            macdData.add(new BarEntry(i + offSet, macdEntity.getMACD().get(i), macdEntity.getMACD().get(i)));
-            deaData.add(new Entry(i + offSet, macdEntity.getDEA().get(i)));
-            difData.add(new Entry(i + offSet, macdEntity.getDIF().get(i)));
+            macdData.add(new BarEntry(i,i + offSet, macdEntity.getMACD().get(i), macdEntity.getMACD().get(i)));
+            deaData.add(new Entry(i, i + offSet, macdEntity.getDEA().get(i)));
+            difData.add(new Entry(i, i + offSet, macdEntity.getDIF().get(i)));
         }
         barDataMACD = setABar(macdData);
         lineDataMACD.add(setALine(ColorType.blue, deaData));
@@ -288,9 +288,9 @@ public class KLineData {
         dData = new ArrayList<>();
         jData = new ArrayList<>();
         for (int i = 0; i < kdjEntity.getD().size(); i++) {
-            kData.add(new Entry(i + offSet, kdjEntity.getK().get(i)));
-            dData.add(new Entry(i + offSet, kdjEntity.getD().get(i)));
-            jData.add(new Entry(i + offSet, kdjEntity.getJ().get(i)));
+            kData.add(new Entry(i, i + offSet, kdjEntity.getK().get(i)));
+            dData.add(new Entry(i, i + offSet, kdjEntity.getD().get(i)));
+            jData.add(new Entry(i, i + offSet, kdjEntity.getJ().get(i)));
         }
         lineDataKDJ.add(setALine(ColorType.blue, kData, "KDJ" + N1, false));
         lineDataKDJ.add(setALine(ColorType.yellow, dData, "KDJ" + N2, false));
@@ -305,7 +305,7 @@ public class KLineData {
         cciData = new ArrayList<>();
 
         for (int i = 0; i < getKLineDatas().size(); i++) {
-            cciData.add(new Entry(i + offSet, cciEntity.getCCIs().get(i)));
+            cciData.add(new Entry(i, i + offSet, cciEntity.getCCIs().get(i)));
         }
         lineDataCCI.add(setALine(ColorType.blue, cciData, true));
     }
@@ -320,8 +320,8 @@ public class KLineData {
         rsiData7 = new ArrayList<>();
         rsiData14 = new ArrayList<>();
         for (int i = 0; i < rsiEntity7.getRSIs().size(); i++) {
-            rsiData7.add(new Entry(i + offSet, rsiEntity7.getRSIs().get(i)));
-            rsiData14.add(new Entry(i + offSet, rsiEntity14.getRSIs().get(i)));
+            rsiData7.add(new Entry(i, i + offSet, rsiEntity7.getRSIs().get(i)));
+            rsiData14.add(new Entry(i, i + offSet, rsiEntity14.getRSIs().get(i)));
         }
         lineDataRSI.add(setALine(ColorType.blue, rsiData7, "RSI" + RSIN1, false));
         lineDataRSI.add(setALine(ColorType.purple, rsiData14, "RSI" + RSIN2, true));
@@ -517,19 +517,19 @@ public class KLineData {
                 if (i >= N1) {
                     sum = 0;
                     float all5 = getSum(i - (N1 - 1), i) / N1;
-                    lineDataSet.addEntry(new Entry(i + offSet, all5));
+                    lineDataSet.addEntry(new Entry(i, i + offSet, all5));
                 }
             } else if (k == 1) {
                 if (i >= N2) {
                     sum = 0;
                     float all10 = getSum(i - (N2 - 1), i) / N2;
-                    lineDataSet.addEntry(new Entry(i + offSet, all10));
+                    lineDataSet.addEntry(new Entry(i, i + offSet, all10));
                 }
             } else if (k == 2) {
                 if (i >= N3) {
                     sum = 0;
                     float all20 = getSum(i - (N3 - 1), i) / N3;
-                    lineDataSet.addEntry(new Entry(i + offSet, all20));
+                    lineDataSet.addEntry(new Entry(i, i + offSet, all20));
                 }
             }
         }

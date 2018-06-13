@@ -42,12 +42,12 @@ public class CoupleChartGestureListener implements OnChartGestureListener {
         }
         syncCharts();
         if (lastPerformedGesture != ChartTouchListener.ChartGesture.SINGLE_TAP) {
-            srcChart.highlightValues(null);
-            for (Chart dstChart : dstCharts) {
-                if (dstChart != null) {
-                    dstChart.highlightValues(null);
-                }
-            }
+            srcChart.highlightValue(null,true);
+//            for (Chart dstChart : dstCharts) {
+//                if (dstChart != null) {
+//                    dstChart.highlightValues(null);
+//                }
+//            }
         }
     }
 

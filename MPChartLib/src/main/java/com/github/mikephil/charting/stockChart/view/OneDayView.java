@@ -296,14 +296,14 @@ public class OneDayView extends BaseView {
         for (int i = 0, j = 0; i < mData.getDatas().size(); i++, j++) {
             TimeDataModel t = mData.getDatas().get(j);
             if (t == null) {
-                lineCJEntries.add(new Entry(i, Float.NaN));
-                lineJJEntries.add(new Entry(i, Float.NaN));
-                barEntries.add(new BarEntry(i, Float.NaN));
+                lineCJEntries.add(new Entry(i, i, Float.NaN));
+                lineJJEntries.add(new Entry(i, i, Float.NaN));
+                barEntries.add(new BarEntry(i, i, Float.NaN));
                 continue;
             }
-            lineCJEntries.add(new Entry(i, (float) mData.getDatas().get(i).getNowPrice()));
-            lineJJEntries.add(new Entry(i, (float) mData.getDatas().get(i).getAveragePrice()));
-            barEntries.add(new BarEntry(i, mData.getDatas().get(i).getVolume()));
+            lineCJEntries.add(new Entry(i, i, (float) mData.getDatas().get(i).getNowPrice()));
+            lineJJEntries.add(new Entry(i, i, (float) mData.getDatas().get(i).getAveragePrice()));
+            barEntries.add(new BarEntry(i, i, mData.getDatas().get(i).getVolume()));
         }
         d1 = new LineDataSet(lineCJEntries, "oneday");
         d2 = new LineDataSet(lineJJEntries, "均价");
@@ -357,13 +357,13 @@ public class OneDayView extends BaseView {
         int index = length - 1;
         LineData lineData = lineChart.getData();
         ILineDataSet d1 = lineData.getDataSetByIndex(0);
-        d1.addEntry(new Entry(index, chPrice));
+        d1.addEntry(new Entry(index, index, chPrice));
         ILineDataSet d2 = lineData.getDataSetByIndex(1);
-        d2.addEntry(new Entry(index, junPrice));
+        d2.addEntry(new Entry(index, index, junPrice));
 
         BarData barData = barChart.getData();
         IBarDataSet barDataSet = barData.getDataSetByIndex(0);
-        barDataSet.addEntry(new BarEntry(index, vol));
+        barDataSet.addEntry(new BarEntry(index, index, vol));
         lineData.notifyDataChanged();
         lineChart.notifyDataSetChanged();
         barData.notifyDataChanged();
@@ -381,17 +381,17 @@ public class OneDayView extends BaseView {
         ILineDataSet d1 = lineData.getDataSetByIndex(0);
         Entry e = d1.getEntryForIndex(index);
         d1.removeEntry(e);
-        d1.addEntry(new Entry(index, chPrice));
+        d1.addEntry(new Entry(index, index, chPrice));
 
         ILineDataSet d2 = lineData.getDataSetByIndex(1);
         Entry e2 = d2.getEntryForIndex(index);
         d2.removeEntry(e2);
-        d2.addEntry(new Entry(index, junPrice));
+        d2.addEntry(new Entry(index, index, junPrice));
 
         BarData barData = barChart.getData();
         IBarDataSet barDataSet = barData.getDataSetByIndex(0);
         barDataSet.removeEntry(index);
-        barDataSet.addEntry(new BarEntry(index, vol));
+        barDataSet.addEntry(new BarEntry(index, index, vol));
 
         //不可见修改数据不刷新
         lineData.notifyDataChanged();
@@ -427,7 +427,7 @@ public class OneDayView extends BaseView {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUserEvent(BaseEvent event) {
-        if(event.method == 1) {
+        if (event.method == 1) {
             CirclePositionTime position = (CirclePositionTime) event.obj;
             cirCleView.setX(position.cx - CommonUtil.dip2px(mContext, 7));
             cirCleView.setY(position.cy - CommonUtil.dip2px(mContext, 9));
@@ -492,7 +492,7 @@ public class OneDayView extends BaseView {
         return xLabels;
     }
 
-    public void setMaxCount(int maxCount){
+    public void setMaxCount(int maxCount) {
         this.maxCount = maxCount;
     }
 

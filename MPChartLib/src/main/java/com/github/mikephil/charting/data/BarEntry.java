@@ -39,8 +39,8 @@ public class BarEntry extends Entry {
      * @param x
      * @param y
      */
-    public BarEntry(float x, float y) {
-        super(x, y);
+    public BarEntry(int mXIndex, float x, float y) {
+        super(mXIndex, x, y);
     }
 
     /**
@@ -50,8 +50,8 @@ public class BarEntry extends Entry {
      * @param y
      * @param data - Spot for additional data this Entry represents.
      */
-    public BarEntry(float x, float y, Object data) {
-        super(x, y, data);
+    public BarEntry(int mXIndex, float x, float y, Object data) {
+        super(mXIndex, x, y, data);
     }
 
     /**
@@ -61,8 +61,8 @@ public class BarEntry extends Entry {
      * @param y
      * @param icon - icon image
      */
-    public BarEntry(float x, float y, Drawable icon) {
-        super(x, y, icon);
+    public BarEntry(int mXIndex, float x, float y, Drawable icon) {
+        super(mXIndex, x, y, icon);
     }
 
     /**
@@ -73,8 +73,8 @@ public class BarEntry extends Entry {
      * @param icon - icon image
      * @param data - Spot for additional data this Entry represents.
      */
-    public BarEntry(float x, float y, Drawable icon, Object data) {
-        super(x, y, icon, data);
+    public BarEntry(int mXIndex, float x, float y, Drawable icon, Object data) {
+        super(mXIndex, x, y, icon, data);
     }
 
     /**
@@ -83,8 +83,8 @@ public class BarEntry extends Entry {
      * @param x
      * @param vals - the stack values, use at least 2
      */
-    public BarEntry(float x, float[] vals) {
-        super(x, calcSum(vals));
+    public BarEntry(int mXIndex, float x, float[] vals) {
+        super(mXIndex, x, calcSum(vals));
 
         this.mYVals = vals;
         calcPosNegSum();
@@ -98,8 +98,8 @@ public class BarEntry extends Entry {
      * @param vals - the stack values, use at least 2
      * @param data - Spot for additional data this Entry represents.
      */
-    public BarEntry(float x, float[] vals, Object data) {
-        super(x, calcSum(vals), data);
+    public BarEntry(int mXIndex, float x, float[] vals, Object data) {
+        super(mXIndex, x, calcSum(vals), data);
 
         this.mYVals = vals;
         calcPosNegSum();
@@ -113,8 +113,8 @@ public class BarEntry extends Entry {
      * @param vals - the stack values, use at least 2
      * @param icon - icon image
      */
-    public BarEntry(float x, float[] vals, Drawable icon) {
-        super(x, calcSum(vals), icon);
+    public BarEntry(int mXIndex, float x, float[] vals, Drawable icon) {
+        super(mXIndex, x, calcSum(vals), icon);
 
         this.mYVals = vals;
         calcPosNegSum();
@@ -129,8 +129,8 @@ public class BarEntry extends Entry {
      * @param icon - icon image
      * @param data - Spot for additional data this Entry represents.
      */
-    public BarEntry(float x, float[] vals, Drawable icon, Object data) {
-        super(x, calcSum(vals), icon, data);
+    public BarEntry(int mXIndex, float x, float[] vals, Drawable icon, Object data) {
+        super(mXIndex, x, calcSum(vals), icon, data);
 
         this.mYVals = vals;
         calcPosNegSum();
@@ -143,7 +143,7 @@ public class BarEntry extends Entry {
     @Override
     public BarEntry copy() {
 
-        BarEntry copied = new BarEntry(getX(), getY(), getData());
+        BarEntry copied = new BarEntry(getXIndex(), getX(), getY(), getData());
         copied.setVals(mYVals);
         return copied;
     }

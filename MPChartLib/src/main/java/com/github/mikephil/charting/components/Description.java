@@ -29,7 +29,7 @@ public class Description extends ComponentBase {
         super();
 
         // default size
-        mTextSize = Utils.convertDpToPixel(8f);
+        mTextSize = Utils.convertDpToPixel(10f);
     }
 
     /**
