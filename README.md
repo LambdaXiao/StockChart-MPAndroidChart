@@ -3,12 +3,12 @@
 
 ![Image text](screenshot/fs1.jpg)
 
-![Image text](https://github.com/x1971481259/StockApp/screenshot/fs2.jpg)
+![Image text](screenshot/fs2.jpg)
 
-![Image text](https://github.com/x1971481259/StockApp/screenshot/k.jpg)
+![Image text](screenshot/k.jpg)
 
-![Image text](https://github.com/x1971481259/StockApp/screenshot/fs1_land.jpg)
+![Image text](screenshot/fs1_land.jpg)
 
-![Image text](https://github.com/x1971481259/StockApp/screenshot/fs2_land.jpg)
+![Image text](screenshot/fs2_land.jpg)
 
-![Image text](https://github.com/x1971481259/StockApp/screenshot/k_land.jpg)
+![Image text](screenshot/k_land.jpg)
