@@ -34,12 +34,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ly on 2017/8/20.
+ * K线数据解析
  */
-public class KLineData {
+public class KLineDataManage {
     private Context mContext;
     private ArrayList<KLineDataModel> kDatas = new ArrayList<>();
     private float offSet = 0.99f;//K线图最右边偏移量
+    private String assetId;
+    private boolean landscape = false;//横屏还是竖屏
 
     //MA参数
     public int N1 = 5;
@@ -65,8 +67,9 @@ public class KLineData {
     //CCI参数
     public int CCIN = 14;
     //RSI参数
-    public int RSIN1 = 7;
-    public int RSIN2 = 14;
+    public int RSIN1 = 6;
+    public int RSIN2 = 12;
+    public int RSIN3 = 24;
 
     //X轴数据
     private ArrayList<String> xVal = new ArrayList<>();
@@ -74,21 +77,9 @@ public class KLineData {
     private CandleDataSet candleDataSet;//蜡烛图集合
     private BarDataSet volumeDataSet;//成交量集合
     private BarDataSet barDataMACD;//MACD集合
+    private CandleDataSet bollCandleDataSet;//BOLL蜡烛图集合
 
     private List<ILineDataSet> lineDataMA = new ArrayList<>();
-
-    private List<ILineDataSet> lineDataEMA = new ArrayList<>();
-    private ArrayList<Entry> emaDataN1 = new ArrayList<>();
-    private ArrayList<Entry> emaDataN2 = new ArrayList<>();
-    private ArrayList<Entry> emaDataN3 = new ArrayList<>();
-
-    private List<ILineDataSet> lineDataSMA = new ArrayList<>();
-    private ArrayList<Entry> smaData = new ArrayList<>();
-
-    private List<ILineDataSet> lineDataBOLL = new ArrayList<>();
-    private ArrayList<Entry> bollDataUP = new ArrayList<>();
-    private ArrayList<Entry> bollDataMB = new ArrayList<>();
-    private ArrayList<Entry> bollDataDN = new ArrayList<>();
 
     private List<ILineDataSet> lineDataMACD = new ArrayList<>();
     private ArrayList<BarEntry> macdData = new ArrayList<>();
@@ -100,28 +91,38 @@ public class KLineData {
     private ArrayList<Entry> dData = new ArrayList<>();
     private ArrayList<Entry> jData = new ArrayList<>();
 
-    private List<ILineDataSet> lineDataCCI = new ArrayList<>();
-    private ArrayList<Entry> cciData = new ArrayList<>();
+    private List<ILineDataSet> lineDataBOLL = new ArrayList<>();
+    private ArrayList<Entry> bollDataUP = new ArrayList<>();
+    private ArrayList<Entry> bollDataMB = new ArrayList<>();
+    private ArrayList<Entry> bollDataDN = new ArrayList<>();
 
     private List<ILineDataSet> lineDataRSI = new ArrayList<>();
-    private ArrayList<Entry> rsiData7 = new ArrayList<>();
-    private ArrayList<Entry> rsiData14 = new ArrayList<>();
+    private ArrayList<Entry> rsiData6 = new ArrayList<>();
+    private ArrayList<Entry> rsiData12 = new ArrayList<>();
+    private ArrayList<Entry> rsiData24 = new ArrayList<>();
+    private double preClosePrice;//K线图昨收价
 
-
-    public KLineData(Context context) {
+    public KLineDataManage(Context context) {
         mContext = context;
     }
 
     /**
      * 解析K线数据
      */
-    public void parseKlineData(JSONObject object) {
-
+    public void parseKlineData(JSONObject object, String assetId,boolean landscape) {
+        this.assetId = assetId;
+        this.landscape = landscape;
         if (object != null) {
             kDatas.clear();
-
+            lineDataMA.clear();
             JSONArray data = object.optJSONArray("data");
             if (data != null) {
+                xVal.clear();
+                ArrayList<CandleEntry> candleEntries = new ArrayList<>();
+                ArrayList<BarEntry> barEntries = new ArrayList<>();
+                ArrayList<Entry> line5Entries = new ArrayList<>();
+                ArrayList<Entry> line10Entries = new ArrayList<>();
+                ArrayList<Entry> line20Entries = new ArrayList<>();
                 for (int i = 0; i < data.length(); i++) {
                     KLineDataModel klineDatamodel = new KLineDataModel();
                     klineDatamodel.setDateMills(data.optJSONArray(i).optLong(0, 0L));
@@ -129,138 +130,40 @@ public class KLineData {
                     klineDatamodel.setHigh(data.optJSONArray(i).optDouble(2));
                     klineDatamodel.setLow(data.optJSONArray(i).optDouble(3));
                     klineDatamodel.setClose(data.optJSONArray(i).optDouble(4));
-                    klineDatamodel.setVolume(Double.valueOf(data.optJSONArray(i).optString(5)).intValue());
-                    klineDatamodel.setTotal(data.optJSONArray(i).optDouble(6));
+                    klineDatamodel.setVolume(NumberUtils.stringNoE10ForVol(Double.isNaN(data.optJSONArray(i).optDouble(5)) ? 0 : data.optJSONArray(i).optDouble(5)));
+                    klineDatamodel.setTotal(NumberUtils.stringNoE10ForVol(Double.isNaN(data.optJSONArray(i).optDouble(6)) ? 0 : data.optJSONArray(i).optDouble(6)));
                     klineDatamodel.setMa5(data.optJSONArray(i).optDouble(7));
                     klineDatamodel.setMa10(data.optJSONArray(i).optDouble(8));
                     klineDatamodel.setMa20(data.optJSONArray(i).optDouble(9));
                     klineDatamodel.setMa30(data.optJSONArray(i).optDouble(10));
                     klineDatamodel.setMa60(data.optJSONArray(i).optDouble(11));
                     klineDatamodel.setPreClose(data.optJSONArray(i).optDouble(12));
+                    preClosePrice = klineDatamodel.getPreClose();
                     kDatas.add(klineDatamodel);
+
+                    xVal.add(DataTimeUtil.secToDate(getKLineDatas().get(i).getDateMills()));
+                    candleEntries.add(new CandleEntry(i, i + offSet, (float) getKLineDatas().get(i).getHigh(), (float) getKLineDatas().get(i).getLow(), (float) getKLineDatas().get(i).getOpen(), (float) getKLineDatas().get(i).getClose()));
+
+                    float color = getKLineDatas().get(i).getOpen() > getKLineDatas().get(i).getClose() ? 0f : 1f;
+                    barEntries.add(new BarEntry(i, i + offSet, (float) getKLineDatas().get(i).getVolume(), color));
+
+                    line5Entries.add(new Entry(i, i + offSet, (float) getKLineDatas().get(i).getMa5()));
+                    line10Entries.add(new Entry(i, i + offSet, (float) getKLineDatas().get(i).getMa10()));
+                    line20Entries.add(new Entry(i, i + offSet, (float) getKLineDatas().get(i).getMa20()));
                 }
+                candleDataSet = setACandle(candleEntries);
+                bollCandleDataSet = setBOLLCandle(candleEntries);
+                volumeDataSet = setABar(barEntries, "成交量");
+                lineDataMA.add(setALine(ColorType.blue, line5Entries, false));
+                lineDataMA.add(setALine(ColorType.yellow, line10Entries, false));
+                lineDataMA.add(setALine(ColorType.purple, line20Entries, false));
             }
         }
     }
 
-    /**
-     * 初始化基本数据
-     */
-    public void initCandle() {
-        xVal.clear();
-        ArrayList<CandleEntry> candleEntries = new ArrayList<>();
-        for (int i = 0; i < getKLineDatas().size(); i++) {
-            xVal.add(DataTimeUtil.secToDate(getKLineDatas().get(i).getDateMills()));
-            candleEntries.add(new CandleEntry(i,i + offSet, (float) getKLineDatas().get(i).getHigh(), (float) getKLineDatas().get(i).getLow(), (float) getKLineDatas().get(i).getOpen(), (float) getKLineDatas().get(i).getClose()));
-        }
-        candleDataSet = setACandle(candleEntries);
-    }
 
     /**
-     * 初始化蜡烛图MA
-     */
-    public void initMaLine() {
-        int kDataSize = getKLineDatas().size();
-        ArrayList<Entry> line5Entries = new ArrayList<>();
-        ArrayList<Entry> line10Entries = new ArrayList<>();
-        ArrayList<Entry> line20Entries = new ArrayList<>();
-        if (kDataSize >= N1) {
-            sum = getSum(0, N1 - 1);
-            line5Entries.add(new Entry(N1 - 1, N1 - 1 + offSet, sum / N1));
-            for (int i = N1; i < kDataSize; i++) {
-                sum = (float) (sum - getKLineDatas().get(i - N1).getClose() + getKLineDatas().get(i).getClose());
-                line5Entries.add(new Entry(i, i + offSet, sum / N1));
-            }
-            lineDataMA.add(setALine(ColorType.blue, line5Entries, false));
-        }
-        if (kDataSize >= N2) {
-            sum = getSum(0, N2 - 1);
-            line10Entries.add(new Entry(N2 - 1, N2 - 1 + offSet, sum / N2));
-            for (int i = N2; i < kDataSize; i++) {
-                sum = (float) (sum - getKLineDatas().get(i - N2).getClose() + getKLineDatas().get(i).getClose());
-                line10Entries.add(new Entry(i, i + offSet, sum / N2));
-            }
-            lineDataMA.add(setALine(ColorType.yellow, line10Entries, false));
-        }
-        if (kDataSize >= N3) {
-            sum = getSum(0, N3 - 1);
-            line20Entries.add(new Entry(N3 - 1, N3 - 1 + offSet, sum / N3));
-            for (int i = N3; i < kDataSize; i++) {
-                sum = (float) (sum - getKLineDatas().get(i - N3).getClose() + getKLineDatas().get(i).getClose());
-                line20Entries.add(new Entry(i, i + offSet, sum / N3));
-            }
-            lineDataMA.add(setALine(ColorType.purple, line20Entries, false));
-        }
-    }
-
-    /**
-     * 初始化EMA
-     */
-    public void initEMA() {
-        EXPMAEntity emaEntity5 = new EXPMAEntity(getKLineDatas(), EMAN1);
-        EXPMAEntity emaEntity10 = new EXPMAEntity(getKLineDatas(), EMAN2);
-        EXPMAEntity emaEntity20 = new EXPMAEntity(getKLineDatas(), EMAN3);
-
-        emaDataN1 = new ArrayList<>();
-        emaDataN2 = new ArrayList<>();
-        emaDataN3 = new ArrayList<>();
-        for (int i = 0; i < emaEntity5.getEXPMAs().size(); i++) {
-            emaDataN1.add(new Entry(i, i + offSet, emaEntity5.getEXPMAs().get(i)));
-            emaDataN2.add(new Entry(i, i + offSet, emaEntity10.getEXPMAs().get(i)));
-            emaDataN3.add(new Entry(i, i + offSet, emaEntity20.getEXPMAs().get(i)));
-        }
-        lineDataEMA.add(setALine(ColorType.blue, emaDataN1, false));
-        lineDataEMA.add(setALine(ColorType.yellow, emaDataN2, false));
-        lineDataEMA.add(setALine(ColorType.purple, emaDataN3, false));
-    }
-
-    /**
-     * 初始化SMA
-     */
-    public void initSMA() {
-        SMAEntity smaEntity = new SMAEntity(getKLineDatas(), SMAN);
-        smaData = new ArrayList<>();
-
-        for (int i = 0; i < getKLineDatas().size(); i++) {
-            smaData.add(new Entry(i, i + offSet, smaEntity.getSMAs().get(i)));
-        }
-        lineDataSMA.add(setALine(ColorType.blue, smaData));
-    }
-
-    /**
-     * 初始化BOLL
-     */
-    public void initBOLL() {
-        BOLLEntity bollEntity = new BOLLEntity(getKLineDatas(), BOLLN);
-        bollDataUP = new ArrayList<>();
-        bollDataMB = new ArrayList<>();
-        bollDataDN = new ArrayList<>();
-        for (int i = 0; i < bollEntity.getUPs().size(); i++) {
-            bollDataUP.add(new Entry(i, i + offSet, bollEntity.getUPs().get(i)));
-            bollDataMB.add(new Entry(i, i + offSet, bollEntity.getMBs().get(i)));
-            bollDataDN.add(new Entry(i, i + offSet, bollEntity.getDNs().get(i)));
-        }
-        lineDataBOLL.add(setALine(ColorType.blue, bollDataUP, false));
-        lineDataBOLL.add(setALine(ColorType.yellow, bollDataMB, false));
-        lineDataBOLL.add(setALine(ColorType.purple, bollDataDN, false));
-    }
-
-    /**
-     * 初始化成交量
-     */
-    public void initVolume() {
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
-        for (int i = 0; i < getKLineDatas().size(); i++) {
-//            xVals.add(TradeCalculateUtil.secToTimeShort(mData.getKLineDatas().get(i).m_nStartTime));//mData.getKLineDatas().get(i).getM_szDate()
-//            barEntries.add(new BarEntry(mData.getKLineDatas().get(i).m_nVolume, i));
-            float color = getKLineDatas().get(i).getOpen() > getKLineDatas().get(i).getClose() ? 0f : 1f;//这里耗时10毫秒
-            barEntries.add(new BarEntry(i,i + offSet, getKLineDatas().get(i).getVolume(), color));
-        }
-        volumeDataSet = setABar(barEntries, "成交量");
-    }
-
-    /**
-     * 初始化MACD
+     * 初始化自己计算MACD
      */
     public void initMACD() {
         MACDEntity macdEntity = new MACDEntity(getKLineDatas(), SHORT, LONG, M);
@@ -279,7 +182,7 @@ public class KLineData {
     }
 
     /**
-     * 初始化KDJ
+     * 初始化自己计算KDJ
      */
     public void initKDJ() {
         KDJEntity kdjEntity = new KDJEntity(getKLineDatas(), KDJN, KDJM1, KDJM2);
@@ -298,53 +201,74 @@ public class KLineData {
     }
 
     /**
-     * 初始化CCI
+     * 初始化自己计算BOLL
      */
-    public void initCCI() {
-        CCIEntity cciEntity = new CCIEntity(getKLineDatas(), CCIN);
-        cciData = new ArrayList<>();
-
-        for (int i = 0; i < getKLineDatas().size(); i++) {
-            cciData.add(new Entry(i, i + offSet, cciEntity.getCCIs().get(i)));
+    public void initBOLL() {
+        BOLLEntity bollEntity = new BOLLEntity(getKLineDatas(), BOLLN);
+        bollDataUP = new ArrayList<>();
+        bollDataMB = new ArrayList<>();
+        bollDataDN = new ArrayList<>();
+        for (int i = 0; i < bollEntity.getUPs().size(); i++) {
+            bollDataUP.add(new Entry(i, i + offSet, bollEntity.getUPs().get(i)));
+            bollDataMB.add(new Entry(i, i + offSet, bollEntity.getMBs().get(i)));
+            bollDataDN.add(new Entry(i, i + offSet, bollEntity.getDNs().get(i)));
         }
-        lineDataCCI.add(setALine(ColorType.blue, cciData, true));
+        lineDataBOLL.add(setALine(ColorType.blue, bollDataUP, false));
+        lineDataBOLL.add(setALine(ColorType.yellow, bollDataMB, false));
+        lineDataBOLL.add(setALine(ColorType.purple, bollDataDN, false));
     }
-
     /**
-     * 初始化RSI
+     * 初始化自己计算RSI
      */
     public void initRSI() {
-        RSIEntity rsiEntity7 = new RSIEntity(getKLineDatas(), RSIN1);
-        RSIEntity rsiEntity14 = new RSIEntity(getKLineDatas(), RSIN2);
+        RSIEntity rsiEntity6 = new RSIEntity(getKLineDatas(), RSIN1);
+        RSIEntity rsiEntity12 = new RSIEntity(getKLineDatas(), RSIN2);
+        RSIEntity rsiEntity24 = new RSIEntity(getKLineDatas(), RSIN3);
 
-        rsiData7 = new ArrayList<>();
-        rsiData14 = new ArrayList<>();
-        for (int i = 0; i < rsiEntity7.getRSIs().size(); i++) {
-            rsiData7.add(new Entry(i, i + offSet, rsiEntity7.getRSIs().get(i)));
-            rsiData14.add(new Entry(i, i + offSet, rsiEntity14.getRSIs().get(i)));
+        rsiData6 = new ArrayList<>();
+        rsiData12 = new ArrayList<>();
+        rsiData24 = new ArrayList<>();
+        for (int i = 0; i < rsiEntity6.getRSIs().size(); i++) {
+            rsiData6.add(new Entry(i, i + offSet, rsiEntity6.getRSIs().get(i)));
+            rsiData12.add(new Entry(i, i + offSet, rsiEntity12.getRSIs().get(i)));
+            rsiData24.add(new Entry(i, i + offSet, rsiEntity24.getRSIs().get(i)));
         }
-        lineDataRSI.add(setALine(ColorType.blue, rsiData7, "RSI" + RSIN1, false));
-        lineDataRSI.add(setALine(ColorType.purple, rsiData14, "RSI" + RSIN2, true));
+        lineDataRSI.add(setALine(ColorType.blue, rsiData6, "RSI" + RSIN1, true));
+        lineDataRSI.add(setALine(ColorType.yellow, rsiData12, "RSI" + RSIN2, false));
+        lineDataRSI.add(setALine(ColorType.purple, rsiData24, "RSI" + RSIN3, false));
     }
 
     private CandleDataSet setACandle(ArrayList<CandleEntry> candleEntries) {
         CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "KLine");
-        candleDataSet.setDrawHorizontalHighlightIndicator(true);
-        candleDataSet.setHighlightEnabled(true);
+        candleDataSet.setDrawHorizontalHighlightIndicator(landscape);
+        candleDataSet.setHighlightEnabled(landscape);
         candleDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
-        candleDataSet.setValueTextSize(10f);
         candleDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        candleDataSet.setPrecision(2);
         candleDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
         candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
         candleDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
-        candleDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
-        candleDataSet.setValueTextSize(10);
-        candleDataSet.setDrawValues(true);
+        candleDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
         candleDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
         candleDataSet.setShadowColorSameAsCandle(true);
-        candleDataSet.setHighlightLineWidth(0.5f);
+        candleDataSet.setValueTextSize(10);
+        candleDataSet.setDrawValues(true);
+
+        return candleDataSet;
+    }
+
+    private CandleDataSet setBOLLCandle(ArrayList<CandleEntry> candleEntries) {
+        CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "KLine");
+        candleDataSet.setDrawHorizontalHighlightIndicator(false);
+        candleDataSet.setHighlightEnabled(landscape);
         candleDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
+        candleDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        candleDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
+        candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
+        candleDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
+        candleDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
+        candleDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
+        candleDataSet.setDrawValues(false);
+        candleDataSet.setShowCandleBar(false);
         return candleDataSet;
     }
 
@@ -366,7 +290,7 @@ public class KLineData {
     private LineDataSet setALine(ColorType colorType, ArrayList<Entry> lineEntries, String label, boolean highlightEnable) {
         LineDataSet lineDataSetMa = new LineDataSet(lineEntries, label);
         lineDataSetMa.setDrawHorizontalHighlightIndicator(false);
-        lineDataSetMa.setHighlightEnabled(highlightEnable);
+        lineDataSetMa.setHighlightEnabled(landscape?highlightEnable:landscape);
         lineDataSetMa.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
         lineDataSetMa.setDrawValues(false);
         if (colorType == ColorType.blue) {
@@ -376,7 +300,7 @@ public class KLineData {
         } else if (colorType == ColorType.purple) {
             lineDataSetMa.setColor(ContextCompat.getColor(mContext, R.color.ma20));
         }
-        lineDataSetMa.setLineWidth(1f);
+        lineDataSetMa.setLineWidth(0.6f);
         lineDataSetMa.setDrawCircles(false);
         lineDataSetMa.setAxisDependency(YAxis.AxisDependency.LEFT);
         return lineDataSetMa;
@@ -389,27 +313,18 @@ public class KLineData {
 
     private BarDataSet setABar(ArrayList<BarEntry> barEntries, String label) {
         BarDataSet barDataSet = new BarDataSet(barEntries, label);
-        barDataSet.setHighlightEnabled(true);
-        //barDataSet.setBarSpacePercent(50);
+        barDataSet.setHighlightEnabled(landscape);
         barDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
-        //barDataSet.setHighLightAlpha(255);
         barDataSet.setValueTextSize(10);
         barDataSet.setDrawValues(false);
         barDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
         barDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
         barDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
-        barDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
+        barDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
         barDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
         return barDataSet;
     }
 
-    private void setMaValue(TextView maTv, float yValue, int NX) {
-        if (NX == 0) {
-            maTv.setText(0.00 + "");
-        } else {
-            maTv.setText(NumberUtils.keepPrecision2(yValue));
-        }
-    }
 
     float sum = 0;
 
@@ -457,10 +372,6 @@ public class KLineData {
         return lineDataBOLL;
     }
 
-    public List<ILineDataSet> getLineDataEMA() {
-        return lineDataEMA;
-    }
-
     public List<ILineDataSet> getLineDataKDJ() {
         return lineDataKDJ;
     }
@@ -485,16 +396,36 @@ public class KLineData {
         return candleDataSet;
     }
 
+    public CandleDataSet getBollCandleDataSet() {
+        return bollCandleDataSet;
+    }
+
     public float getOffSet() {
         return offSet;
     }
 
-    public List<ILineDataSet> getLineDataCCI() {
-        return lineDataCCI;
+    public ArrayList<BarEntry> getMacdData() {
+        return macdData;
     }
 
-    public List<ILineDataSet> getLineDataSMA() {
-        return lineDataSMA;
+    public ArrayList<Entry> getDeaData() {
+        return deaData;
+    }
+
+    public ArrayList<Entry> getDifData() {
+        return difData;
+    }
+
+    public ArrayList<Entry> getkData() {
+        return kData;
+    }
+
+    public ArrayList<Entry> getdData() {
+        return dData;
+    }
+
+    public ArrayList<Entry> getjData() {
+        return jData;
     }
 
     public ArrayList<Entry> getBollDataUP() {
@@ -507,6 +438,18 @@ public class KLineData {
 
     public ArrayList<Entry> getBollDataDN() {
         return bollDataDN;
+    }
+
+    public ArrayList<Entry> getRsiData6() {
+        return rsiData6;
+    }
+
+    public ArrayList<Entry> getRsiData12() {
+        return rsiData12;
+    }
+
+    public ArrayList<Entry> getRsiData24() {
+        return rsiData24;
     }
 
     public void setOneMaValue(LineData lineData, int i) {
@@ -541,4 +484,11 @@ public class KLineData {
         purple
     }
 
+    public String getAssetId() {
+        return assetId;
+    }
+
+    public double getPreClosePrice() {
+        return preClosePrice;
+    }
 }

@@ -116,9 +116,6 @@ public class YAxisRenderer extends AxisRenderer {
      * @param positions
      */
     protected void drawYLabels(Canvas c, float fixedPosition, float[] positions, float offset) {
-//        if(!isShowLabels()){
-//            return;
-//        }
 
         final int from = mYAxis.isDrawBottomYLabelEntryEnabled() ? 0 : 1;
         final int to = mYAxis.isDrawTopYLabelEntryEnabled()

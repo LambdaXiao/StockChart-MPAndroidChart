@@ -6,30 +6,15 @@
 
     <com.github.mikephil.charting.stockChart.CandleCombinedChart
         android:id="@+id/candleChart"
-        android:layout_above="@id/bar_chart_frame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"/>
-    <FrameLayout
-        android:id="@+id/bar_chart_frame"
+        android:layout_above="@+id/barchart"
+        android:layout_weight="1.8" />
+
+    <com.github.mikephil.charting.stockChart.MyCombinedChart
+        android:id="@+id/barchart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-        <com.github.mikephil.charting.stockChart.MyCombinedChart
-            android:id="@+id/barchart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        <TextView
-            android:id="@+id/chart_type_des"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#888888"
-            android:textSize="10sp"
-            android:layout_gravity="right"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:text="VOL"
-            android:visibility="gone"/>
-    </FrameLayout>
+        android:layout_weight="1.2" />
 
 </LinearLayout>

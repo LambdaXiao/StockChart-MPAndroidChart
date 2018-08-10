@@ -105,4 +105,10 @@ public class TimeDataModel implements Serializable {
     public void setColor(int color) {
         this.color = color;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        TimeDataModel model = (TimeDataModel) obj;
+        return getTimeMills().equals(model.getTimeMills());
+    }
 }

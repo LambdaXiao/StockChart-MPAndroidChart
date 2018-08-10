@@ -63,10 +63,10 @@ public class CoupleChartGestureListener implements OnChartGestureListener {
 
     @Override
     public void onChartSingleTapped(MotionEvent me) {
-        syncCharts();
         if (coupleClick != null) {
             coupleClick.singleClickListener();
         }
+        syncCharts();
     }
 
     @Override

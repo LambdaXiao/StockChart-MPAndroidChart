@@ -13,4 +13,11 @@ public interface IBarLineScatterCandleBubbleDataSet<T extends Entry> extends IDa
      * @return
      */
     int getHighLightColor();
+
+    /**
+     * Returns the line-width in which highlight lines are to be drawn.
+     *
+     * @return
+     */
+    float getHighlightLineWidth();
 }

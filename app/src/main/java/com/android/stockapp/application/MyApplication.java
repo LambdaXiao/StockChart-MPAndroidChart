@@ -1,6 +1,13 @@
 package com.android.stockapp.application;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatDelegate;
+import android.widget.Toast;
+
+import com.android.stockapp.common.data.Constants;
 import com.android.stockapp.ui.base.BaseApp;
+import com.android.stockapp.ui.market.activity.StockDetailActivity;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.cache.converter.SerializableDiskConverter;
 
@@ -10,8 +17,22 @@ public class MyApplication extends BaseApp {
     public void onCreate() {
         super.onCreate();
         netWorkInit();
+        initDayNight();
     }
 
+    public static MyApplication getApplication() {
+        return (MyApplication) getApp();
+    }
+
+    public void initDayNight(){
+        //初始化夜间模式
+        SharedPreferences sp = getSharedPreferences(Constants.SP_FILE,Context.MODE_PRIVATE);
+        if(sp.getBoolean(Constants.DAY_NIGHT_MODE,false)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
     private void netWorkInit(){
         EasyHttp.init(this);
 

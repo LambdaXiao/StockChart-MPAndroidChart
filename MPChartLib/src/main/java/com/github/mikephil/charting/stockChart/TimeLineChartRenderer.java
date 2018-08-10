@@ -1,6 +1,5 @@
 package com.github.mikephil.charting.stockChart;
 
-import android.app.usage.UsageEvents;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -28,14 +27,10 @@ import org.greenrobot.eventbus.EventBus;
  */
 
 public class TimeLineChartRenderer extends LineChartRenderer {
-    int dotPoint = 2;
+
 
     public TimeLineChartRenderer(LineDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(chart, animator, viewPortHandler);
-    }
-
-    public void setDotPoint(int dotPoint) {
-        this.dotPoint = dotPoint;
     }
 
     /**
@@ -88,7 +83,7 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                     continue;
                 }
 
-                mLineBuffer[0] = e.getX()+offSet;
+                mLineBuffer[0] = e.getX() + offSet;
                 mLineBuffer[1] = e.getY() * phaseY;
 
                 if (j < mXBounds.max) {
@@ -100,14 +95,14 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                     }
 
                     if (isDrawSteppedEnabled) {
-                        mLineBuffer[2] = e.getX()+offSet;
+                        mLineBuffer[2] = e.getX() + offSet;
                         mLineBuffer[3] = mLineBuffer[1];
                         mLineBuffer[4] = mLineBuffer[2];
                         mLineBuffer[5] = mLineBuffer[3];
-                        mLineBuffer[6] = e.getX()+offSet;
+                        mLineBuffer[6] = e.getX() + offSet;
                         mLineBuffer[7] = e.getY() * phaseY;
                     } else {
-                        mLineBuffer[2] = e.getX()+offSet;
+                        mLineBuffer[2] = e.getX() + offSet;
                         mLineBuffer[3] = e.getY() * phaseY;
                     }
 
@@ -158,21 +153,21 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                         continue;
                     }
 
-                    mLineBuffer[j++] = e1.getX()+offSet;
+                    mLineBuffer[j++] = e1.getX() + offSet;
                     mLineBuffer[j++] = e1.getY() * phaseY;
 
                     if (isDrawSteppedEnabled) {
-                        mLineBuffer[j++] = e2.getX()+offSet;
+                        mLineBuffer[j++] = e2.getX() + offSet;
                         mLineBuffer[j++] = e1.getY() * phaseY;
-                        mLineBuffer[j++] = e2.getX()+offSet;
+                        mLineBuffer[j++] = e2.getX() + offSet;
                         mLineBuffer[j++] = e1.getY() * phaseY;
                     }
                     //这些点与点之间不连接，用于五日分时
-                    if ("fiveday".equals(dataSet.getLabel()) && dataSet.getXLabels().indexOfKey(x == 0 ? 0 : (x - 1)) > 0) {
-                        mLineBuffer[j++] = e1.getX()+offSet;
+                    if (dataSet.getTimeDayType() == 5 && dataSet.getXLabels().indexOfKey(x == 0 ? 0 : (x - 1)) > 0) {
+                        mLineBuffer[j++] = e1.getX() + offSet;
                         mLineBuffer[j++] = e1.getY() * phaseY;
                     } else {
-                        mLineBuffer[j++] = e2.getX()+offSet;
+                        mLineBuffer[j++] = e2.getX() + offSet;
                         mLineBuffer[j++] = e2.getY() * phaseY;
                     }
                 }
@@ -199,11 +194,10 @@ public class TimeLineChartRenderer extends LineChartRenderer {
     }
 
     public void drawCircleDashMarker(Canvas canvas, ILineDataSet dataSet, int count) {
-        //        Log.e("drawCircleDashMarker",mLineBuffer[mLineBuffer.length/4-2]+" "+mLineBuffer[mLineBuffer.length/4-1]+" "+mLineBuffer.length);
+
         //画虚线圆点和MarkerView
         PathEffect effects = new DashPathEffect(new float[]{5, 5, 5, 5}, 1);
         Path path = new Path();
-//        int pointOffset = mLineBuffer.length/2;
         // 应为这里会复用之前的mLineBuffer，在总长度不变的情况下，取一般就是之前的位置，mXBounds.range + mXBounds.min 是最新的K线的变动范围
         int pointOffset = (mXBounds.range + mXBounds.min + 1) * 4;
         if (dataSet.getEntryCount() != 0) {
@@ -214,24 +208,37 @@ public class TimeLineChartRenderer extends LineChartRenderer {
 
             Entry e = dataSet.getEntryForIndex(count - 1);//Utils.convertDpToPixel(35)
             mRenderPaint.setTextSize(Utils.convertDpToPixel(10));
-            String text = NumberUtils.keepPrecisionR(e.getY(), dotPoint);
+            String text = NumberUtils.keepPrecisionR(e.getY(), dataSet.getPrecision());
             int width = Utils.calcTextWidth(mRenderPaint, text);
+            int height = Utils.calcTextHeight(mRenderPaint, text);
             float rectLeft = mViewPortHandler.contentRight() - width - Utils.convertDpToPixel(4);
             float circleX = mLineBuffer[pointOffset - 2];
 
             if (circleX >= rectLeft) {
                 mRenderPaint.setStyle(Paint.Style.FILL);
-                canvas.drawRect(rectLeft, mLineBuffer[pointOffset - 1] - Utils.convertDpToPixel(22), mViewPortHandler.contentRight(), mLineBuffer[pointOffset - 1] - Utils.convertDpToPixel(6), mRenderPaint);
-                Path pathS = new Path();
                 float x = mLineBuffer[pointOffset - 2];
                 float y = mLineBuffer[pointOffset - 1];
-                pathS.moveTo(x, y - Utils.convertDpToPixel(3));// 此点为多边形的起点
-                pathS.lineTo(x - Utils.convertDpToPixel(3), y - Utils.convertDpToPixel(6));
-                pathS.lineTo(x + Utils.convertDpToPixel(3), y - Utils.convertDpToPixel(6));
-                pathS.close(); // 使这些点构成封闭的多边形
-                canvas.drawPath(pathS, mRenderPaint);
-                mRenderPaint.setColor(Color.WHITE);
-                canvas.drawText(text, rectLeft + Utils.convertDpToPixel(2), mLineBuffer[pointOffset - 1] - Utils.convertDpToPixel(10), mRenderPaint);
+                if (y > mViewPortHandler.contentTop() + mViewPortHandler.getChartHeight() / 2) {
+                    canvas.drawRect(rectLeft, y - Utils.convertDpToPixel(22), mViewPortHandler.contentRight(), y - Utils.convertDpToPixel(6), mRenderPaint);
+                    Path pathS = new Path();
+                    pathS.moveTo(x, y - Utils.convertDpToPixel(3));// 此点为多边形的起点
+                    pathS.lineTo(x - Utils.convertDpToPixel(3), y - Utils.convertDpToPixel(6));
+                    pathS.lineTo(x + Utils.convertDpToPixel(3), y - Utils.convertDpToPixel(6));
+                    pathS.close(); // 使这些点构成封闭的多边形
+                    canvas.drawPath(pathS, mRenderPaint);
+                    mRenderPaint.setColor(Color.WHITE);
+                    canvas.drawText(text, rectLeft + Utils.convertDpToPixel(2), y - Utils.convertDpToPixel(10), mRenderPaint);
+                } else {
+                    canvas.drawRect(rectLeft, y + Utils.convertDpToPixel(6), mViewPortHandler.contentRight(), y + Utils.convertDpToPixel(22), mRenderPaint);
+                    Path pathS = new Path();
+                    pathS.moveTo(x, y + Utils.convertDpToPixel(1));// 此点为多边形的起点
+                    pathS.lineTo(x - Utils.convertDpToPixel(3), y + Utils.convertDpToPixel(6));
+                    pathS.lineTo(x + Utils.convertDpToPixel(3), y + Utils.convertDpToPixel(6));
+                    pathS.close(); // 使这些点构成封闭的多边形
+                    canvas.drawPath(pathS, mRenderPaint);
+                    mRenderPaint.setColor(Color.WHITE);
+                    canvas.drawText(text, rectLeft + Utils.convertDpToPixel(2), y + Utils.convertDpToPixel(10) + height, mRenderPaint);
+                }
             } else {
                 canvas.drawPath(path, mRenderPaint);
                 mRenderPaint.setStyle(Paint.Style.FILL);
@@ -248,7 +255,7 @@ public class TimeLineChartRenderer extends LineChartRenderer {
         CirclePositionTime position = new CirclePositionTime();
         position.cx = x;
         position.cy = y;
-        BaseEvent event = new BaseEvent("oneday".equals(dataSet.getLabel()) ? 1 : 5);
+        BaseEvent event = new BaseEvent(dataSet.getTimeDayType());
         event.obj = position;
         EventBus.getDefault().post(event);
     }

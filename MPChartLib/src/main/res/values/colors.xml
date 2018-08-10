@@ -8,7 +8,7 @@
     <color name="down_color">#30A52F</color><!-- 行情DOWN颜色  跌 -->
     <color name="equal_color">#696969</color><!-- 行情Equal颜色  不变 -->
 
-    <color name="ma5">#FF0000FF</color>
+    <color name="ma5">#5198FA</color>
     <color name="ma10">#E9967A</color>
     <color name="ma20">#8d4bbb</color>
     <color name="ma30">#804000</color>
@@ -17,8 +17,8 @@
     <color name="chart_bg">#ffffff</color>
     <color name="marker_bg">#ff8c0d</color>
     <color name="marker_text_color">#FFFFFF</color>
-    <color name="border_color">#A7ADBC</color>
-    <color name="grid_color">#FFCCCCCC</color>
+    <color name="border_color">#e8e8e8</color>
+    <color name="grid_color">#e8e8e8</color>
     <color name="label_text">#A7ADBC</color>
     <color name="minute_jizhun">#7F9976</color>
     <color name="minute_blue">#5198FA</color>

@@ -9,7 +9,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.stockChart.data.KLineData;
+import com.github.mikephil.charting.stockChart.data.KLineDataManage;
 import com.github.mikephil.charting.utils.CommonUtil;
 
 
@@ -19,7 +19,7 @@ import com.github.mikephil.charting.utils.CommonUtil;
 public class CandleCombinedChart extends CombinedChart {
     private LeftMarkerView myMarkerViewLeft;
     private KRightMarkerView myMarkerViewRight;
-    public KLineData kLineData;
+    public KLineDataManage kLineData;
 
     public CandleCombinedChart(Context context) {
         super(context);
@@ -33,7 +33,7 @@ public class CandleCombinedChart extends CombinedChart {
         super(context, attrs, defStyle);
     }
 
-    public void setMarker(LeftMarkerView markerLeft, KRightMarkerView markerRight, KLineData kLineData) {
+    public void setMarker(LeftMarkerView markerLeft, KRightMarkerView markerRight, KLineDataManage kLineData) {
         this.myMarkerViewLeft = markerLeft;
         this.myMarkerViewRight = markerRight;
         this.kLineData = kLineData;

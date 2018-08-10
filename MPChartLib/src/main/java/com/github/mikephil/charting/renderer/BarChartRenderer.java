@@ -447,7 +447,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                 Transformer trans = mChart.getTransformer(set.getAxisDependency());
 
                 mHighlightPaint.setColor(set.getHighLightColor());
-                mHighlightPaint.setAlpha(set.getHighLightAlpha());
+                mHighlightPaint.setStrokeWidth(Utils.convertDpToPixel(set.getHighlightLineWidth()));
 
                 boolean isStack = (high.getStackIndex() >= 0 && e.isStacked()) ? true : false;
 
@@ -477,13 +477,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
                 setHighlightDrawPos(high, mBarRect);
 
-                mHighlightPaint.setStrokeWidth(Utils.convertDpToPixel(0.5f));
-                mHighlightPaint.setColor(0xff888888);
-                mBarBorderPaint.setAlpha(255);
-                //这里设置和分时图线条一样粗
-//            Log.e("画笔的宽度00",mHighlightPaint.getColor()+"  "+mHighlightPaint.getAlpha()+"  "+mHighlightPaint.getStrokeWidth()+" "+set.getBarBorderWidth());
                 c.drawLine(mBarRect.centerX(), mViewPortHandler.getContentRect().bottom, mBarRect.centerX(), 0, mHighlightPaint);
-//            c.drawRect(mBarRect, mHighlightPaint);
             }
         }
     }

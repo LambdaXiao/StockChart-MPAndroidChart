@@ -439,24 +439,27 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             mDescPaint.setTextAlign(mDescription.getTextAlign());
 
             if (mIsDescriptionCustom) {
+                float xpos = mViewPortHandler.contentLeft();
                 if (position == null) {
                     for (int i = 0; i < mDescriptionLabels.length; i++) {
+                        xpos = xpos + Utils.calcTextWidth(mDescPaint, mDescriptionLabels[i]) + 20;
                         mDescPaint.setColor(mDescriptionColors[i]);
-                        c.drawText(mDescriptionLabels[i], getWidth() - mViewPortHandler.offsetRight() - mDescription.getXOffset() * 2,
-                                mViewPortHandler.contentTop() + Utils.calcTextHeight(mDescPaint, mDescription.toString()) + 10, mDescPaint);
+                        c.drawText(mDescriptionLabels[i], xpos,
+                                mViewPortHandler.contentTop() + 5 - Utils.calcTextHeight(mDescPaint, mDescription.toString()) / 2, mDescPaint);
                     }
 
                 } else {
                     for (int i = 0; i < mDescriptionLabels.length; i++) {
                         mDescPaint.setColor(mDescriptionColors[i]);
-                        c.drawText(mDescriptionLabels[i], position.x, position.y, mDescPaint);
+                        xpos = xpos + Utils.calcTextWidth(mDescPaint, mDescriptionLabels[i]) + 20;
+                        c.drawText(mDescriptionLabels[i], xpos + position.x, position.y, mDescPaint);
                     }
                 }
             } else if (!"".equals(mDescription.getText())) {
 
                 if (position == null) {
-                    c.drawText(mDescription.getText(), getWidth() - mViewPortHandler.offsetRight() - mDescription.getXOffset() * 2,
-                            mViewPortHandler.contentTop() + Utils.calcTextHeight(mDescPaint, mDescription.getText()) + 10, mDescPaint);
+                    c.drawText(mDescription.getText(), mViewPortHandler.contentLeft() + Utils.calcTextWidth(mDescPaint, mDescription.getText()) + 10,
+                            mViewPortHandler.contentTop() + 5 - Utils.calcTextHeight(mDescPaint, mDescription.getText()) / 2, mDescPaint);
                 } else {
                     c.drawText(mDescription.getText(), position.x, position.y, mDescPaint);
                 }
@@ -1286,6 +1289,14 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public Description getDescription() {
         return mDescription;
+    }
+
+    public void setDescriptionCustom(int color, String label) {
+        mDescriptionColors = new int[1];
+        mDescriptionColors[0] = color;
+        mDescriptionLabels = new String[1];
+        mDescriptionLabels[0] = label;
+        mIsDescriptionCustom = true;
     }
 
     public void setDescriptionCustom(int[] colors, String[] labels) {

@@ -484,4 +484,6 @@ public interface IDataSet<T extends Entry> {
     boolean isVisible();
 
     int getPrecision();
+
+    int getTimeDayType();
 }

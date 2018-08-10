@@ -14,7 +14,7 @@ public class KLineDataModel implements Serializable {
     private double low;// 最低价
     private double open;// 开盘价
     private double close;// 收盘价
-    private int volume;// 成交量
+    private double volume;// 成交量
     private double total;// 成交额
     private double preClose;// 昨收价
     private double ma5;
@@ -63,11 +63,11 @@ public class KLineDataModel implements Serializable {
         this.close = close;
     }
 
-    public int getVolume() {
+    public double getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(double volume) {
         this.volume = volume;
     }
 

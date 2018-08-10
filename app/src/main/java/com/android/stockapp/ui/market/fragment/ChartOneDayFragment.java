@@ -3,17 +3,16 @@ package com.android.stockapp.ui.market.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.stockapp.R;
-import com.android.stockapp.common.data.Constant;
+import com.android.stockapp.common.data.ChartData;
 import com.android.stockapp.ui.base.BaseFragment;
 import com.android.stockapp.ui.market.activity.StockDetailLandActivity;
 import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
-import com.github.mikephil.charting.stockChart.data.KTimeData;
+import com.github.mikephil.charting.stockChart.data.TimeDataManage;
 import com.github.mikephil.charting.stockChart.view.OneDayView;
 
 import org.json.JSONException;
@@ -33,7 +32,7 @@ public class ChartOneDayFragment extends BaseFragment {
     Unbinder unbinder;
 
     private boolean land;//是否横屏
-    private KTimeData kTimeData = new KTimeData();
+    private TimeDataManage kTimeData = new TimeDataManage();
     private JSONObject object;
 
     public static ChartOneDayFragment newInstance(boolean land) {
@@ -56,13 +55,13 @@ public class ChartOneDayFragment extends BaseFragment {
         chart.initChart(land);
         //测试数据
         try {
-            object = new JSONObject(Constant.TIMEDATA);
+            object = new JSONObject(ChartData.TIMEDATA);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-
-        kTimeData.parseTimeData(object);
+        //恒生指数代码HSI.IDX.HK
+        kTimeData.parseTimeData(object,"HSI.IDX.HK");
         chart.setDataToChart(kTimeData);
 
         //非横屏页单击转横屏页

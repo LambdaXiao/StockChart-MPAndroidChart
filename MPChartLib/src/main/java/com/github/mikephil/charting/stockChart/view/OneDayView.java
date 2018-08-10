@@ -16,6 +16,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.R;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -34,18 +35,22 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.stockChart.BarBottomMarkerView;
+import com.github.mikephil.charting.stockChart.ColorContentYAxisRenderer;
 import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
 import com.github.mikephil.charting.stockChart.LeftMarkerView;
 import com.github.mikephil.charting.stockChart.TimeBarChart;
 import com.github.mikephil.charting.stockChart.TimeLineChart;
 import com.github.mikephil.charting.stockChart.TimeRightMarkerView;
 import com.github.mikephil.charting.stockChart.TimeXAxis;
-import com.github.mikephil.charting.stockChart.data.KTimeData;
+import com.github.mikephil.charting.stockChart.data.TimeDataManage;
+import com.github.mikephil.charting.stockChart.enums.ChartType;
 import com.github.mikephil.charting.stockChart.event.BaseEvent;
 import com.github.mikephil.charting.stockChart.model.CirclePositionTime;
 import com.github.mikephil.charting.stockChart.model.TimeDataModel;
 import com.github.mikephil.charting.utils.CommonUtil;
 import com.github.mikephil.charting.utils.NumberUtils;
+import com.github.mikephil.charting.utils.Transformer;
+import com.github.mikephil.charting.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,7 +58,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 当日分时图view
@@ -76,11 +80,10 @@ public class OneDayView extends BaseView {
     YAxis axisLeftBar;
     YAxis axisRightBar;
 
-    private CoupleChartGestureListener gestureListenerLine;
-    private CoupleChartGestureListener gestureListenerBar;
-    private boolean landscape = false;
-    private int maxCount = 242;//最大可见数量，即分时一天最大数据点数
+    private int maxCount = ChartType.HK_ONE_DAY.getPointNum();//最大可见数量，即分时一天最大数据点数
     private SparseArray<String> xLabels = new SparseArray<>();//X轴刻度label
+    private TimeDataManage mData;
+    private int[] colorArray;
 
     public OneDayView(Context context) {
         this(context, null);
@@ -96,6 +99,8 @@ public class OneDayView extends BaseView {
 
         EventBus.getDefault().register(this);
 
+        colorArray = new int[]{ContextCompat.getColor(mContext, R.color.down_color), ContextCompat.getColor(mContext, R.color.down_color), ContextCompat.getColor(mContext, R.color.equal_color), ContextCompat.getColor(mContext, R.color.up_color), ContextCompat.getColor(mContext, R.color.up_color)};
+
         playHeartbeatAnimation(cirCleView.findViewById(R.id.anim_view));
 
     }
@@ -110,7 +115,7 @@ public class OneDayView extends BaseView {
         lineChart.setDrawBorders(true);
         lineChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
         lineChart.setBorderWidth(0.7f);
-        lineChart.setNoDataText("加载中...");
+        lineChart.setNoDataText(getResources().getString(R.string.loading));
         Legend lineChartLegend = lineChart.getLegend();
         lineChartLegend.setEnabled(false);
         lineChart.setDescription(null);
@@ -119,7 +124,7 @@ public class OneDayView extends BaseView {
         barChart.setDrawBorders(true);
         barChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
         barChart.setBorderWidth(0.7f);
-        barChart.setNoDataText("加载中...");
+        barChart.setNoDataText(getResources().getString(R.string.loading));
         Legend barChartLegend = barChart.getLegend();
         barChartLegend.setEnabled(false);
         barChart.setDescription(null);
@@ -131,6 +136,7 @@ public class OneDayView extends BaseView {
         xAxisLine.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxisLine.setAvoidFirstLastClipping(true);
         xAxisLine.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
+        xAxisLine.setGridLineWidth(0.7f);
         xAxisLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
 
         //主图左Y轴
@@ -141,25 +147,30 @@ public class OneDayView extends BaseView {
         axisLeftLine.setDrawTopBottomGridLine(false);
         axisLeftLine.setDrawAxisLine(false);
         axisLeftLine.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
-        axisLeftLine.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
         axisLeftLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
         axisLeftLine.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return NumberUtils.keepPrecisionR(value, 2);
+                return NumberUtils.keepPrecisionR(value, precision);
             }
         });
+        //Y轴label渲染颜色
+        Transformer leftYTransformer = lineChart.getRendererLeftYAxis().getTransformer();
+        ColorContentYAxisRenderer leftColorContentYAxisRenderer = new ColorContentYAxisRenderer(lineChart.getViewPortHandler(), axisLeftLine, leftYTransformer);
+        leftColorContentYAxisRenderer.setLabelColor(colorArray);
+        lineChart.setRendererLeftYAxis(leftColorContentYAxisRenderer);
 
         //主图右Y轴
         axisRightLine = lineChart.getAxisRight();
         axisRightLine.setLabelCount(5, true);
         axisRightLine.setDrawTopBottomGridLine(false);
         axisRightLine.setDrawGridLines(true);
+        axisRightLine.setGridLineWidth(0.7f);
         axisRightLine.enableGridDashedLine(CommonUtil.dip2px(mContext, 4), CommonUtil.dip2px(mContext, 3), 0);
         axisRightLine.setDrawAxisLine(false);
         axisRightLine.setValueLineInside(true);
         axisRightLine.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
-        axisRightLine.setAxisLineColor(ContextCompat.getColor(mContext, R.color.grid_color));
+        axisRightLine.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
         axisRightLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
         axisRightLine.setValueFormatter(new IAxisValueFormatter() {
             @Override
@@ -168,6 +179,11 @@ public class OneDayView extends BaseView {
                 return mFormat.format(value);
             }
         });
+        //Y轴label渲染颜色
+        Transformer rightYTransformer = lineChart.getRendererRightYAxis().getTransformer();
+        ColorContentYAxisRenderer rightColorContentYAxisRenderer = new ColorContentYAxisRenderer(lineChart.getViewPortHandler(), axisRightLine, rightYTransformer);
+        rightColorContentYAxisRenderer.setLabelColor(colorArray);
+        lineChart.setRendererRightYAxis(rightColorContentYAxisRenderer);
 
         //副图X轴
         xAxisBar = (TimeXAxis) barChart.getXAxis();
@@ -177,6 +193,7 @@ public class OneDayView extends BaseView {
         xAxisBar.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxisBar.setAvoidFirstLastClipping(true);
         xAxisBar.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
+        xAxisBar.setGridLineWidth(0.7f);
 
         //副图左Y轴
         axisLeftBar = barChart.getAxisLeft();
@@ -195,19 +212,11 @@ public class OneDayView extends BaseView {
         axisRightBar.setDrawLabels(false);
         axisRightBar.setDrawGridLines(true);
         axisRightBar.setDrawAxisLine(false);
-        axisRightBar.setLabelCount(3, false);
+        axisRightBar.setLabelCount(3, true);
         axisRightBar.setDrawTopBottomGridLine(false);
+        axisRightBar.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
+        axisRightBar.setGridLineWidth(0.7f);
         axisRightBar.enableGridDashedLine(CommonUtil.dip2px(mContext, 4), CommonUtil.dip2px(mContext, 3), 0);
-
-        //设置图表偏移边距
-        int left_right = 0;
-        if (landscape) {
-            left_right = CommonUtil.dip2px(mContext, 50);
-        } else {
-            left_right = CommonUtil.dip2px(mContext, 5);
-        }
-        lineChart.setViewPortOffsets(left_right, CommonUtil.dip2px(mContext, 5), left_right, CommonUtil.dip2px(mContext, 15));
-        barChart.setViewPortOffsets(left_right, 0, left_right, CommonUtil.dip2px(mContext, 15));
 
         //手势联动监听
         gestureListenerLine = new CoupleChartGestureListener(lineChart, new Chart[]{barChart});
@@ -220,11 +229,17 @@ public class OneDayView extends BaseView {
             public void onValueSelected(Entry e, Highlight h) {
                 lineChart.highlightValue(h);
                 barChart.highlightValue(new Highlight(h.getX(), h.getDataSetIndex(), -1));
+                if (mHighlightValueSelectedListener != null) {
+                    mHighlightValueSelectedListener.onDayHighlightValueListener(mData, e.getXIndex(), true);
+                }
             }
 
             @Override
             public void onNothingSelected() {
                 barChart.highlightValues(null);
+                if (mHighlightValueSelectedListener != null) {
+                    mHighlightValueSelectedListener.onDayHighlightValueListener(mData, 0, false);
+                }
             }
         });
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -232,11 +247,17 @@ public class OneDayView extends BaseView {
             public void onValueSelected(Entry e, Highlight h) {
                 barChart.highlightValue(h);
                 lineChart.highlightValue(new Highlight(h.getX(), h.getDataSetIndex(), -1));
+                if (mHighlightValueSelectedListener != null) {
+                    mHighlightValueSelectedListener.onDayHighlightValueListener(mData, e.getXIndex(), true);
+                }
             }
 
             @Override
             public void onNothingSelected() {
                 lineChart.highlightValues(null);
+                if (mHighlightValueSelectedListener != null) {
+                    mHighlightValueSelectedListener.onDayHighlightValueListener(mData, 0, false);
+                }
             }
         });
 
@@ -259,15 +280,39 @@ public class OneDayView extends BaseView {
      *
      * @param mData
      */
-    public void setDataToChart(KTimeData mData) {
-
+    public void setDataToChart(TimeDataManage mData) {
+        this.mData = mData;
         if (mData.getDatas().size() == 0) {
             cirCleView.setVisibility(View.GONE);
-            lineChart.setNoDataText("暂无数据");
-            barChart.setNoDataText("暂无数据");
-            return;
+            lineChart.setNoDataText(getResources().getString(R.string.no_data));
+            barChart.setNoDataText(getResources().getString(R.string.no_data));
         } else {
-            cirCleView.setVisibility(View.VISIBLE);
+            cirCleView.setVisibility(landscape ? View.VISIBLE : View.GONE);
+        }
+
+        if (mData.getAssetId().endsWith(".HK")) {
+            setPrecision(mData.getAssetId().contains("IDX") ? 2 : 3);
+            setMaxCount(ChartType.HK_ONE_DAY.getPointNum());
+        } else if (mData.getAssetId().endsWith(".US")) {
+            setPrecision(2);
+            setMaxCount(ChartType.US_ONE_DAY.getPointNum());
+        } else {
+            setPrecision(2);
+            setMaxCount(ChartType.ONE_DAY.getPointNum());
+        }
+        setXLabels(mData.getOneDayXLabels(landscape));
+
+        //设置图表偏移边距
+        if (landscape) {
+            float volwidth = Utils.calcTextWidthForVol(mPaint, mData.getVolMaxTime());
+            float pricewidth = Utils.calcTextWidth(mPaint, NumberUtils.keepPrecision(mData.getMax() + "", precision) + "#");
+            float left = CommonUtil.dip2px(mContext, pricewidth > volwidth ? pricewidth : volwidth);
+            float right = CommonUtil.dip2px(mContext, Utils.calcTextWidth(mPaint, "-10.00%"));
+            lineChart.setViewPortOffsets(left, CommonUtil.dip2px(mContext, 5), right, CommonUtil.dip2px(mContext, 15));
+            barChart.setViewPortOffsets(left, 0, right, CommonUtil.dip2px(mContext, 15));
+        } else {
+            lineChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
+            barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), 0, CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5));
         }
 
         setShowLabels(true);
@@ -288,7 +333,7 @@ public class OneDayView extends BaseView {
             axisRightLine.setAxisMaximum(mData.getPercentMax());
         }
 
-        axisLeftBar.setValueFormatter(new VolFormatter());
+        axisLeftBar.setValueFormatter(new VolFormatter(mContext, mData.getAssetId()));
 
         ArrayList<Entry> lineCJEntries = new ArrayList<>();
         ArrayList<Entry> lineJJEntries = new ArrayList<>();
@@ -305,9 +350,9 @@ public class OneDayView extends BaseView {
             lineJJEntries.add(new Entry(i, i, (float) mData.getDatas().get(i).getAveragePrice()));
             barEntries.add(new BarEntry(i, i, mData.getDatas().get(i).getVolume()));
         }
-        d1 = new LineDataSet(lineCJEntries, "oneday");
+        d1 = new LineDataSet(lineCJEntries, "分时线");
         d2 = new LineDataSet(lineJJEntries, "均价");
-        d1.setDrawCircleDashMarker(true);
+        d1.setDrawCircleDashMarker(landscape);
         d2.setDrawCircleDashMarker(false);
         d1.setDrawValues(false);
         d2.setDrawValues(false);
@@ -318,10 +363,14 @@ public class OneDayView extends BaseView {
         d1.setDrawFilled(true);
         d1.setFillColor(ContextCompat.getColor(mContext, R.color.fill_Color));
         d1.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
+        d1.setHighlightEnabled(landscape);
         d2.setHighlightEnabled(false);
         d1.setDrawCircles(false);
         d2.setDrawCircles(false);
         d1.setAxisDependency(YAxis.AxisDependency.LEFT);
+        d1.setPrecision(precision);
+        d1.setTimeDayType(1);//设置分时图类型
+        d2.setTimeDayType(1);
         ArrayList<ILineDataSet> sets = new ArrayList<>();
         sets.add(d1);
         sets.add(d2);
@@ -330,6 +379,7 @@ public class OneDayView extends BaseView {
 
         barDataSet = new BarDataSet(barEntries, "成交量");
         barDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
+        barDataSet.setHighlightEnabled(landscape);
         barDataSet.setDrawValues(false);
         barDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
         barDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
@@ -350,20 +400,20 @@ public class OneDayView extends BaseView {
         lineChart.moveViewToX(mData.getDatas().size() - 1);
         barChart.moveViewToX(mData.getDatas().size() - 1);
         lineChart.invalidate();
-        barChart.invalidate();
+        barChart.animateY(1000);
     }
 
-    public void dynamicsAddOne(String xValue, float chPrice, float junPrice, float vol, int length) {
+    public void dynamicsAddOne(TimeDataModel timeDatamodel, int length) {
         int index = length - 1;
         LineData lineData = lineChart.getData();
         ILineDataSet d1 = lineData.getDataSetByIndex(0);
-        d1.addEntry(new Entry(index, index, chPrice));
+        d1.addEntry(new Entry(index, index, (float) timeDatamodel.getNowPrice()));
         ILineDataSet d2 = lineData.getDataSetByIndex(1);
-        d2.addEntry(new Entry(index, index, junPrice));
+        d2.addEntry(new Entry(index, index, (float) timeDatamodel.getAveragePrice()));
 
         BarData barData = barChart.getData();
         IBarDataSet barDataSet = barData.getDataSetByIndex(0);
-        barDataSet.addEntry(new BarEntry(index, index, vol));
+        barDataSet.addEntry(new BarEntry(index, index, timeDatamodel.getVolume()));
         lineData.notifyDataChanged();
         lineChart.notifyDataSetChanged();
         barData.notifyDataChanged();
@@ -375,25 +425,24 @@ public class OneDayView extends BaseView {
         barChart.moveViewToX(index);
     }
 
-    public void dynamicsUpdateOne(String xValue, float chPrice, float junPrice, float vol, int length) {
+    public void dynamicsUpdateOne(TimeDataModel timeDatamodel, int length) {
         int index = length - 1;
         LineData lineData = lineChart.getData();
         ILineDataSet d1 = lineData.getDataSetByIndex(0);
         Entry e = d1.getEntryForIndex(index);
         d1.removeEntry(e);
-        d1.addEntry(new Entry(index, index, chPrice));
+        d1.addEntry(new Entry(index, index, (float) timeDatamodel.getNowPrice()));
 
         ILineDataSet d2 = lineData.getDataSetByIndex(1);
         Entry e2 = d2.getEntryForIndex(index);
         d2.removeEntry(e2);
-        d2.addEntry(new Entry(index, index, junPrice));
+        d2.addEntry(new Entry(index, index, (float) timeDatamodel.getAveragePrice()));
 
         BarData barData = barChart.getData();
         IBarDataSet barDataSet = barData.getDataSetByIndex(0);
         barDataSet.removeEntry(index);
-        barDataSet.addEntry(new BarEntry(index, index, vol));
+        barDataSet.addEntry(new BarEntry(index, index, timeDatamodel.getVolume()));
 
-        //不可见修改数据不刷新
         lineData.notifyDataChanged();
         lineChart.notifyDataSetChanged();
         lineChart.moveViewToX(index);
@@ -414,13 +463,13 @@ public class OneDayView extends BaseView {
         }
     }
 
-    private void setMarkerView(KTimeData mData) {
-        LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview, 2);
+    private void setMarkerView(TimeDataManage mData) {
+        LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview, precision);
         TimeRightMarkerView rightMarkerView = new TimeRightMarkerView(mContext, R.layout.my_markerview);
         lineChart.setMarker(leftMarkerView, rightMarkerView, mData);
     }
 
-    private void setBottomMarkerView(KTimeData kDatas) {
+    private void setBottomMarkerView(TimeDataManage kDatas) {
         BarBottomMarkerView bottomMarkerView = new BarBottomMarkerView(mContext, R.layout.my_markerview);
         barChart.setMarker(bottomMarkerView, kDatas);
     }
@@ -429,52 +478,9 @@ public class OneDayView extends BaseView {
     public void onUserEvent(BaseEvent event) {
         if (event.method == 1) {
             CirclePositionTime position = (CirclePositionTime) event.obj;
-            cirCleView.setX(position.cx - CommonUtil.dip2px(mContext, 7));
-            cirCleView.setY(position.cy - CommonUtil.dip2px(mContext, 9));
+            cirCleView.setX(position.cx - cirCleView.getWidth() / 2);
+            cirCleView.setY(position.cy - cirCleView.getHeight() / 2);
         }
-    }
-
-    private void playHeartbeatAnimation(final View heartbeatView) {
-        AnimationSet swellAnimationSet = new AnimationSet(true);
-        swellAnimationSet.addAnimation(new ScaleAnimation(1.0f, 2.0f, 1.0f, 2.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f));
-        swellAnimationSet.setDuration(1000);
-        swellAnimationSet.setInterpolator(new AccelerateInterpolator());
-        swellAnimationSet.setFillAfter(true);//动画终止时停留在最后一帧~不然会回到没有执行之前的状态
-        heartbeatView.startAnimation(swellAnimationSet);
-        swellAnimationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                AnimationSet shrinkAnimationSet = new AnimationSet(true);
-                shrinkAnimationSet.addAnimation(new ScaleAnimation(2.0f, 1.0f, 2.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f));
-                shrinkAnimationSet.setDuration(1000);
-                shrinkAnimationSet.setInterpolator(new DecelerateInterpolator());
-                shrinkAnimationSet.setFillAfter(false);
-                heartbeatView.startAnimation(shrinkAnimationSet);// 动画结束时重新开始，实现心跳的View
-                shrinkAnimationSet.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        playHeartbeatAnimation(heartbeatView);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
-        });
     }
 
     public void setXLabels(SparseArray<String> xLabels) {
@@ -483,11 +489,14 @@ public class OneDayView extends BaseView {
 
     public SparseArray<String> getXLabels() {
         if (xLabels.size() == 0) {
+            setMaxCount(ChartType.HK_ONE_DAY.getPointNum());
             xLabels.put(0, "09:30");
             xLabels.put(60, "10:30");
-            xLabels.put(121, "11:30/13:00");
-            xLabels.put(182, "14:00");
-            xLabels.put(241, "15:00");
+            xLabels.put(120, "11:30");
+            xLabels.put(180, "13:30");
+            xLabels.put(240, "14:30");
+            xLabels.put(300, "15:30");
+            xLabels.put(330, "16:00");
         }
         return xLabels;
     }
@@ -500,11 +509,5 @@ public class OneDayView extends BaseView {
         EventBus.getDefault().unregister(this);
     }
 
-    public CoupleChartGestureListener getGestureListenerLine() {
-        return gestureListenerLine;
-    }
 
-    public CoupleChartGestureListener getGestureListenerBar() {
-        return gestureListenerBar;
-    }
 }

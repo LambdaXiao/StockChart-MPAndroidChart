@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StockApp</string>
+    <string name="loading">加載中...</string>
+    <string name="no_data">暫無數據</string>
+    <string name="vol_name">成交量</string>
+    <string name="billions_shou">億手</string>
+    <string name="millions_shou">萬手</string>
+    <string name="shou">手</string>
+    <string name="billions_gu">億股</string>
+    <string name="millions_gu">萬股</string>
+    <string name="gu">股</string>
+</resources>

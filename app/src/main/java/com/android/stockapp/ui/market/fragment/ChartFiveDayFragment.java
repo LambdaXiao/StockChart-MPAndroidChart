@@ -3,19 +3,17 @@ package com.android.stockapp.ui.market.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.stockapp.R;
-import com.android.stockapp.common.data.Constant;
+import com.android.stockapp.common.data.ChartData;
 import com.android.stockapp.ui.base.BaseFragment;
 import com.android.stockapp.ui.market.activity.StockDetailLandActivity;
 import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
-import com.github.mikephil.charting.stockChart.data.KTimeData;
+import com.github.mikephil.charting.stockChart.data.TimeDataManage;
 import com.github.mikephil.charting.stockChart.view.FiveDayView;
-import com.github.mikephil.charting.stockChart.view.OneDayView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +32,7 @@ public class ChartFiveDayFragment extends BaseFragment {
     Unbinder unbinder;
 
     private boolean land;//是否横屏
-    private KTimeData kTimeData = new KTimeData();
+    private TimeDataManage kTimeData = new TimeDataManage();
     private JSONObject object;
 
     public static ChartFiveDayFragment newInstance(boolean land) {
@@ -58,22 +56,13 @@ public class ChartFiveDayFragment extends BaseFragment {
 
         //测试数据
         try {
-            object = new JSONObject(Constant.FiveTIMEDATA);
+            object = new JSONObject(ChartData.FiveTIMEDATA);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        chart.setMaxCount(302);
-        SparseArray<String> xLabels = new SparseArray<>();
-        xLabels.put(0, "1日");
-        xLabels.put(60, "2日");
-        xLabels.put(121, "3日");
-        xLabels.put(182, "4日");
-        xLabels.put(243, "5日");
-        xLabels.put(301, "");
-        chart.setXLabels(xLabels);
 
-
-        kTimeData.parseTimeData(object);
+        //恒生指数代码HSI.IDX.HK
+        kTimeData.parseTimeData(object,"HSI.IDX.HK");
         chart.setDataToChart(kTimeData);
 
         //非横屏页单击转横屏页

@@ -92,6 +92,8 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     protected boolean mVisible = true;
     //数值的精确度位数
     protected int precision = 2;
+    //分时图类型，区分当日分时和多日分时
+    protected int timeDayType = 1;
 
     /**
      * Default constructor.
@@ -436,11 +438,18 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
         this.precision = precision;
     }
 
-    ;
-
     @Override
     public int getPrecision() {
         return precision;
+    }
+
+    public void setTimeDayType(int timeDayType) {
+        this.timeDayType = timeDayType;
+    }
+
+    @Override
+    public int getTimeDayType() {
+        return timeDayType;
     }
 
     /**

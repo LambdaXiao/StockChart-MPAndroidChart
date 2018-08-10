@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.stockapp.R;
-import com.android.stockapp.common.data.Constant;
+import com.android.stockapp.common.data.ChartData;
 import com.android.stockapp.ui.base.BaseFragment;
 import com.android.stockapp.ui.market.activity.StockDetailLandActivity;
 import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
-import com.github.mikephil.charting.stockChart.data.KLineData;
+import com.github.mikephil.charting.stockChart.data.KLineDataManage;
 import com.github.mikephil.charting.stockChart.view.KLineView;
 
 import org.json.JSONException;
@@ -34,8 +34,9 @@ public class ChartKLineFragment extends BaseFragment {
 
     private int mType;//日K：1；周K：7；月K：30
     private boolean land;//是否横屏
-    private KLineData kLineData;
+    private KLineDataManage kLineData;
     private JSONObject object;
+    private int indexType = 1;
 
     public static ChartKLineFragment newInstance(int type,boolean land){
         ChartKLineFragment fragment = new ChartKLineFragment();
@@ -54,28 +55,27 @@ public class ChartKLineFragment extends BaseFragment {
 
     @Override
     protected void initBase(View view) {
-        kLineData = new KLineData(getActivity());
+        kLineData = new KLineDataManage(getActivity());
         combinedchart.initChart(land);
         try {
             if(mType == 1){
-                object = new JSONObject(Constant.KLINEDATA);
+                object = new JSONObject(ChartData.KLINEDATA);
             }else if(mType == 7){
-                object = new JSONObject(Constant.KLINEWEEKDATA);
+                object = new JSONObject(ChartData.KLINEWEEKDATA);
             }else if(mType == 30){
-                object = new JSONObject(Constant.KLINEMONTHDATA);
+                object = new JSONObject(ChartData.KLINEMONTHDATA);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        kLineData.parseKlineData(object);
+        //恒生指数代码HSI.IDX.HK
+        kLineData.parseKlineData(object,"HSI.IDX.HK",land);
         combinedchart.setDataToChart(kLineData);
 
         combinedchart.getGestureListenerCandle().setCoupleClick(new CoupleChartGestureListener.CoupleClick() {
             @Override
             public void singleClickListener() {
-                if(land) {
-                    combinedchart.doCandleChartSwitch();
-                }else {
+                if(!land) {
                     Intent intent = new Intent(getActivity(), StockDetailLandActivity.class);
                     getActivity().startActivity(intent);
                 }
@@ -86,7 +86,7 @@ public class ChartKLineFragment extends BaseFragment {
             @Override
             public void singleClickListener() {
                 if(land) {
-                    combinedchart.doBarChartSwitch();
+                    loadIndexData(indexType < 5 ? ++indexType : 1);
                 }else {
                     Intent intent = new Intent(getActivity(), StockDetailLandActivity.class);
                     getActivity().startActivity(intent);
@@ -100,6 +100,33 @@ public class ChartKLineFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         mType = getArguments().getInt("type");
         land = getArguments().getBoolean("landscape");
+    }
+
+    private void loadIndexData(int type) {
+        indexType = type;
+        switch (indexType) {
+            case 1://成交量
+                combinedchart.doBarChartSwitch(indexType);
+                break;
+            case 2://请求MACD
+                kLineData.initMACD();
+                combinedchart.doBarChartSwitch(indexType);
+                break;
+            case 3://请求KDJ
+                kLineData.initKDJ();
+                combinedchart.doBarChartSwitch(indexType);
+                break;
+            case 4://请求BOLL
+                kLineData.initBOLL();
+                combinedchart.doBarChartSwitch(indexType);
+                break;
+            case 5://请求RSI
+                kLineData.initRSI();
+                combinedchart.doBarChartSwitch(indexType);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

@@ -9,13 +9,13 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.stockChart.data.KTimeData;
+import com.github.mikephil.charting.stockChart.data.TimeDataManage;
 
 
 public class TimeLineChart extends LineChart {
     private LeftMarkerView myMarkerViewLeft;
     private TimeRightMarkerView myMarkerViewRight;
-    private KTimeData kTimeData;
+    private TimeDataManage kTimeData;
     private VolSelected volSelected;
 
     public void setVolSelected(VolSelected volSelected) {
@@ -56,7 +56,7 @@ public class TimeLineChart extends LineChart {
     }
 
     /*返回转型后的左右轴*/
-    public void setMarker(LeftMarkerView markerLeft, TimeRightMarkerView markerRight, KTimeData kTimeData) {
+    public void setMarker(LeftMarkerView markerLeft, TimeRightMarkerView markerRight, TimeDataManage kTimeData) {
         this.myMarkerViewLeft = markerLeft;
         this.myMarkerViewRight = markerRight;
         this.kTimeData = kTimeData;

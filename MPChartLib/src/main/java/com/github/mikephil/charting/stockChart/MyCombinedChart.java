@@ -8,7 +8,7 @@ import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.stockChart.data.KLineData;
+import com.github.mikephil.charting.stockChart.data.KLineDataManage;
 import com.github.mikephil.charting.stockChart.enums.TimeType;
 import com.github.mikephil.charting.utils.DataTimeUtil;
 
@@ -17,7 +17,7 @@ import com.github.mikephil.charting.utils.DataTimeUtil;
  */
 public class MyCombinedChart extends CombinedChart {
     private BarBottomMarkerView markerBottom;
-    private KLineData kLineData;
+    private KLineDataManage kLineData;
 
     public MyCombinedChart(Context context) {
         super(context);
@@ -38,7 +38,7 @@ public class MyCombinedChart extends CombinedChart {
 
     private TimeType timeType = TimeType.TIME_DATE;
 
-    public void setMarker(BarBottomMarkerView markerBottom, KLineData kLineData, TimeType timeType) {
+    public void setMarker(BarBottomMarkerView markerBottom, KLineDataManage kLineData, TimeType timeType) {
         this.markerBottom = markerBottom;
         this.kLineData = kLineData;
         this.timeType = timeType;
@@ -56,7 +56,9 @@ public class MyCombinedChart extends CombinedChart {
             Highlight highlight = mIndicesToHighlight[i];
 
             IDataSet set = mData.getDataSetByIndex(highlight.getDataSetIndex());
-
+            if(set == null){
+                continue;
+            }
             Entry e = mData.getEntryForHighlight(mIndicesToHighlight[i]);
             int entryIndex = set.getEntryIndex(e);
 

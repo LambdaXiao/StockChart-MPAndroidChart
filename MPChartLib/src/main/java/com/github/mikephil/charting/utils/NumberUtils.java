@@ -4,9 +4,12 @@ package com.github.mikephil.charting.utils;
  * Created by Administrator on 2016/8/4.
  */
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+
+import com.github.mikephil.charting.R;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -39,20 +42,6 @@ public class NumberUtils {
     }
 
     /**
-     * 格式化为指定位小数的数字,返回未使用科学计数法表示的具有指定位数的字符串。<br>
-     * 该方法舍入模式：向“最接近的”数字舍入，如果与两个相邻数字的距离相等，则为向上舍入的舍入模式。<br>
-     * 如果给定的数字没有小数，则转换之后将以0填充；例如：int 123  1 --> 123.0<br>
-     * <b>注意：</b>如果精度要求比较精确请使用 keepPrecision(String number, int precision)方法
-     *
-     * @param //String类型的数字对象
-     * @param precision       小数精确度总位数,如2表示两位小数
-     * @return 返回数字格式化后的字符串表示形式(注意返回的字符串未使用科学计数法)
-     */
-    public static String keepPrecision(Number number, int precision) {
-        return keepPrecision(String.valueOf(number), precision);
-    }
-
-    /**
      * 对float类型的数值保留指定位数的小数。<br>
      * 该方法舍入模式：向“最接近的”数字舍入，如果与两个相邻数字的距离相等，则为向上舍入的舍入模式。<br>
      * <b>注意：</b>如果精度要求比较精确请使用 keepPrecision(String number, int precision)方法
@@ -61,9 +50,9 @@ public class NumberUtils {
      * @param precision 小数位数
      * @return float 如果数值较大，则使用科学计数法表示
      */
-    public static float keepPrecision(float number, int precision) {
+    public static String keepPrecision(float number, int precision) {
         BigDecimal bg = new BigDecimal(number);
-        return bg.setScale(precision, BigDecimal.ROUND_HALF_UP).floatValue();
+        return bg.setScale(precision, BigDecimal.ROUND_HALF_UP).toPlainString();
     }
 
     /**
@@ -137,9 +126,16 @@ public class NumberUtils {
         }
     }
 
-    public static String doubleNoE10(double double1) {
+    public static String stringNoE10(double double1) {
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");//格式化设置
         return decimalFormat.format(double1);
+    }
+
+    public static double stringNoE10ForVol(double double1) {
+        BigDecimal d1 = new BigDecimal(Double.toString(double1));
+        BigDecimal d2 = new BigDecimal(Integer.toString(1));
+        // 四舍五入,保留2位小数
+        return d1.divide(d2, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     public static void setPricePoint(final EditText editText) {
@@ -184,7 +180,27 @@ public class NumberUtils {
             }
 
         });
+    }
 
+    /**
+     * 格式化成交量,(开启千位分隔符)
+     *
+     * @param vol 成交量
+     * @return
+     */
+    public static String formatVol(Context context, String assetId, double vol) {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        df.setGroupingUsed(true);
+        String str;
+        if (vol >= 100000000) {
+            str = df.format(vol / 100000000) + (assetId.endsWith(".HK") ? context.getResources().getString(R.string.billions_gu) : context.getResources().getString(R.string.billions_shou));
+        } else if (vol >= 10000) {
+            str = df.format(vol / 10000) + (assetId.endsWith(".HK") ? context.getResources().getString(R.string.millions_gu) : context.getResources().getString(R.string.millions_shou));
+        } else {
+            str = df.format(Math.round(vol)) + (assetId.endsWith(".HK") ? context.getResources().getString(R.string.gu) : context.getResources().getString(R.string.shou));
+        }
+        return str;
     }
 
 }

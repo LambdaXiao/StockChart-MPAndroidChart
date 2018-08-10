@@ -40,7 +40,7 @@ public class SAREntity {
                 for (int j = index - num + 1; j < index; j++) {
 
                     float c = (float) datas.get(j).getClose();
-                    int v = datas.get(j).getVolume();
+                    int v = (int) datas.get(j).getVolume();
 
                     if (v > max_vol) {
                         max_vol_price = c;
@@ -58,7 +58,7 @@ public class SAREntity {
             } else {
                 //每位移一个数，计算是否最大交易量
                 float c = (float) datas.get(index).getClose();
-                int v = datas.get(index).getVolume();
+                int v = (int) datas.get(index).getVolume();
 
                 if (v > max_vol) {
                     max_vol_price = c;

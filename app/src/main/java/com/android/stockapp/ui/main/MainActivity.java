@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.android.stockapp.R;
+import com.android.stockapp.application.MyApplication;
 import com.android.stockapp.ui.market.activity.StockDetailActivity;
 
 import butterknife.ButterKnife;
@@ -37,5 +38,11 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_test)
     public void onViewClicked() {
         startActivity(new Intent(MainActivity.this, StockDetailActivity.class));
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        MyApplication.getApplication().initDayNight();
     }
 }

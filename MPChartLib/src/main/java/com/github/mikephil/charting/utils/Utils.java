@@ -24,6 +24,7 @@ import android.view.ViewConfiguration;
 import com.github.mikephil.charting.formatter.DefaultValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -148,7 +149,22 @@ public abstract class Utils {
         return (int) paint.measureText(demoText);
     }
 
+    //专用于计算亿万后的成交量值的宽度
+    public static int calcTextWidthForVol(Paint paint, float vol) {
+        int e = (int) Math.floor(Math.log10(vol));
+        if (e >= 8) {
+            e = 8;
+        } else if (e >= 4) {
+            e = 4;
+        } else {
+            e = 1;
+        }
+        vol = vol / (int) Math.pow(10, e);
+        return (int) paint.measureText(new DecimalFormat("#0.00").format(vol));
+    }
+
     private static Rect mCalcTextHeightRect = new Rect();
+
     /**
      * calculates the approximate height of a text, depending on a demo text
      * avoid repeated calls (e.g. inside drawing methods)
@@ -160,7 +176,7 @@ public abstract class Utils {
     public static int calcTextHeight(Paint paint, String demoText) {
 
         Rect r = mCalcTextHeightRect;
-        r.set(0,0,0,0);
+        r.set(0, 0, 0, 0);
         paint.getTextBounds(demoText, 0, demoText.length(), r);
         return r.height();
     }
@@ -171,7 +187,7 @@ public abstract class Utils {
         return getLineHeight(paint, mFontMetrics);
     }
 
-    public static float getLineHeight(Paint paint, Paint.FontMetrics fontMetrics){
+    public static float getLineHeight(Paint paint, Paint.FontMetrics fontMetrics) {
         paint.getFontMetrics(fontMetrics);
         return fontMetrics.descent - fontMetrics.ascent;
     }
@@ -180,7 +196,7 @@ public abstract class Utils {
         return getLineSpacing(paint, mFontMetrics);
     }
 
-    public static float getLineSpacing(Paint paint, Paint.FontMetrics fontMetrics){
+    public static float getLineSpacing(Paint paint, Paint.FontMetrics fontMetrics) {
         paint.getFontMetrics(fontMetrics);
         return fontMetrics.ascent - fontMetrics.top + fontMetrics.bottom;
     }
@@ -196,12 +212,13 @@ public abstract class Utils {
      */
     public static FSize calcTextSize(Paint paint, String demoText) {
 
-        FSize result = FSize.getInstance(0,0);
+        FSize result = FSize.getInstance(0, 0);
         calcTextSize(paint, demoText, result);
         return result;
     }
 
     private static Rect mCalcTextSizeRect = new Rect();
+
     /**
      * calculates the approximate size of a text, depending on a demo text
      * avoid repeated calls (e.g. inside drawing methods)
@@ -213,7 +230,7 @@ public abstract class Utils {
     public static void calcTextSize(Paint paint, String demoText, FSize outputFSize) {
 
         Rect r = mCalcTextSizeRect;
-        r.set(0,0,0,0);
+        r.set(0, 0, 0, 0);
         paint.getTextBounds(demoText, 0, demoText.length(), r);
         outputFSize.width = r.width();
         outputFSize.height = r.height();
@@ -237,8 +254,7 @@ public abstract class Utils {
     }
 
     /// - returns: The default value formatter used for all chart components that needs a default
-    public static IValueFormatter getDefaultValueFormatter()
-    {
+    public static IValueFormatter getDefaultValueFormatter() {
         return mDefaultValueFormatter;
     }
 
@@ -353,12 +369,12 @@ public abstract class Utils {
      * @return
      */
     public static float roundToNextSignificant(double number) {
-        if (Double.isInfinite(number) || 
-            Double.isNaN(number) || 
-            number == 0.0) {
+        if (Double.isInfinite(number) ||
+                Double.isNaN(number) ||
+                number == 0.0) {
             return 0;
         }
-        
+
         final float d = (float) Math.ceil((float) Math.log10(number < 0 ? -number : number));
         final int pw = 1 - (int) d;
         final float magnitude = (float) Math.pow(10, pw);
@@ -376,11 +392,11 @@ public abstract class Utils {
     public static int getDecimals(float number) {
 
         float i = roundToNextSignificant(number);
-        
+
         if (Float.isInfinite(i)) {
             return 0;
         }
-        
+
         return (int) Math.ceil(-Math.log10(i)) + 2;
     }
 
@@ -399,9 +415,9 @@ public abstract class Utils {
         return ret;
     }
 
-    public static void copyIntegers(List<Integer> from, int[] to){
+    public static void copyIntegers(List<Integer> from, int[] to) {
         int count = to.length < from.size() ? to.length : from.size();
-        for(int i = 0 ; i < count ; i++){
+        for (int i = 0; i < count; i++) {
             to[i] = from.get(i);
         }
     }
@@ -423,9 +439,9 @@ public abstract class Utils {
         return ret;
     }
 
-    public static void copyStrings(List<String> from, String[] to){
+    public static void copyStrings(List<String> from, String[] to) {
         int count = to.length < from.size() ? to.length : from.size();
-        for(int i = 0 ; i < count ; i++){
+        for (int i = 0; i < count; i++) {
             to[i] = from.get(i);
         }
     }
@@ -459,12 +475,12 @@ public abstract class Utils {
      */
     public static MPPointF getPosition(MPPointF center, float dist, float angle) {
 
-        MPPointF p = MPPointF.getInstance(0,0);
+        MPPointF p = MPPointF.getInstance(0, 0);
         getPosition(center, dist, angle, p);
         return p;
     }
 
-    public static void getPosition(MPPointF center, float dist, float angle, MPPointF outputPoint){
+    public static void getPosition(MPPointF center, float dist, float angle, MPPointF outputPoint) {
         outputPoint.x = (float) (center.x + dist * Math.cos(Math.toRadians(angle)));
         outputPoint.y = (float) (center.y + dist * Math.sin(Math.toRadians(angle)));
     }
