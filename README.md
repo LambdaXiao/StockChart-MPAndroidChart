@@ -4,7 +4,7 @@
 
 先上效果图：
 
-![Image text](screenshot/main1.png)
+![Image text](screenshot/main.png)
 
 ![Image text](screenshot/day_night.png)
 
