@@ -60,8 +60,8 @@ public class ChartOneDayFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-        //恒生指数代码HSI.IDX.HK
-        kTimeData.parseTimeData(object,"HSI.IDX.HK");
+        //上证指数代码000001.IDX.SH
+        kTimeData.parseTimeData(object,"000001.IDX.SH");
         chart.setDataToChart(kTimeData);
 
         //非横屏页单击转横屏页

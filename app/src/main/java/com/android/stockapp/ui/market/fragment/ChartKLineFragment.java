@@ -68,8 +68,8 @@ public class ChartKLineFragment extends BaseFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //恒生指数代码HSI.IDX.HK
-        kLineData.parseKlineData(object,"HSI.IDX.HK",land);
+        //上证指数代码000001.IDX.SH
+        kLineData.parseKlineData(object,"000001.IDX.SH",land);
         combinedchart.setDataToChart(kLineData);
 
         combinedchart.getGestureListenerCandle().setCoupleClick(new CoupleChartGestureListener.CoupleClick() {

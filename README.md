@@ -4,17 +4,19 @@
 
 先上效果图：
 
-![Image text](screenshot/fs1.jpg)
+![Image text](screenshot/main.png)
 
-![Image text](screenshot/fs2.jpg)
+![Image text](screenshot/day_night.png)
 
-![Image text](screenshot/k.jpg)
+![Image text](screenshot/fiveday_night.png)
 
-![Image text](screenshot/fs1_land.jpg)
+![Image text](screenshot/k_night.png)
 
-![Image text](screenshot/fs2_land.jpg)
+![Image text](screenshot/day.png)
 
-![Image text](screenshot/k_land.jpg)
+![Image text](screenshot/fiveday.png)
+
+![Image text](screenshot/k.png)
 
 ## 简介
 
@@ -27,6 +29,7 @@ StockApp是Android平台的金融图表库，包括**分时图**和**K线图**�
 - 支持刻度值画在图表内侧和外侧，可自由定制
 - 横屏模式的展示
 - 分时图增加最近一点的数值闪动显示并在右侧画出最新价数值
+- 支持夜间模式的展示
 
 
    

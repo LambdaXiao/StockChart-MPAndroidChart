@@ -22,7 +22,7 @@ public class BOLLEntity {
      * @param n
      */
     public BOLLEntity(ArrayList<KLineDataModel> kLineBeens, int n) {
-        this(kLineBeens, n, NaN);
+        this(kLineBeens, n, 0);
     }
 
     /**
