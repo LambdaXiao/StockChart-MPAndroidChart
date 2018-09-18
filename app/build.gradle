@@ -14,12 +14,24 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {//签名配置
+        relealse {
+            storeFile file('testDemoKey.jks')
+            storePassword '1008610010xwh'
+            keyAlias 'xiao'
+            keyPassword '1008610010xwh'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.relealse
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
