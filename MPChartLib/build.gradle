@@ -37,8 +37,8 @@ dependencies {
     //compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.android.support:support-v4:19.+'
     //provided 'io.realm:realm-android:0.87.5' // "optional" dependency to realm-database API
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.9.5'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:1.9.5'
     implementation 'com.android.support:appcompat-v7:25.1.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
 }
@@ -83,7 +83,7 @@ def libName = "MPChartLib"
 //发布到组织名称名字，必须填写
 group = "com.github.wallacexiao"
 // 版本号，下次更新是只需要更改版本号即可
-version = "1.1.0"
+version = "1.2.0"
 
 // 配置maven库，生成POM.xml文件
 install {
