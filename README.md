@@ -1,6 +1,6 @@
 # StockChart-MPAndroidChart
 
-**基于MPAndroidChart的专业分时图和K线图**
+**基于MPAndroidChart3.0+的专业分时图和K线图**
 
 先上效果图：
 
