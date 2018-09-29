@@ -1,4 +1,4 @@
-# StockApp
+# StockChart-MPAndroidChart
 
 **基于MPAndroidChart的专业分时图和K线图**
 
