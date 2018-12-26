@@ -20,8 +20,8 @@ import com.github.mikephil.charting.stockChart.data.TimeDataManage;
 
 public class BaseView extends LinearLayout {
 
-    public boolean landscape = false;//ÊÇ·ñºáÆÁÄ£Ê½
-    public int precision = 3;//Ğ¡Êı¾«¶È
+    public boolean landscape = false;//æ˜¯å¦æ¨ªå±æ¨¡å¼
+    public int precision = 3;//å°æ•°ç²¾åº¦
     public Paint mPaint;
 
     public BaseView(Context context) {
@@ -64,7 +64,7 @@ public class BaseView extends LinearLayout {
     }
 
     /**
-     * ·ÖÊ±Í¼×îºóÒ»µãµÄÔ²È¦¶¯»­
+     * åˆ†æ—¶å›¾æœ€åä¸€ç‚¹çš„åœ†åœˆåŠ¨ç”»
      * @param heartbeatView
      */
     public void playHeartbeatAnimation(final View heartbeatView) {
@@ -72,7 +72,7 @@ public class BaseView extends LinearLayout {
         swellAnimationSet.addAnimation(new ScaleAnimation(1.0f, 2.0f, 1.0f, 2.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f));
         swellAnimationSet.setDuration(1000);
         swellAnimationSet.setInterpolator(new AccelerateInterpolator());
-        swellAnimationSet.setFillAfter(true);//¶¯»­ÖÕÖ¹Ê±Í£ÁôÔÚ×îºóÒ»Ö¡~²»È»»á»Øµ½Ã»ÓĞÖ´ĞĞÖ®Ç°µÄ×´Ì¬
+        swellAnimationSet.setFillAfter(true);//åŠ¨ç”»ç»ˆæ­¢æ—¶åœç•™åœ¨æœ€åä¸€å¸§ï¼Œä¸ç„¶ä¼šå›åˆ°æ²¡æœ‰æ‰§è¡Œä¹‹å‰çš„çŠ¶æ€
         heartbeatView.startAnimation(swellAnimationSet);
         swellAnimationSet.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -90,7 +90,7 @@ public class BaseView extends LinearLayout {
                 shrinkAnimationSet.setDuration(1000);
                 shrinkAnimationSet.setInterpolator(new DecelerateInterpolator());
                 shrinkAnimationSet.setFillAfter(false);
-                heartbeatView.startAnimation(shrinkAnimationSet);// ¶¯»­½áÊøÊ±ÖØĞÂ¿ªÊ¼£¬ÊµÏÖĞÄÌøµÄView
+                heartbeatView.startAnimation(shrinkAnimationSet);// åŠ¨ç”»ç»“æŸæ—¶é‡æ–°å¼€å§‹ï¼Œå®ç°å¿ƒè·³çš„View
                 shrinkAnimationSet.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {

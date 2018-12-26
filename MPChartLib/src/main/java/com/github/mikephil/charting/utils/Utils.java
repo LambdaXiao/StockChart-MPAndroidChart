@@ -149,7 +149,7 @@ public abstract class Utils {
         return (int) paint.measureText(demoText);
     }
 
-    //专用于计算亿万后的成交量值的宽度
+    //涓撶敤浜庤绠椾嚎涓囧悗鐨勬垚浜ら噺鍊肩殑瀹藉害
     public static int calcTextWidthForVol(Paint paint, float vol) {
         int e = (int) Math.floor(Math.log10(vol));
         if (e >= 8) {
