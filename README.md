@@ -23,7 +23,7 @@ StockApp是Android平台的金融图表库，包括**分时图**和**K线图**�
 - 分时图增加最近一点的数值闪动显示并在右侧画出最新价数值
 - 支持夜间模式的展示
 
-## Demo体验
+## apk体验
 
    ![Image text](screenshot/stockChart.png)
 
