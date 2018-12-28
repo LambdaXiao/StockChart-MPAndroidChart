@@ -9,7 +9,8 @@
         android:id="@+id/tab"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/white"/>
+        android:background="@color/white"
+        app:tabGravity="fill"/>
 
     <com.android.stockapp.common.viewpager.NoTouchScrollViewpager
         android:id="@+id/view_pager"

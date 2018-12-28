@@ -4,19 +4,11 @@
 
 先上效果图：
 
+![Image text](screenshot/stockChart.gif)
+
 ![Image text](screenshot/main.png)
 
 ![Image text](screenshot/day_night.png)
-
-![Image text](screenshot/fiveday_night.png)
-
-![Image text](screenshot/k_night.png)
-
-![Image text](screenshot/day.png)
-
-![Image text](screenshot/fiveday.png)
-
-![Image text](screenshot/k.png)
 
 ## 简介
 
@@ -33,7 +25,7 @@ StockApp是Android平台的金融图表库，包括**分时图**和**K线图**�
 
 ## Demo体验
 
-   ![Image text](screenshot/stockapp.png)
+   ![Image text](screenshot/stockChart.png)
 
 ## 反馈
 

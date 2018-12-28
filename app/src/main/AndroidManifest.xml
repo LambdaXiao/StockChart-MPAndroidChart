@@ -19,7 +19,8 @@
         </activity>
         <activity android:name=".ui.market.activity.StockDetailActivity" />
         <activity android:name=".ui.market.activity.StockDetailLandActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

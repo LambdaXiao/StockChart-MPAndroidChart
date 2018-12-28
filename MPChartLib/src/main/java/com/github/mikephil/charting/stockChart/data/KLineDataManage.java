@@ -45,8 +45,8 @@ public class KLineDataManage {
 
     //MA参数
     public int N1 = 5;
-    public int N2 = 20;
-    public int N3 = 30;
+    public int N2 = 10;
+    public int N3 = 20;
     //EMA参数
     public int EMAN1 = 5;
     public int EMAN2 = 10;

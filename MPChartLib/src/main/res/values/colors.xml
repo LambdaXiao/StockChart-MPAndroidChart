@@ -15,11 +15,12 @@
 
     <!-- chart -->
     <color name="chart_bg">#ffffff</color>
-    <color name="marker_bg">#ff8c0d</color>
+    <color name="marker_bg">#406ebc</color>
     <color name="marker_text_color">#FFFFFF</color>
     <color name="border_color">#e8e8e8</color>
     <color name="grid_color">#e8e8e8</color>
     <color name="label_text">#A7ADBC</color>
+    <color name="axis_text">#333333</color>
     <color name="minute_jizhun">#7F9976</color>
     <color name="minute_blue">#5198FA</color>
     <color name="minute_yellow">#E7B448</color>

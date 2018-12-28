@@ -215,6 +215,7 @@ public class TimeLineChartRenderer extends LineChartRenderer {
             float circleX = mLineBuffer[pointOffset - 2];
 
             if (circleX >= rectLeft) {
+                mRenderPaint.setColor(Color.parseColor("#A65198FA"));
                 mRenderPaint.setStyle(Paint.Style.FILL);
                 float x = mLineBuffer[pointOffset - 2];
                 float y = mLineBuffer[pointOffset - 1];
@@ -226,7 +227,7 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                     pathS.lineTo(x + Utils.convertDpToPixel(3), y - Utils.convertDpToPixel(6));
                     pathS.close(); // 使这些点构成封闭的多边形
                     canvas.drawPath(pathS, mRenderPaint);
-                    mRenderPaint.setColor(Color.WHITE);
+                    mRenderPaint.setColor(Color.parseColor("#66FFFFFF"));
                     canvas.drawText(text, rectLeft + Utils.convertDpToPixel(2), y - Utils.convertDpToPixel(10), mRenderPaint);
                 } else {
                     canvas.drawRect(rectLeft, y + Utils.convertDpToPixel(6), mViewPortHandler.contentRight(), y + Utils.convertDpToPixel(22), mRenderPaint);
@@ -236,14 +237,14 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                     pathS.lineTo(x + Utils.convertDpToPixel(3), y + Utils.convertDpToPixel(6));
                     pathS.close(); // 使这些点构成封闭的多边形
                     canvas.drawPath(pathS, mRenderPaint);
-                    mRenderPaint.setColor(Color.WHITE);
+                    mRenderPaint.setColor(Color.parseColor("#66FFFFFF"));
                     canvas.drawText(text, rectLeft + Utils.convertDpToPixel(2), y + Utils.convertDpToPixel(10) + height, mRenderPaint);
                 }
             } else {
                 canvas.drawPath(path, mRenderPaint);
                 mRenderPaint.setStyle(Paint.Style.FILL);
                 canvas.drawRect(rectLeft, mLineBuffer[pointOffset - 1] - Utils.convertDpToPixel(8), mViewPortHandler.contentRight(), mLineBuffer[pointOffset - 1] + Utils.convertDpToPixel(8), mRenderPaint);
-                mRenderPaint.setColor(Color.WHITE);
+                mRenderPaint.setColor(Color.parseColor("#FFFFFF"));
                 canvas.drawText(text, rectLeft + Utils.convertDpToPixel(2), mLineBuffer[pointOffset - 1] + Utils.convertDpToPixel(3), mRenderPaint);
             }
         }

@@ -203,5 +203,14 @@ public class NumberUtils {
         return str;
     }
 
+    public static double String2Double(String strVal) {
+        try {
+            double doubleVal = Double.parseDouble(strVal);
+            return doubleVal;
+        } catch (Exception e) {
+
+        }
+        return 0;
+    }
 }
 

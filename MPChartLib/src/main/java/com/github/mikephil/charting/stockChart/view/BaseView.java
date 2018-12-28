@@ -17,6 +17,10 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
 import com.github.mikephil.charting.stockChart.data.KLineDataManage;
 import com.github.mikephil.charting.stockChart.data.TimeDataManage;
+import com.github.mikephil.charting.stockChart.event.BaseEvent;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class BaseView extends LinearLayout {
 
@@ -109,4 +113,10 @@ public class BaseView extends LinearLayout {
             }
         });
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(BaseEvent event) {
+
+    }
+
 }

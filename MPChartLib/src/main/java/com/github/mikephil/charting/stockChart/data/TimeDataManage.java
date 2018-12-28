@@ -24,17 +24,19 @@ public class TimeDataManage {
     private double permaxmin = 0;//分时图价格最大区间值
     private int mAllVolume = 0;//分时图总成交量
     private double volMaxTimeLine;//分时图最大成交量
-    private double perPerMaxmin = 0;
+    private double max = 0;//分时图最大价格
+    private double min = 0;//分时图最小价格
     private double perVolMaxTimeLine = 0;
     private SparseArray<String> fiveDayXLabels = new SparseArray<String>();//专用于五日分时横坐标轴刻度
     private List<Integer> fiveDayXLabelKey = new ArrayList<Integer>();//专用于五日分时横坐标轴刻度
     private String assetId;
     private SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    private double preClose;//昨收价
 
     /**
      * 外部传JSONObject解析获得分时数据集
      */
-    public void parseTimeData(JSONObject object, String assetId) {
+    public void parseTimeData(JSONObject object, String assetId, double preClosePrice) {
         this.assetId = assetId;
         if (object != null) {
             realTimeDatas.clear();
@@ -42,21 +44,23 @@ public class TimeDataManage {
             getFiveDayXLabelKey(assetId);
             String preDate = null;
             int index = 0;
-            double preClose = object.optDouble("preClose");
+            preClose = Double.isNaN(object.optDouble("preClose")) ? 0 : object.optDouble("preClose");
             JSONArray data = object.optJSONArray("data");
             if (data != null) {
                 for (int i = 0; i < data.length(); i++) {
                     TimeDataModel timeDatamodel = new TimeDataModel();
                     timeDatamodel.setTimeMills(data.optJSONArray(i).optLong(0, 0L));
-                    timeDatamodel.setNowPrice(data.optJSONArray(i).optDouble(1));
-                    timeDatamodel.setAveragePrice(data.optJSONArray(i).optDouble(2));
+                    timeDatamodel.setNowPrice(Double.isNaN(data.optJSONArray(i).optDouble(1)) ? 0 : data.optJSONArray(i).optDouble(1));
+                    timeDatamodel.setAveragePrice(Double.isNaN(data.optJSONArray(i).optDouble(2)) ? 0 : data.optJSONArray(i).optDouble(2));
                     timeDatamodel.setVolume(Double.valueOf(data.optJSONArray(i).optString(3)).intValue());
-                    timeDatamodel.setOpen(data.optJSONArray(i).optDouble(4));
-                    timeDatamodel.setPreClose(preClose);
+                    timeDatamodel.setOpen(Double.isNaN(data.optJSONArray(i).optDouble(4)) ? 0 : data.optJSONArray(i).optDouble(4));
+                    timeDatamodel.setPreClose(preClose == 0 ? (preClosePrice == 0 ? timeDatamodel.getOpen() : preClosePrice) : preClose);
 
                     if (i == 0) {
+                        preClose = timeDatamodel.getPreClose();
                         mAllVolume = timeDatamodel.getVolume();
-                        permaxmin = 0;
+                        max = timeDatamodel.getNowPrice();
+                        min = timeDatamodel.getNowPrice();
                         volMaxTimeLine = 0;
                         if (baseValue == 0) {
                             baseValue = timeDatamodel.getPreClose();
@@ -73,61 +77,17 @@ public class TimeDataManage {
                         }
                     }
                     preDate = secToDateForFiveDay(timeDatamodel.getTimeMills());
-                    timeDatamodel.setCha(timeDatamodel.getNowPrice() - baseValue);
-                    timeDatamodel.setPer(timeDatamodel.getCha() / baseValue);
-                    if (Math.abs(timeDatamodel.getCha()) > permaxmin / 1.2) {
-                        perPerMaxmin = permaxmin;
-                        permaxmin = (float) Math.abs(timeDatamodel.getCha()) * (1.2f);//最大值和百分比都增加20%，防止内容顶在边框
-                    }
+                    timeDatamodel.setCha(timeDatamodel.getNowPrice() - preClose);
+                    timeDatamodel.setPer(timeDatamodel.getCha() / preClose);
+
+                    max = Math.max(timeDatamodel.getNowPrice(), max);
+                    min = Math.min(timeDatamodel.getNowPrice(), min);
+
                     perVolMaxTimeLine = volMaxTimeLine;
                     volMaxTimeLine = Math.max(timeDatamodel.getVolume(), volMaxTimeLine);
                     realTimeDatas.add(timeDatamodel);
                 }
-            }
-        }
-    }
-
-    /**
-     * 外部传JSONObject解析获得分时数据集(用于解析美股分时)
-     */
-    public void parseUSTimeData(JSONObject object, String assetId) {
-        this.assetId = assetId;
-        if (object != null) {
-            realTimeDatas.clear();
-            getFiveDayXLabelKey(assetId);
-            double preClose = object.optDouble("prevClose");
-            mAllVolume = object.optInt("totalVolume");
-            JSONArray data = object.optJSONArray("data");
-            if (data != null) {
-                for (int i = 0; i < data.length(); i++) {
-                    TimeDataModel timeDatamodel = new TimeDataModel();
-                    try {
-                        timeDatamodel.setTimeMills(sf.parse(data.optJSONObject(i).optString("date")).getTime());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    timeDatamodel.setNowPrice(data.optJSONObject(i).optDouble("price"));
-                    timeDatamodel.setVolume(data.optJSONObject(i).optInt("volume"));
-                    timeDatamodel.setCha(data.optJSONObject(i).optDouble("change"));
-                    timeDatamodel.setPer(data.optJSONObject(i).optDouble("changePct"));
-                    timeDatamodel.setPreClose(preClose);
-
-                    if (i == 0) {
-                        permaxmin = 0;
-                        volMaxTimeLine = 0;
-                        if (baseValue == 0) {
-                            baseValue = timeDatamodel.getPreClose();
-                        }
-                    }
-
-                    if (Math.abs(timeDatamodel.getCha()) > permaxmin / 1.2) {
-                        perPerMaxmin = permaxmin;
-                        permaxmin = (float) Math.abs(timeDatamodel.getCha()) * (1.2f);//最大值和百分比都增加20%，防止内容顶在边框
-                    }
-                    perVolMaxTimeLine = volMaxTimeLine;
-                    volMaxTimeLine = Math.max(timeDatamodel.getVolume(), volMaxTimeLine);
-                    realTimeDatas.add(timeDatamodel);
-                }
+                permaxmin = (max - min) / 2;
             }
         }
     }
@@ -144,29 +104,30 @@ public class TimeDataManage {
     }
 
     public void resetTimeData() {
-        permaxmin = 0;
         baseValue = 0;
         getRealTimeData().clear();
     }
 
-    //分时图左Y轴最小值
-    public float getMin() {
-        return (float) (baseValue - permaxmin);
-    }
-
     //分时图左Y轴最大值
     public float getMax() {
-        return (float) (baseValue + permaxmin);
+        return (float) (baseValue + baseValue * getPercentMax());
+    }
+
+    //分时图左Y轴最小值
+    public float getMin() {
+        return (float) (baseValue + baseValue * getPercentMin());
     }
 
     //分时图右Y轴最大涨跌值
     public float getPercentMax() {
-        return (float) ((permaxmin) / baseValue);
+        //0.1表示Y轴最大涨跌值再增加10%，使图线不至于顶到最顶部
+        return (float) ((max - baseValue) / baseValue + Math.abs(max - baseValue > min - baseValue ? max - baseValue : min - baseValue) / baseValue * 0.1);
     }
 
-    //分时图右Y轴最大涨跌值
+    //分时图右Y轴最小涨跌值
     public float getPercentMin() {
-        return (float) -getPercentMax();
+        //0.1表示Y轴最小涨跌值再减小10%，使图线不至于顶到最底部
+        return (float) ((min - baseValue) / baseValue - Math.abs(max - baseValue > min - baseValue ? max - baseValue : min - baseValue) / baseValue * 0.1);
     }
 
     //分时图最大成交量
@@ -181,6 +142,10 @@ public class TimeDataManage {
 
     public String getAssetId() {
         return assetId;
+    }
+
+    public double getPreClose() {
+        return preClose;
     }
 
     /**
@@ -206,7 +171,7 @@ public class TimeDataManage {
                 xLabels.put(240, "");
                 xLabels.put(330, "16:00");
             }
-        }else if (assetId.endsWith(".US")){
+        } else if (assetId.endsWith(".US")) {
             xLabels.put(0, "09:30");
             xLabels.put(120, "11:30");
             xLabels.put(210, "13:00");

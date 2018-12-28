@@ -99,7 +99,7 @@ public class OneDayView extends BaseView {
 
         EventBus.getDefault().register(this);
 
-        colorArray = new int[]{ContextCompat.getColor(mContext, R.color.down_color), ContextCompat.getColor(mContext, R.color.down_color), ContextCompat.getColor(mContext, R.color.equal_color), ContextCompat.getColor(mContext, R.color.up_color), ContextCompat.getColor(mContext, R.color.up_color)};
+        colorArray = new int[]{ ContextCompat.getColor(mContext, R.color.up_color), ContextCompat.getColor(mContext, R.color.equal_color),ContextCompat.getColor(mContext, R.color.down_color)};
 
         playHeartbeatAnimation(cirCleView.findViewById(R.id.anim_view));
 
@@ -137,7 +137,6 @@ public class OneDayView extends BaseView {
         xAxisLine.setAvoidFirstLastClipping(true);
         xAxisLine.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
         xAxisLine.setGridLineWidth(0.7f);
-        xAxisLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
 
         //主图左Y轴
         axisLeftLine = lineChart.getAxisLeft();
@@ -147,18 +146,13 @@ public class OneDayView extends BaseView {
         axisLeftLine.setDrawTopBottomGridLine(false);
         axisLeftLine.setDrawAxisLine(false);
         axisLeftLine.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
-        axisLeftLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
+        axisLeftLine.setTextColor(ContextCompat.getColor(mContext, R.color.axis_text));
         axisLeftLine.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
                 return NumberUtils.keepPrecisionR(value, precision);
             }
         });
-        //Y轴label渲染颜色
-        Transformer leftYTransformer = lineChart.getRendererLeftYAxis().getTransformer();
-        ColorContentYAxisRenderer leftColorContentYAxisRenderer = new ColorContentYAxisRenderer(lineChart.getViewPortHandler(), axisLeftLine, leftYTransformer);
-        leftColorContentYAxisRenderer.setLabelColor(colorArray);
-        lineChart.setRendererLeftYAxis(leftColorContentYAxisRenderer);
 
         //主图右Y轴
         axisRightLine = lineChart.getAxisRight();
@@ -171,7 +165,7 @@ public class OneDayView extends BaseView {
         axisRightLine.setValueLineInside(true);
         axisRightLine.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisRightLine.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
-        axisRightLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
+        axisRightLine.setTextColor(ContextCompat.getColor(mContext, R.color.axis_text));
         axisRightLine.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -179,11 +173,6 @@ public class OneDayView extends BaseView {
                 return mFormat.format(value);
             }
         });
-        //Y轴label渲染颜色
-        Transformer rightYTransformer = lineChart.getRendererRightYAxis().getTransformer();
-        ColorContentYAxisRenderer rightColorContentYAxisRenderer = new ColorContentYAxisRenderer(lineChart.getViewPortHandler(), axisRightLine, rightYTransformer);
-        rightColorContentYAxisRenderer.setLabelColor(colorArray);
-        lineChart.setRendererRightYAxis(rightColorContentYAxisRenderer);
 
         //副图X轴
         xAxisBar = (TimeXAxis) barChart.getXAxis();
@@ -199,7 +188,7 @@ public class OneDayView extends BaseView {
         axisLeftBar = barChart.getAxisLeft();
         axisLeftBar.setDrawGridLines(false);
         axisLeftBar.setDrawAxisLine(false);
-        axisLeftBar.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
+        axisLeftBar.setTextColor(ContextCompat.getColor(mContext, R.color.axis_text));
         axisLeftBar.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisLeftBar.setDrawLabels(true);
         axisLeftBar.setLabelCount(2, true);
@@ -294,27 +283,17 @@ public class OneDayView extends BaseView {
             setPrecision(mData.getAssetId().contains("IDX") ? 2 : 3);
             setMaxCount(ChartType.HK_ONE_DAY.getPointNum());
         } else if (mData.getAssetId().endsWith(".US")) {
-            setPrecision(2);
+            if (Math.abs(mData.getMax()) < 1) {
+                setPrecision(4);
+            } else {
+                setPrecision(2);
+            }
             setMaxCount(ChartType.US_ONE_DAY.getPointNum());
         } else {
             setPrecision(2);
             setMaxCount(ChartType.ONE_DAY.getPointNum());
         }
         setXLabels(mData.getOneDayXLabels(landscape));
-
-        //设置图表偏移边距
-        if (landscape) {
-            float volwidth = Utils.calcTextWidthForVol(mPaint, mData.getVolMaxTime());
-            float pricewidth = Utils.calcTextWidth(mPaint, NumberUtils.keepPrecision(mData.getMax() + "", precision) + "#");
-            float left = CommonUtil.dip2px(mContext, pricewidth > volwidth ? pricewidth : volwidth);
-            float right = CommonUtil.dip2px(mContext, Utils.calcTextWidth(mPaint, "-10.00%"));
-            lineChart.setViewPortOffsets(left, CommonUtil.dip2px(mContext, 5), right, CommonUtil.dip2px(mContext, 15));
-            barChart.setViewPortOffsets(left, 0, right, CommonUtil.dip2px(mContext, 15));
-        } else {
-            lineChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
-            barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), 0, CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5));
-        }
-
         setShowLabels(true);
         setMarkerView(mData);
         setBottomMarkerView(mData);
@@ -322,8 +301,23 @@ public class OneDayView extends BaseView {
         axisLeftLine.setAxisMinimum(mData.getMin());
         axisLeftLine.setAxisMaximum(mData.getMax());
 
+        //Y轴label渲染颜色
+        Transformer leftYTransformer = lineChart.getRendererLeftYAxis().getTransformer();
+        ColorContentYAxisRenderer leftColorContentYAxisRenderer = new ColorContentYAxisRenderer(lineChart.getViewPortHandler(), axisLeftLine, leftYTransformer);
+        leftColorContentYAxisRenderer.setLabelColor(colorArray);
+        leftColorContentYAxisRenderer.setClosePrice(mData.getPreClose());
+        leftColorContentYAxisRenderer.setLandscape(landscape);
+        lineChart.setRendererLeftYAxis(leftColorContentYAxisRenderer);
 
-        if (Float.isNaN(mData.getPercentMax()) || mData.getPercentMax() == 0) {
+        //Y轴label渲染颜色
+        Transformer rightYTransformer = lineChart.getRendererRightYAxis().getTransformer();
+        ColorContentYAxisRenderer rightColorContentYAxisRenderer = new ColorContentYAxisRenderer(lineChart.getViewPortHandler(), axisRightLine, rightYTransformer);
+        rightColorContentYAxisRenderer.setLabelColor(colorArray);
+        rightColorContentYAxisRenderer.setClosePrice(mData.getPreClose());
+        rightColorContentYAxisRenderer.setLandscape(landscape);
+        lineChart.setRendererRightYAxis(rightColorContentYAxisRenderer);
+
+        if (Float.isNaN(mData.getPercentMax()) || Float.isNaN(mData.getPercentMin())||Float.isNaN(mData.getVolMaxTime())) {
             axisLeftBar.setAxisMaximum(0);
             axisRightLine.setAxisMinimum(-0.01f);
             axisRightLine.setAxisMaximum(0.01f);
@@ -389,6 +383,20 @@ public class OneDayView extends BaseView {
         BarData barData = new BarData(barDataSet);
         barChart.setData(barData);
 
+        //请注意，修改视口的所有方法需要在为Chart设置数据之后调用。
+        //设置当前视图四周的偏移量。 设置这个，将阻止图表自动计算它的偏移量。使用 resetViewPortOffsets()撤消此设置。
+        if (landscape) {
+            float volwidth = Utils.calcTextWidthForVol(mPaint, mData.getVolMaxTime());
+            float pricewidth = Utils.calcTextWidth(mPaint, NumberUtils.keepPrecision(Float.isNaN(mData.getMax())?"0":mData.getMax() + "", precision) + "#");
+            float left = CommonUtil.dip2px(mContext, pricewidth > volwidth ? pricewidth : volwidth);
+            float right = CommonUtil.dip2px(mContext, Utils.calcTextWidth(mPaint, "-10.00%"));
+            lineChart.setViewPortOffsets(left, CommonUtil.dip2px(mContext, 5), right, CommonUtil.dip2px(mContext, 15));
+            barChart.setViewPortOffsets(left, 0, right, CommonUtil.dip2px(mContext, 15));
+        } else {
+            lineChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
+            barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), 0, CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5));
+        }
+
         //下面方法需在填充数据后调用
         xAxisLine.setXLabels(getXLabels());
         xAxisLine.setLabelCount(getXLabels().size(), false);
@@ -396,11 +404,10 @@ public class OneDayView extends BaseView {
         xAxisBar.setLabelCount(getXLabels().size(), false);
         lineChart.setVisibleXRange(maxCount, maxCount);
         barChart.setVisibleXRange(maxCount, maxCount);
-
+        //moveViewTo(...) 方法会自动调用 invalidate()
         lineChart.moveViewToX(mData.getDatas().size() - 1);
         barChart.moveViewToX(mData.getDatas().size() - 1);
-        lineChart.invalidate();
-        barChart.animateY(1000);
+
     }
 
     public void dynamicsAddOne(TimeDataModel timeDatamodel, int length) {
@@ -420,7 +427,7 @@ public class OneDayView extends BaseView {
         barChart.notifyDataSetChanged();
         lineChart.setVisibleXRange(maxCount, maxCount);
         barChart.setVisibleXRange(maxCount, maxCount);
-
+        //动态添加或移除数据后， 调用invalidate()刷新图表之前 必须调用 notifyDataSetChanged() .
         lineChart.moveViewToX(index);
         barChart.moveViewToX(index);
     }
@@ -474,8 +481,9 @@ public class OneDayView extends BaseView {
         barChart.setMarker(bottomMarkerView, kDatas);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUserEvent(BaseEvent event) {
+
+    @Override
+    public void onEventMainThread(BaseEvent event) {
         if (event.method == 1) {
             CirclePositionTime position = (CirclePositionTime) event.obj;
             cirCleView.setX(position.cx - cirCleView.getWidth() / 2);

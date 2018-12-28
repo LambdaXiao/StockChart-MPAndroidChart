@@ -270,7 +270,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
         List<ICandleDataSet> dataSets = mChart.getCandleData().getDataSets();
 
-        mValuePaint.setColor(Color.parseColor("#ff8c0d"));
+        mValuePaint.setColor(Color.parseColor("#406ebc"));
         for (int i = 0; i < dataSets.size(); i++) {
 
             ICandleDataSet dataSet = dataSets.get(i);

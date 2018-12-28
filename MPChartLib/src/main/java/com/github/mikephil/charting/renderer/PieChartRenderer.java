@@ -87,11 +87,11 @@ public class PieChartRenderer extends DataRenderer {
         mCenterTextPaint.setTextSize(Utils.convertDpToPixel(12f));
 
         mValuePaint.setTextSize(Utils.convertDpToPixel(13f));
-        mValuePaint.setColor(Color.WHITE);
+        mValuePaint.setColor(Color.BLACK);
         mValuePaint.setTextAlign(Align.CENTER);
 
         mEntryLabelsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mEntryLabelsPaint.setColor(Color.WHITE);
+        mEntryLabelsPaint.setColor(Color.BLACK);
         mEntryLabelsPaint.setTextAlign(Align.CENTER);
         mEntryLabelsPaint.setTextSize(Utils.convertDpToPixel(13f));
 
@@ -549,11 +549,11 @@ public class PieChartRenderer extends DataRenderer {
                                 entry,
                                 0,
                                 labelPtx,
-                                labelPty,
+                                labelPty+lineHeight,
                                 dataSet.getValueTextColor(j));
 
                         if (j < data.getEntryCount() && entry.getLabel() != null) {
-                            drawEntryLabel(c, entry.getLabel(), labelPtx, labelPty + lineHeight);
+                            drawEntryLabel(c, entry.getLabel(), labelPtx, labelPty);
                         }
 
                     } else if (drawXOutside) {
