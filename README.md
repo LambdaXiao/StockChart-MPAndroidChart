@@ -34,7 +34,7 @@ StockApp是Android平台的金融图表库，包括**分时图**和**K线图**�
 
 **联系方式**
 
-_email: wallacexiao.dev@gmail.com_
+_email: lambdaxiao@gmail.com_
 
 _QQ: 932599583_
 
