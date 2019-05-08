@@ -407,6 +407,11 @@ public class FiveDayView extends BaseView {
         barChart.animateY(1000);
     }
 
+    /**
+     * 动态增加一个点数据
+     * @param timeDatamodel
+     * @param length
+     */
     public void dynamicsAddOne(TimeDataModel timeDatamodel, int length) {
         int index = length - 1;
         LineData lineData = lineChart.getData();
@@ -429,6 +434,11 @@ public class FiveDayView extends BaseView {
         barChart.moveViewToX(index);
     }
 
+    /**
+     * 动态更新最后一点数据
+     * @param timeDatamodel
+     * @param length
+     */
     public void dynamicsUpdateOne(TimeDataModel timeDatamodel, int length) {
         int index = length - 1;
         LineData lineData = lineChart.getData();

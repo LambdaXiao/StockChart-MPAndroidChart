@@ -539,6 +539,79 @@ public class KLineView extends BaseView {
         }
     }
 
+    /**
+     * 动态增加一个点数据
+     *
+     * @param kLineData 最新数据集
+     */
+    public void dynamicsAddOne(KLineDataManage kLineData) {
+        int size = kLineData.getKLineDatas().size();
+        CombinedData candleChartData = candleChart.getData();
+        CandleData candleData = candleChartData.getCandleData();
+        ICandleDataSet candleDataSet = candleData.getDataSetByIndex(0);
+        int i = size - 1;
+        candleDataSet.addEntry(new CandleEntry(i, i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getHigh(), (float) kLineData.getKLineDatas().get(i).getLow(), (float) kLineData.getKLineDatas().get(i).getOpen(), (float) kLineData.getKLineDatas().get(i).getClose()));
+        kLineData.getxVals().add(DataTimeUtil.secToDate(kLineData.getKLineDatas().get(i).getDateMills()));
+        candleChart.getXAxis().setAxisMaximum(kLineData.getKLineDatas().size() < 70 ? 70 : candleChartData.getXMax() + kLineData.getOffSet());
+
+        if (chartType1 == 1) {//副图是成交量
+            CombinedData barChartData = barChart.getData();
+            IBarDataSet barDataSet = barChartData.getBarData().getDataSetByIndex(0);
+            if (barDataSet == null) {//当没有数据时
+                return;
+            }
+            float color = kLineData.getKLineDatas().get(i).getOpen() > kLineData.getKLineDatas().get(i).getClose() ? 0f : 1f;
+            BarEntry barEntry = new BarEntry(i, i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getVolume(), color);
+
+            barDataSet.addEntry(barEntry);
+            barChart.getXAxis().setAxisMaximum(kLineData.getKLineDatas().size() < 70 ? 70 : barChartData.getXMax() + kLineData.getOffSet());
+        } else {//副图是其他技术指标
+            doBarChartSwitch(chartType1);
+        }
+
+        candleChart.notifyDataSetChanged();
+        barChart.notifyDataSetChanged();
+        if (kLineData.getKLineDatas().size() > 70) {
+            //moveViewTo(...) 方法会自动调用 invalidate()
+            candleChart.moveViewToX(kLineData.getKLineDatas().size() - 1);
+            barChart.moveViewToX(kLineData.getKLineDatas().size() - 1);
+        } else {
+            candleChart.invalidate();
+            barChart.invalidate();
+        }
+    }
+
+    /**
+     * 动态更新最后一点数据 最新数据集
+     *
+     * @param kLineData
+     */
+    public void dynamicsUpdateOne(KLineDataManage kLineData) {
+        int size = kLineData.getKLineDatas().size();
+        int i = size - 1;
+        CombinedData candleChartData = candleChart.getData();
+        CandleData candleData = candleChartData.getCandleData();
+        ICandleDataSet candleDataSet = candleData.getDataSetByIndex(0);
+        candleDataSet.removeEntry(i);
+
+        candleDataSet.addEntry(new CandleEntry(i, i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getHigh(), (float) kLineData.getKLineDatas().get(i).getLow(), (float) kLineData.getKLineDatas().get(i).getOpen(), (float) kLineData.getKLineDatas().get(i).getClose()));
+        if (chartType1 == 1) {//副图是成交量
+            CombinedData barChartData = barChart.getData();
+            IBarDataSet barDataSet = barChartData.getBarData().getDataSetByIndex(0);
+            barDataSet.removeEntry(i);
+            float color = kLineData.getKLineDatas().get(i).getOpen() > kLineData.getKLineDatas().get(i).getClose() ? 0f : 1f;
+            BarEntry barEntry = new BarEntry(i, i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getVolume(), color);
+            barDataSet.addEntry(barEntry);
+        } else {//副图是其他技术指标
+            doBarChartSwitch(chartType1);
+        }
+
+        candleChart.notifyDataSetChanged();
+        barChart.notifyDataSetChanged();
+        candleChart.invalidate();
+        barChart.invalidate();
+    }
+
     public void setMarkerView(KLineDataManage kLineData) {
         LeftMarkerView leftMarkerView = new LeftMarkerView(mContext, R.layout.my_markerview, precision);
         KRightMarkerView rightMarkerView = new KRightMarkerView(mContext, R.layout.my_markerview, precision);
