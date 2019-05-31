@@ -2,12 +2,10 @@ package com.android.stockapp.application;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatDelegate;
-import android.widget.Toast;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.android.stockapp.common.data.Constants;
 import com.android.stockapp.ui.base.BaseApp;
-import com.android.stockapp.ui.market.activity.StockDetailActivity;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.cache.converter.SerializableDiskConverter;
 

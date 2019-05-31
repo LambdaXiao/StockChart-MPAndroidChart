@@ -2,8 +2,7 @@ package com.github.mikephil.charting.stockChart.data;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.support.v4.content.ContextCompat;
-import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.R;
 import com.github.mikephil.charting.components.YAxis;
@@ -17,12 +16,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.stockChart.model.KLineDataModel;
 import com.github.mikephil.charting.stockChart.model.bean.BOLLEntity;
-import com.github.mikephil.charting.stockChart.model.bean.CCIEntity;
-import com.github.mikephil.charting.stockChart.model.bean.EXPMAEntity;
 import com.github.mikephil.charting.stockChart.model.bean.KDJEntity;
 import com.github.mikephil.charting.stockChart.model.bean.MACDEntity;
 import com.github.mikephil.charting.stockChart.model.bean.RSIEntity;
-import com.github.mikephil.charting.stockChart.model.bean.SMAEntity;
 import com.github.mikephil.charting.utils.DataTimeUtil;
 import com.github.mikephil.charting.utils.NumberUtils;
 

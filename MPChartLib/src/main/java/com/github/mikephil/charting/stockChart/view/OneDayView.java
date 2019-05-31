@@ -2,21 +2,15 @@ package com.github.mikephil.charting.stockChart.view;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.R;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -53,8 +47,6 @@ import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

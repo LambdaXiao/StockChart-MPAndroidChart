@@ -1,17 +1,12 @@
 package com.github.mikephil.charting.components;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.RelativeLayout;
 
-import com.github.mikephil.charting.R;
+import androidx.core.content.ContextCompat;
+
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;

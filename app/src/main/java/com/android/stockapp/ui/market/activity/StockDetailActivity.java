@@ -2,14 +2,13 @@ package com.android.stockapp.ui.market.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import com.android.stockapp.R;
 import com.android.stockapp.common.adapter.SimpleFragmentPagerAdapter;
 import com.android.stockapp.common.data.Constants;
 import com.android.stockapp.common.viewpager.NoTouchScrollViewpager;
-import com.android.stockapp.ui.main.MainActivity;
 import com.android.stockapp.ui.market.fragment.ChartFiveDayFragment;
 import com.android.stockapp.ui.market.fragment.ChartKLineFragment;
 import com.android.stockapp.ui.market.fragment.ChartOneDayFragment;

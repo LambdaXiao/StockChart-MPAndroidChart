@@ -2,7 +2,7 @@ package com.github.mikephil.charting.stockChart.view;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -12,8 +12,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
 import com.github.mikephil.charting.stockChart.data.KLineDataManage;
 import com.github.mikephil.charting.stockChart.data.TimeDataManage;
