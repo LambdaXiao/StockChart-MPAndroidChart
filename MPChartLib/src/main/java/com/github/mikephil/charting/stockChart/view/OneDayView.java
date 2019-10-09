@@ -267,9 +267,14 @@ public class OneDayView extends BaseView {
             cirCleView.setVisibility(View.GONE);
             lineChart.setNoDataText(getResources().getString(R.string.no_data));
             barChart.setNoDataText(getResources().getString(R.string.no_data));
-        } else {
-            cirCleView.setVisibility(landscape ? View.VISIBLE : View.GONE);
-        }
+			lineChart.invalidate();
+            barChart.invalidate();
+            return;
+		} 
+		
+        cirCleView.setVisibility(landscape ? View.VISIBLE : View.GONE);
+        
+		
 
         if (mData.getAssetId().endsWith(".HK")) {
             setPrecision(mData.getAssetId().contains("IDX") ? 2 : 3);

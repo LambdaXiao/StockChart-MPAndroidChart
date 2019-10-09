@@ -51,7 +51,7 @@ public class ChartOneDayFragment extends BaseFragment {
 
     @Override
     public void initBase(View view) {
-
+        //初始化
         chart.initChart(land);
         //测试数据
         try {

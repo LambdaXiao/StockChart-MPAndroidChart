@@ -204,6 +204,7 @@ public class KLineView extends BaseView {
         candleChart.setOnChartGestureListener(gestureListenerCandle);
         barChart.setOnChartGestureListener(gestureListenerBar);
 
+        //移动十字标数据监听
         candleChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
@@ -226,6 +227,7 @@ public class KLineView extends BaseView {
                 updateText(kLineData.getKLineDatas().size() - 1, false);
             }
         });
+        //移动十字标数据监听
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 
             @Override
@@ -256,6 +258,8 @@ public class KLineView extends BaseView {
         if (kLineData.getKLineDatas().size() == 0) {
             candleChart.setNoDataText(getResources().getString(R.string.no_data));
             barChart.setNoDataText(getResources().getString(R.string.no_data));
+            candleChart.invalidate();
+            barChart.invalidate();
             return;
         }
         axisLeftBar.setValueFormatter(new VolFormatter(mContext, data.getAssetId()));
@@ -632,10 +636,12 @@ public class KLineView extends BaseView {
         return xScale;
     }
 
-    public void updateText(int index, boolean isSelect) {
+    //移动十字标更新数据
+    public void updateText(int index, float xPx, boolean isSelect) {
         if (mHighlightValueSelectedListener != null) {
             mHighlightValueSelectedListener.onKHighlightValueListener(kLineData, index, isSelect);
         }
+        //更新MA均线数据
         candleChart.setDescriptionCustom(zbColor, new String[]{"MA5:" + NumberUtils.keepPrecision(kLineData.getKLineDatas().get(index).getMa5(), 3), "MA10:" + NumberUtils.keepPrecision(kLineData.getKLineDatas().get(index).getMa10(), 3), "MA20:" + NumberUtils.keepPrecision(kLineData.getKLineDatas().get(index).getMa20(), 3)});
         chartSwitch(index);
     }
