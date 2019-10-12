@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">StockApp</string>
 
+    <string name="test1">股票图演示</string>
+    <string name="test2">MPAndroidChart演示</string>
     <string name="viewGithub">View on GitHub</string>
     <string name="reportProblem">Problem Report</string>
     <string name="viewWebsite">Developer Website</string>

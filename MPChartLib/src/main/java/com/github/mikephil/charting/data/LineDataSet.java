@@ -31,7 +31,7 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     /**
      * the color of the inner circles
      */
-    private int mCircleColorHole = Color.WHITE;
+    private int mCircleHoleColor = Color.WHITE;
 
     /**
      * the radius of the circle-shaped value indicators
@@ -370,13 +370,13 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
      *
      * @param color
      */
-    public void setCircleColorHole(int color) {
-        mCircleColorHole = color;
+    public void setCircleHoleColor(int color) {
+        mCircleHoleColor = color;
     }
 
     @Override
     public int getCircleHoleColor() {
-        return mCircleColorHole;
+        return mCircleHoleColor;
     }
 
     /**

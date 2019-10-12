@@ -21,4 +21,9 @@
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
     </style>
+
+    <!-- Application theme. -->
+    <style name="MPAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
 </resources>
