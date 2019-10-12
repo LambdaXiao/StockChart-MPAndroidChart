@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.github.mikephil.charting.stockChart.view.OneDayView
+    <com.github.mikephil.charting.stockChart.OneDayChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

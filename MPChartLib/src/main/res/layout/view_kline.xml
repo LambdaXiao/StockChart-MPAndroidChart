@@ -4,14 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.github.mikephil.charting.stockChart.CandleCombinedChart
+    <com.github.mikephil.charting.stockChart.charts.CandleCombinedChart
         android:id="@+id/candleChart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_above="@+id/barchart"
         android:layout_weight="1.8" />
 
-    <com.github.mikephil.charting.stockChart.MyCombinedChart
+    <com.github.mikephil.charting.stockChart.charts.MyCombinedChart
         android:id="@+id/barchart"
         android:layout_width="match_parent"
         android:layout_height="0dp"

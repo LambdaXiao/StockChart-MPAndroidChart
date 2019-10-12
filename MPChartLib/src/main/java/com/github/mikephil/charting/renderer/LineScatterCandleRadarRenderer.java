@@ -2,11 +2,9 @@ package com.github.mikephil.charting.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Path;
-import android.util.Log;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.interfaces.datasets.ILineScatterCandleRadarDataSet;
-import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
@@ -59,7 +57,6 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
             mHighlightLinePath.moveTo(mViewPortHandler.contentLeft(), y);
             mHighlightLinePath.lineTo(mViewPortHandler.contentRight(), y);
 
-//            Log.e("画笔的宽度11", Utils.convertDpToPixel(0.5f)+"  "+mHighlightPaint.getColor()+"  "+mHighlightPaint.getAlpha()+"  "+mHighlightPaint.getStrokeWidth());
             c.drawPath(mHighlightLinePath, mHighlightPaint);
         }
     }

@@ -22,7 +22,6 @@
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>
 
-        <activity android:name=".ui.main.BarChartActivity" />
     </application>
 
 </manifest>

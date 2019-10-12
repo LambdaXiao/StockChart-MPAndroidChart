@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart;
+package com.github.mikephil.charting.stockChart.charts;
 
 import android.graphics.Matrix;
 import android.view.MotionEvent;

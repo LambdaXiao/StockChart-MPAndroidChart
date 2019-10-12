@@ -1,10 +1,10 @@
-package com.github.mikephil.charting.stockChart.view;
+package com.github.mikephil.charting.stockChart;
 
 import android.content.Context;
 import android.graphics.Paint;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatDelegate;
+
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -23,23 +23,21 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.VolFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.stockChart.BarBottomMarkerView;
-import com.github.mikephil.charting.stockChart.ColorContentYAxisRenderer;
-import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
-import com.github.mikephil.charting.stockChart.LeftMarkerView;
-import com.github.mikephil.charting.stockChart.TimeBarChart;
-import com.github.mikephil.charting.stockChart.TimeLineChart;
-import com.github.mikephil.charting.stockChart.TimeRightMarkerView;
-import com.github.mikephil.charting.stockChart.TimeXAxis;
-import com.github.mikephil.charting.stockChart.data.TimeDataManage;
+import com.github.mikephil.charting.stockChart.markerView.BarBottomMarkerView;
+import com.github.mikephil.charting.stockChart.renderer.ColorContentYAxisRenderer;
+import com.github.mikephil.charting.stockChart.charts.CoupleChartGestureListener;
+import com.github.mikephil.charting.stockChart.markerView.LeftMarkerView;
+import com.github.mikephil.charting.stockChart.charts.TimeBarChart;
+import com.github.mikephil.charting.stockChart.charts.TimeLineChart;
+import com.github.mikephil.charting.stockChart.markerView.TimeRightMarkerView;
+import com.github.mikephil.charting.stockChart.charts.TimeXAxis;
+import com.github.mikephil.charting.stockChart.dataManage.TimeDataManage;
 import com.github.mikephil.charting.stockChart.enums.ChartType;
 import com.github.mikephil.charting.stockChart.event.BaseEvent;
 import com.github.mikephil.charting.stockChart.model.CirclePositionTime;
@@ -55,9 +53,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
- * 当日分时图view
+ * 当日分时图
  */
-public class FiveDayView extends BaseView {
+public class FiveDayChart extends BaseChart {
 
     private Context mContext;
     TimeLineChart lineChart;
@@ -80,11 +78,11 @@ public class FiveDayView extends BaseView {
     private TimeDataManage mData;
     private int[] colorArray;
 
-    public FiveDayView(Context context) {
+    public FiveDayChart(Context context) {
         this(context, null);
     }
 
-    public FiveDayView(Context context, @Nullable AttributeSet attrs) {
+    public FiveDayChart(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.view_time, this);

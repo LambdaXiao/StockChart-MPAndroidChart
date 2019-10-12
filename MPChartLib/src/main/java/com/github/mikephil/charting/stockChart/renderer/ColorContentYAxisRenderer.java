@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart;
+package com.github.mikephil.charting.stockChart.renderer;
 
 import android.graphics.Canvas;
 

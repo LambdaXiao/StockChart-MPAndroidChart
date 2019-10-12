@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart;
+package com.github.mikephil.charting.stockChart.charts;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,8 +8,10 @@ import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.stockChart.data.KLineDataManage;
+import com.github.mikephil.charting.stockChart.dataManage.KLineDataManage;
 import com.github.mikephil.charting.stockChart.enums.TimeType;
+import com.github.mikephil.charting.stockChart.markerView.BarBottomMarkerView;
+import com.github.mikephil.charting.stockChart.renderer.MyCombinedChartRenderer;
 import com.github.mikephil.charting.utils.DataTimeUtil;
 
 /**

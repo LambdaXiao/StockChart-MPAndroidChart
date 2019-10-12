@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart;
+package com.github.mikephil.charting.stockChart.markerView;
 
 import android.content.Context;
 import android.widget.TextView;
@@ -8,11 +8,12 @@ import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.NumberUtils;
 
 
 import java.text.DecimalFormat;
 
-public class TimeRightMarkerView extends MarkerView {
+public class KRightMarkerView extends MarkerView {
     /**
      * Constructor. Sets up the MarkerView with a custom layout resource.
      *
@@ -21,11 +22,11 @@ public class TimeRightMarkerView extends MarkerView {
      */
     private TextView markerTv;
     private float num;
-    private DecimalFormat mFormat;
+    private int precision;
 
-    public TimeRightMarkerView(Context context, int layoutResource) {
+    public KRightMarkerView(Context context, int layoutResource,int precision) {
         super(context, layoutResource);
-        mFormat = new DecimalFormat("#0.00");
+        this.precision = precision;
         markerTv = (TextView) findViewById(R.id.marker_tv);
         markerTv.setTextSize(10);
 
@@ -37,7 +38,7 @@ public class TimeRightMarkerView extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        markerTv.setText(mFormat.format(num * 100) + "%");
+        markerTv.setText(NumberUtils.keepPrecisionR(num,precision));
     }
 
     @Override

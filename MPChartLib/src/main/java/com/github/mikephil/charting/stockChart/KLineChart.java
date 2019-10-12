@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart.view;
+package com.github.mikephil.charting.stockChart;
 
 import android.content.Context;
 import android.os.Handler;
@@ -22,20 +22,19 @@ import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.VolFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.stockChart.BarBottomMarkerView;
-import com.github.mikephil.charting.stockChart.CandleCombinedChart;
-import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
-import com.github.mikephil.charting.stockChart.KRightMarkerView;
-import com.github.mikephil.charting.stockChart.LeftMarkerView;
-import com.github.mikephil.charting.stockChart.MyCombinedChart;
-import com.github.mikephil.charting.stockChart.data.KLineDataManage;
+import com.github.mikephil.charting.stockChart.markerView.BarBottomMarkerView;
+import com.github.mikephil.charting.stockChart.charts.CandleCombinedChart;
+import com.github.mikephil.charting.stockChart.charts.CoupleChartGestureListener;
+import com.github.mikephil.charting.stockChart.markerView.KRightMarkerView;
+import com.github.mikephil.charting.stockChart.markerView.LeftMarkerView;
+import com.github.mikephil.charting.stockChart.charts.MyCombinedChart;
+import com.github.mikephil.charting.stockChart.dataManage.KLineDataManage;
 import com.github.mikephil.charting.stockChart.enums.TimeType;
 import com.github.mikephil.charting.utils.CommonUtil;
 import com.github.mikephil.charting.utils.DataTimeUtil;
@@ -44,9 +43,9 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * K线view
+ * K线
  */
-public class KLineView extends BaseView {
+public class KLineChart extends BaseChart {
 
     private Context mContext;
     private CandleCombinedChart candleChart;
@@ -75,11 +74,11 @@ public class KLineView extends BaseView {
         }
     };
 
-    public KLineView(Context context) {
+    public KLineChart(Context context) {
         this(context, null);
     }
 
-    public KLineView(Context context, @Nullable AttributeSet attrs) {
+    public KLineChart(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.view_kline, this);

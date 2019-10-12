@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart.data;
+package com.github.mikephil.charting.stockChart.dataManage;
 
 import android.util.SparseArray;
 
@@ -7,7 +7,6 @@ import com.github.mikephil.charting.stockChart.model.TimeDataModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;

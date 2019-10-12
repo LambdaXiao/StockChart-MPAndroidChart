@@ -1,9 +1,10 @@
-package com.github.mikephil.charting.stockChart;
+package com.github.mikephil.charting.stockChart.renderer;
 
 import android.graphics.Canvas;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.renderer.XAxisRenderer;
+import com.github.mikephil.charting.stockChart.charts.TimeXAxis;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;

@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart;
+package com.github.mikephil.charting.stockChart.charts;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,7 +8,10 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.stockChart.data.TimeDataManage;
+import com.github.mikephil.charting.stockChart.dataManage.TimeDataManage;
+import com.github.mikephil.charting.stockChart.markerView.BarBottomMarkerView;
+import com.github.mikephil.charting.stockChart.renderer.TimeBarChartRenderer;
+import com.github.mikephil.charting.stockChart.renderer.TimeXAxisRenderer;
 import com.github.mikephil.charting.utils.DataTimeUtil;
 
 public class TimeBarChart extends BarChart {

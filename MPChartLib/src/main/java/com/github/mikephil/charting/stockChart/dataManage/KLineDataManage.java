@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart.data;
+package com.github.mikephil.charting.stockChart.dataManage;
 
 import android.content.Context;
 import android.graphics.Paint;

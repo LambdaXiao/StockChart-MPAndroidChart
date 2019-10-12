@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart;
+package com.github.mikephil.charting.stockChart.markerView;
 
 import android.content.Context;
 import android.widget.TextView;

@@ -1,4 +1,4 @@
-package com.github.mikephil.charting.stockChart.view;
+package com.github.mikephil.charting.stockChart;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -12,21 +12,21 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 
-import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
-import com.github.mikephil.charting.stockChart.data.KLineDataManage;
-import com.github.mikephil.charting.stockChart.data.TimeDataManage;
+import com.github.mikephil.charting.stockChart.charts.CoupleChartGestureListener;
+import com.github.mikephil.charting.stockChart.dataManage.KLineDataManage;
+import com.github.mikephil.charting.stockChart.dataManage.TimeDataManage;
 import com.github.mikephil.charting.stockChart.event.BaseEvent;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class BaseView extends LinearLayout {
+public class BaseChart extends LinearLayout {
 
     public boolean landscape = false;//是否横屏模式
     public int precision = 3;//小数精度
     public Paint mPaint;
 
-    public BaseView(Context context) {
+    public BaseChart(Context context) {
         this(context, null);
     }
 
@@ -35,7 +35,7 @@ public class BaseView extends LinearLayout {
     public CoupleChartGestureListener gestureListenerBar;
     public CoupleChartGestureListener gestureListenerCandle;
 
-    public BaseView(Context context, @Nullable AttributeSet attrs) {
+    public BaseChart(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }

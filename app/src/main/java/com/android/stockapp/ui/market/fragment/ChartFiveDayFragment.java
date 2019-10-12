@@ -11,9 +11,9 @@ import com.android.stockapp.R;
 import com.android.stockapp.common.data.ChartData;
 import com.android.stockapp.ui.base.BaseFragment;
 import com.android.stockapp.ui.market.activity.StockDetailLandActivity;
-import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
-import com.github.mikephil.charting.stockChart.data.TimeDataManage;
-import com.github.mikephil.charting.stockChart.view.FiveDayView;
+import com.github.mikephil.charting.stockChart.charts.CoupleChartGestureListener;
+import com.github.mikephil.charting.stockChart.dataManage.TimeDataManage;
+import com.github.mikephil.charting.stockChart.FiveDayChart;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +28,7 @@ import butterknife.Unbinder;
 public class ChartFiveDayFragment extends BaseFragment {
 
     @BindView(R.id.chart)
-    FiveDayView chart;
+    FiveDayChart chart;
     Unbinder unbinder;
 
     private boolean land;//是否横屏

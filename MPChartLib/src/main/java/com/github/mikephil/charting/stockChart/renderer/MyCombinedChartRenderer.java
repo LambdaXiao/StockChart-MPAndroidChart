@@ -1,9 +1,8 @@
-package com.github.mikephil.charting.stockChart;
+package com.github.mikephil.charting.stockChart.renderer;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.renderer.BubbleChartRenderer;
-import com.github.mikephil.charting.renderer.CandleStickChartRenderer;
 import com.github.mikephil.charting.renderer.CombinedChartRenderer;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.renderer.ScatterChartRenderer;

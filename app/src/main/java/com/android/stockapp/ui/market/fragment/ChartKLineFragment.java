@@ -11,9 +11,9 @@ import com.android.stockapp.R;
 import com.android.stockapp.common.data.ChartData;
 import com.android.stockapp.ui.base.BaseFragment;
 import com.android.stockapp.ui.market.activity.StockDetailLandActivity;
-import com.github.mikephil.charting.stockChart.CoupleChartGestureListener;
-import com.github.mikephil.charting.stockChart.data.KLineDataManage;
-import com.github.mikephil.charting.stockChart.view.KLineView;
+import com.github.mikephil.charting.stockChart.charts.CoupleChartGestureListener;
+import com.github.mikephil.charting.stockChart.dataManage.KLineDataManage;
+import com.github.mikephil.charting.stockChart.KLineChart;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +29,7 @@ public class ChartKLineFragment extends BaseFragment {
 
 
     @BindView(R.id.combinedchart)
-    KLineView combinedchart;
+    KLineChart combinedchart;
     Unbinder unbinder;
 
     private int mType;//日K：1；周K：7；月K：30
