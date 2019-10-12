@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.VolFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
@@ -139,9 +140,9 @@ public class OneDayView extends BaseView {
         axisLeftLine.setDrawAxisLine(false);
         axisLeftLine.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisLeftLine.setTextColor(ContextCompat.getColor(mContext, R.color.axis_text));
-        axisLeftLine.setValueFormatter(new IAxisValueFormatter() {
+        axisLeftLine.setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public String getAxisLabel(float value, AxisBase axis) {
                 return NumberUtils.keepPrecisionR(value, precision);
             }
         });
@@ -158,9 +159,9 @@ public class OneDayView extends BaseView {
         axisRightLine.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisRightLine.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
         axisRightLine.setTextColor(ContextCompat.getColor(mContext, R.color.axis_text));
-        axisRightLine.setValueFormatter(new IAxisValueFormatter() {
+        axisRightLine.setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public String getAxisLabel(float value, AxisBase axis) {
                 DecimalFormat mFormat = new DecimalFormat("#0.00%");
                 return mFormat.format(value);
             }
@@ -211,7 +212,7 @@ public class OneDayView extends BaseView {
                 lineChart.highlightValue(h);
                 barChart.highlightValue(new Highlight(h.getX(), h.getDataSetIndex(), -1));
                 if (mHighlightValueSelectedListener != null) {
-                    mHighlightValueSelectedListener.onDayHighlightValueListener(mData, e.getXIndex(), true);
+                    mHighlightValueSelectedListener.onDayHighlightValueListener(mData, (int) e.getX(), true);
                 }
             }
 
@@ -229,7 +230,7 @@ public class OneDayView extends BaseView {
                 barChart.highlightValue(h);
                 lineChart.highlightValue(new Highlight(h.getX(), h.getDataSetIndex(), -1));
                 if (mHighlightValueSelectedListener != null) {
-                    mHighlightValueSelectedListener.onDayHighlightValueListener(mData, e.getXIndex(), true);
+                    mHighlightValueSelectedListener.onDayHighlightValueListener(mData, (int) e.getX(), true);
                 }
             }
 
@@ -332,14 +333,14 @@ public class OneDayView extends BaseView {
         for (int i = 0, j = 0; i < mData.getDatas().size(); i++, j++) {
             TimeDataModel t = mData.getDatas().get(j);
             if (t == null) {
-                lineCJEntries.add(new Entry(i, i, Float.NaN));
-                lineJJEntries.add(new Entry(i, i, Float.NaN));
-                barEntries.add(new BarEntry(i, i, Float.NaN));
+                lineCJEntries.add(new Entry( i, Float.NaN));
+                lineJJEntries.add(new Entry( i, Float.NaN));
+                barEntries.add(new BarEntry( i, Float.NaN));
                 continue;
             }
-            lineCJEntries.add(new Entry(i, i, (float) mData.getDatas().get(i).getNowPrice()));
-            lineJJEntries.add(new Entry(i, i, (float) mData.getDatas().get(i).getAveragePrice()));
-            barEntries.add(new BarEntry(i, i, mData.getDatas().get(i).getVolume()));
+            lineCJEntries.add(new Entry( i, (float) mData.getDatas().get(i).getNowPrice()));
+            lineJJEntries.add(new Entry( i, (float) mData.getDatas().get(i).getAveragePrice()));
+            barEntries.add(new BarEntry( i, mData.getDatas().get(i).getVolume()));
         }
         d1 = new LineDataSet(lineCJEntries, "分时线");
         d2 = new LineDataSet(lineJJEntries, "均价");
@@ -416,13 +417,13 @@ public class OneDayView extends BaseView {
         int index = length - 1;
         LineData lineData = lineChart.getData();
         ILineDataSet d1 = lineData.getDataSetByIndex(0);
-        d1.addEntry(new Entry(index, index, (float) timeDatamodel.getNowPrice()));
+        d1.addEntry(new Entry(index, (float) timeDatamodel.getNowPrice()));
         ILineDataSet d2 = lineData.getDataSetByIndex(1);
-        d2.addEntry(new Entry(index, index, (float) timeDatamodel.getAveragePrice()));
+        d2.addEntry(new Entry(index, (float) timeDatamodel.getAveragePrice()));
 
         BarData barData = barChart.getData();
         IBarDataSet barDataSet = barData.getDataSetByIndex(0);
-        barDataSet.addEntry(new BarEntry(index, index, timeDatamodel.getVolume()));
+        barDataSet.addEntry(new BarEntry(index, timeDatamodel.getVolume()));
         lineData.notifyDataChanged();
         lineChart.notifyDataSetChanged();
         barData.notifyDataChanged();
@@ -445,17 +446,17 @@ public class OneDayView extends BaseView {
         ILineDataSet d1 = lineData.getDataSetByIndex(0);
         Entry e = d1.getEntryForIndex(index);
         d1.removeEntry(e);
-        d1.addEntry(new Entry(index, index, (float) timeDatamodel.getNowPrice()));
+        d1.addEntry(new Entry(index, (float) timeDatamodel.getNowPrice()));
 
         ILineDataSet d2 = lineData.getDataSetByIndex(1);
         Entry e2 = d2.getEntryForIndex(index);
         d2.removeEntry(e2);
-        d2.addEntry(new Entry(index, index, (float) timeDatamodel.getAveragePrice()));
+        d2.addEntry(new Entry(index, (float) timeDatamodel.getAveragePrice()));
 
         BarData barData = barChart.getData();
         IBarDataSet barDataSet = barData.getDataSetByIndex(0);
         barDataSet.removeEntry(index);
-        barDataSet.addEntry(new BarEntry(index, index, timeDatamodel.getVolume()));
+        barDataSet.addEntry(new BarEntry(index, timeDatamodel.getVolume()));
 
         lineData.notifyDataChanged();
         lineChart.notifyDataSetChanged();

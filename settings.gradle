@@ -1,1 +1,1 @@
-include ':app', ':rxeasyhttp',':MPChartLib'
+include ':app',':MPChartLib'

@@ -99,6 +99,11 @@ public class CombinedChartRenderer extends DataRenderer {
     }
 
     @Override
+    public void drawValue(Canvas c, String valueText, float x, float y, int color) {
+        Log.e("MPAndroidChart", "Erroneous call to drawValue() in CombinedChartRenderer!");
+    }
+
+    @Override
     public void drawValues(Canvas c) {
 
         for (DataRenderer renderer : mRenderers) {

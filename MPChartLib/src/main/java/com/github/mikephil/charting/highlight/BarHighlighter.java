@@ -20,7 +20,7 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
     public Highlight getHighlight(float x, float y) {
         Highlight high = super.getHighlight(x, y);
 
-        if (high == null) {
+        if(high == null) {
             return null;
         }
 

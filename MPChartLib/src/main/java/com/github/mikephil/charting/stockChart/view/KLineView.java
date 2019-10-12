@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.VolFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
@@ -149,9 +150,9 @@ public class KLineView extends BaseView {
         axisLeftK.setValueLineInside(true);
         axisLeftK.setDrawTopBottomGridLine(false);
         axisLeftK.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
-        axisLeftK.setValueFormatter(new IAxisValueFormatter() {
+        axisLeftK.setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public String getAxisLabel(float value, AxisBase axis) {
                 return NumberUtils.keepPrecisionR(value, precision);
             }
         });
@@ -218,7 +219,7 @@ public class KLineView extends BaseView {
                     highlight.setDataIndex(0);
                     barChart.highlightValues(new Highlight[]{highlight});
                 }
-                updateText(e.getXIndex(), true);
+                updateText((int) e.getX(), true);
             }
 
             @Override
@@ -237,7 +238,7 @@ public class KLineView extends BaseView {
                 highlight.setDataIndex(1);
                 candleChart.highlightValues(new Highlight[]{highlight});
 
-                updateText(e.getXIndex(), true);
+                updateText((int) e.getX(), true);
             }
 
             @Override
@@ -297,9 +298,9 @@ public class KLineView extends BaseView {
         }
 
         if (isFirst) {
-            barChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            barChart.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
-                public String getFormattedValue(float value, AxisBase axis) {
+                public String getAxisLabel(float value, AxisBase axis) {
                     int index = (int) (value - kLineData.getOffSet());
                     if (index < 0 || index >= kLineData.getxVals().size()) {
                         return "";
@@ -339,8 +340,10 @@ public class KLineView extends BaseView {
             viewPortHandlerBar.setMaximumScaleX(50);
             barChart.zoom(xScale, 0, 0, 0);
 
-            candleChart.getXAxis().setAxisMaximum(kLineData.getKLineDatas().size() < 70 ? 70 : candleChartData.getXMax() + kLineData.getOffSet());
-            barChart.getXAxis().setAxisMaximum(kLineData.getKLineDatas().size() < 70 ? 70 : barChartData.getXMax() + kLineData.getOffSet());
+            candleChart.getXAxis().setAxisMinimum(candleChartData.getXMin()-0.5f);
+            barChart.getXAxis().setAxisMinimum(barChartData.getXMin()-0.5f);
+            candleChart.getXAxis().setAxisMaximum(kLineData.getKLineDatas().size() < 70 ? 70 : candleChartData.getXMax() + 0.5f);
+            barChart.getXAxis().setAxisMaximum(kLineData.getKLineDatas().size() < 70 ? 70 : barChartData.getXMax() + +0.5f);
             if (kLineData.getKLineDatas().size() > 70) {
                 //moveViewTo(...) 方法会自动调用 invalidate()
                 candleChart.moveViewToX(kLineData.getKLineDatas().size() - 1);
@@ -425,9 +428,9 @@ public class KLineView extends BaseView {
 
             axisLeftBar.resetAxisMaximum();
             axisLeftBar.resetAxisMinimum();
-            axisLeftBar.setValueFormatter(new IAxisValueFormatter() {
+            axisLeftBar.setValueFormatter(new ValueFormatter() {
                 @Override
-                public String getFormattedValue(float value, AxisBase axis) {
+                public String getAxisLabel(float value, AxisBase axis) {
                     return NumberUtils.keepPrecision(value, precision);
                 }
             });
@@ -457,9 +460,9 @@ public class KLineView extends BaseView {
 
             axisLeftBar.resetAxisMaximum();
             axisLeftBar.resetAxisMinimum();
-            axisLeftBar.setValueFormatter(new IAxisValueFormatter() {
+            axisLeftBar.setValueFormatter(new ValueFormatter() {
                 @Override
-                public String getFormattedValue(float value, AxisBase axis) {
+                public String getAxisLabel(float value, AxisBase axis) {
                     return NumberUtils.keepPrecision(value, precision);
                 }
             });
@@ -488,9 +491,9 @@ public class KLineView extends BaseView {
 
             axisLeftBar.resetAxisMaximum();
             axisLeftBar.resetAxisMinimum();
-            axisLeftBar.setValueFormatter(new IAxisValueFormatter() {
+            axisLeftBar.setValueFormatter(new ValueFormatter() {
                 @Override
-                public String getFormattedValue(float value, AxisBase axis) {
+                public String getAxisLabel(float value, AxisBase axis) {
                     return NumberUtils.keepPrecision(value, precision);
                 }
             });
@@ -520,9 +523,9 @@ public class KLineView extends BaseView {
 
             axisLeftBar.resetAxisMaximum();
             axisLeftBar.resetAxisMinimum();
-            axisLeftBar.setValueFormatter(new IAxisValueFormatter() {
+            axisLeftBar.setValueFormatter(new ValueFormatter() {
                 @Override
-                public String getFormattedValue(float value, AxisBase axis) {
+                public String getAxisLabel(float value, AxisBase axis) {
                     return NumberUtils.keepPrecision(value, precision);
                 }
             });
@@ -545,7 +548,7 @@ public class KLineView extends BaseView {
         CandleData candleData = candleChartData.getCandleData();
         ICandleDataSet candleDataSet = candleData.getDataSetByIndex(0);
         int i = size - 1;
-        candleDataSet.addEntry(new CandleEntry(i, i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getHigh(), (float) kLineData.getKLineDatas().get(i).getLow(), (float) kLineData.getKLineDatas().get(i).getOpen(), (float) kLineData.getKLineDatas().get(i).getClose()));
+        candleDataSet.addEntry(new CandleEntry(i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getHigh(), (float) kLineData.getKLineDatas().get(i).getLow(), (float) kLineData.getKLineDatas().get(i).getOpen(), (float) kLineData.getKLineDatas().get(i).getClose()));
         kLineData.getxVals().add(DataTimeUtil.secToDate(kLineData.getKLineDatas().get(i).getDateMills()));
         candleChart.getXAxis().setAxisMaximum(kLineData.getKLineDatas().size() < 70 ? 70 : candleChartData.getXMax() + kLineData.getOffSet());
 
@@ -556,7 +559,7 @@ public class KLineView extends BaseView {
                 return;
             }
             float color = kLineData.getKLineDatas().get(i).getOpen() > kLineData.getKLineDatas().get(i).getClose() ? 0f : 1f;
-            BarEntry barEntry = new BarEntry(i, i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getVolume(), color);
+            BarEntry barEntry = new BarEntry(i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getVolume(), color);
 
             barDataSet.addEntry(barEntry);
             barChart.getXAxis().setAxisMaximum(kLineData.getKLineDatas().size() < 70 ? 70 : barChartData.getXMax() + kLineData.getOffSet());
@@ -589,13 +592,13 @@ public class KLineView extends BaseView {
         ICandleDataSet candleDataSet = candleData.getDataSetByIndex(0);
         candleDataSet.removeEntry(i);
 
-        candleDataSet.addEntry(new CandleEntry(i, i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getHigh(), (float) kLineData.getKLineDatas().get(i).getLow(), (float) kLineData.getKLineDatas().get(i).getOpen(), (float) kLineData.getKLineDatas().get(i).getClose()));
+        candleDataSet.addEntry(new CandleEntry(i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getHigh(), (float) kLineData.getKLineDatas().get(i).getLow(), (float) kLineData.getKLineDatas().get(i).getOpen(), (float) kLineData.getKLineDatas().get(i).getClose()));
         if (chartType1 == 1) {//副图是成交量
             CombinedData barChartData = barChart.getData();
             IBarDataSet barDataSet = barChartData.getBarData().getDataSetByIndex(0);
             barDataSet.removeEntry(i);
             float color = kLineData.getKLineDatas().get(i).getOpen() > kLineData.getKLineDatas().get(i).getClose() ? 0f : 1f;
-            BarEntry barEntry = new BarEntry(i, i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getVolume(), color);
+            BarEntry barEntry = new BarEntry(i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getVolume(), color);
             barDataSet.addEntry(barEntry);
         } else {//副图是其他技术指标
             doBarChartSwitch(chartType1);
@@ -637,7 +640,7 @@ public class KLineView extends BaseView {
     }
 
     //移动十字标更新数据
-    public void updateText(int index, float xPx, boolean isSelect) {
+    public void updateText(int index, boolean isSelect) {
         if (mHighlightValueSelectedListener != null) {
             mHighlightValueSelectedListener.onKHighlightValueListener(kLineData, index, isSelect);
         }

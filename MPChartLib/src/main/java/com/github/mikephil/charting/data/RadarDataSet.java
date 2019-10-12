@@ -114,4 +114,14 @@ public class RadarDataSet extends LineRadarDataSet<RadarEntry> implements IRadar
 
         return copied;
     }
+
+    protected void copy(RadarDataSet radarDataSet) {
+        super.copy(radarDataSet);
+        radarDataSet.mDrawHighlightCircleEnabled = mDrawHighlightCircleEnabled;
+        radarDataSet.mHighlightCircleFillColor = mHighlightCircleFillColor;
+        radarDataSet.mHighlightCircleInnerRadius = mHighlightCircleInnerRadius;
+        radarDataSet.mHighlightCircleStrokeAlpha = mHighlightCircleStrokeAlpha;
+        radarDataSet.mHighlightCircleStrokeColor = mHighlightCircleStrokeColor;
+        radarDataSet.mHighlightCircleStrokeWidth = mHighlightCircleStrokeWidth;
+    }
 }

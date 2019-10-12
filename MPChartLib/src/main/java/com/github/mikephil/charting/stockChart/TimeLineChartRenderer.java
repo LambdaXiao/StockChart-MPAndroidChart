@@ -83,7 +83,7 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                     continue;
                 }
 
-                mLineBuffer[0] = e.getX() + offSet;
+                mLineBuffer[0] = e.getX();
                 mLineBuffer[1] = e.getY() * phaseY;
 
                 if (j < mXBounds.max) {
@@ -95,14 +95,14 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                     }
 
                     if (isDrawSteppedEnabled) {
-                        mLineBuffer[2] = e.getX() + offSet;
+                        mLineBuffer[2] = e.getX();
                         mLineBuffer[3] = mLineBuffer[1];
                         mLineBuffer[4] = mLineBuffer[2];
                         mLineBuffer[5] = mLineBuffer[3];
-                        mLineBuffer[6] = e.getX() + offSet;
+                        mLineBuffer[6] = e.getX();
                         mLineBuffer[7] = e.getY() * phaseY;
                     } else {
-                        mLineBuffer[2] = e.getX() + offSet;
+                        mLineBuffer[2] = e.getX();
                         mLineBuffer[3] = e.getY() * phaseY;
                     }
 
@@ -153,21 +153,21 @@ public class TimeLineChartRenderer extends LineChartRenderer {
                         continue;
                     }
 
-                    mLineBuffer[j++] = e1.getX() + offSet;
+                    mLineBuffer[j++] = e1.getX();
                     mLineBuffer[j++] = e1.getY() * phaseY;
 
                     if (isDrawSteppedEnabled) {
-                        mLineBuffer[j++] = e2.getX() + offSet;
+                        mLineBuffer[j++] = e2.getX();
                         mLineBuffer[j++] = e1.getY() * phaseY;
-                        mLineBuffer[j++] = e2.getX() + offSet;
+                        mLineBuffer[j++] = e2.getX();
                         mLineBuffer[j++] = e1.getY() * phaseY;
                     }
                     //这些点与点之间不连接，用于五日分时
                     if (dataSet.getTimeDayType() == 5 && dataSet.getXLabels().indexOfKey(x == 0 ? 0 : (x - 1)) > 0) {
-                        mLineBuffer[j++] = e1.getX() + offSet;
+                        mLineBuffer[j++] = e1.getX();
                         mLineBuffer[j++] = e1.getY() * phaseY;
                     } else {
-                        mLineBuffer[j++] = e2.getX() + offSet;
+                        mLineBuffer[j++] = e2.getX();
                         mLineBuffer[j++] = e2.getY() * phaseY;
                     }
                 }

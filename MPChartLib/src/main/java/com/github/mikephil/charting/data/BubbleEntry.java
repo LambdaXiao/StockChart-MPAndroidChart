@@ -26,8 +26,8 @@ public class BubbleEntry extends Entry {
      * @param y    The value on the y-axis.
      * @param size The size of the bubble.
      */
-    public BubbleEntry(int mXIndex, float x, float y, float size) {
-        super(mXIndex, x, y);
+    public BubbleEntry(float x, float y, float size) {
+        super(x, y);
         this.mSize = size;
     }
 
@@ -39,8 +39,8 @@ public class BubbleEntry extends Entry {
      * @param size The size of the bubble.
      * @param data Spot for additional data this Entry represents.
      */
-    public BubbleEntry(int mXIndex, float x, float y, float size, Object data) {
-        super(mXIndex, x, y, data);
+    public BubbleEntry(float x, float y, float size, Object data) {
+        super(x, y, data);
         this.mSize = size;
     }
 
@@ -52,8 +52,8 @@ public class BubbleEntry extends Entry {
      * @param size The size of the bubble.
      * @param icon Icon image
      */
-    public BubbleEntry(int mXIndex, float x, float y, float size, Drawable icon) {
-        super(mXIndex, x, y, icon);
+    public BubbleEntry(float x, float y, float size, Drawable icon) {
+        super(x, y, icon);
         this.mSize = size;
     }
 
@@ -66,15 +66,15 @@ public class BubbleEntry extends Entry {
      * @param icon Icon image
      * @param data Spot for additional data this Entry represents.
      */
-    public BubbleEntry(int mXIndex, float x, float y, float size, Drawable icon, Object data) {
-        super(mXIndex, x, y, icon, data);
+    public BubbleEntry(float x, float y, float size, Drawable icon, Object data) {
+        super(x, y, icon, data);
         this.mSize = size;
     }
 
     @Override
     public BubbleEntry copy() {
 
-        BubbleEntry c = new BubbleEntry(getXIndex(), getX(), getY(), mSize, getData());
+        BubbleEntry c = new BubbleEntry(getX(), getY(), mSize, getData());
         return c;
     }
 

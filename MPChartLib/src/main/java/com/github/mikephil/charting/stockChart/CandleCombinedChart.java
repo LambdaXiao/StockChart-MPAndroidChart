@@ -33,6 +33,11 @@ public class CandleCombinedChart extends CombinedChart {
         super(context, attrs, defStyle);
     }
 
+    @Override
+    public void initRenderer() {
+        mRenderer = new MyCombinedChartRenderer(this, mAnimator, mViewPortHandler);
+    }
+
     public void setMarker(LeftMarkerView markerLeft, KRightMarkerView markerRight, KLineDataManage kLineData) {
         this.myMarkerViewLeft = markerLeft;
         this.myMarkerViewRight = markerRight;

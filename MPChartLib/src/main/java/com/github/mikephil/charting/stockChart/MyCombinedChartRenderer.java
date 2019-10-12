@@ -51,7 +51,7 @@ public class MyCombinedChartRenderer extends CombinedChartRenderer {
                     break;
                 case CANDLE:
                     if (chart.getCandleData() != null) {
-                        mRenderers.add(new CandleStickChartRenderer(chart, mAnimator, mViewPortHandler));
+                        mRenderers.add(new MyCandleStickChartRenderer(chart, mAnimator, mViewPortHandler));
                     }
                     break;
                 case SCATTER:

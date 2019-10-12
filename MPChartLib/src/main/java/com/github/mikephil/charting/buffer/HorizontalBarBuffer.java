@@ -20,9 +20,8 @@ public class HorizontalBarBuffer extends BarBuffer {
 
             BarEntry e = data.getEntryForIndex(i);
 
-            if (e == null) {
+            if(e == null)
                 continue;
-            }
 
             float x = e.getX();
             float y = e.getY();
@@ -42,11 +41,10 @@ public class HorizontalBarBuffer extends BarBuffer {
                 }
 
                 // multiply the height of the rect with the phase
-                if (right > 0) {
+                if (right > 0)
                     right *= phaseY;
-                } else {
+                else
                     left *= phaseY;
-                }
 
                 addBar(left, top, right, bottom);
 

@@ -21,8 +21,7 @@ public interface IBubbleDataSet extends IBarLineScatterCandleBubbleDataSet<Bubbl
 
     /**
      * Returns the width of the highlight-circle that surrounds the bubble
-     *
-     * @return
+      * @return
      */
     float getHighlightCircleWidth();
 }

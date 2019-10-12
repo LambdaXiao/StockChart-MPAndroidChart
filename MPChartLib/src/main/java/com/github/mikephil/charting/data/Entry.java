@@ -20,8 +20,6 @@ public class Entry extends BaseEntry implements Parcelable {
      * the x value
      */
     private float x = 0f;
-    /** the index on the x-axis */
-    private int mXIndex = 0;
 
     public Entry() {
 
@@ -33,22 +31,20 @@ public class Entry extends BaseEntry implements Parcelable {
      * @param x the x value
      * @param y the y value (the actual value of the entry)
      */
-    public Entry(int mXIndex,float x, float y) {
+    public Entry(float x, float y) {
         super(y);
-        this.mXIndex = mXIndex;
         this.x = x;
     }
 
     /**
      * A Entry represents one single entry in the chart.
      *
-     * @param x    the x value
-     * @param y    the y value (the actual value of the entry)
+     * @param x the x value
+     * @param y the y value (the actual value of the entry)
      * @param data Spot for additional data this Entry represents.
      */
-    public Entry(int mXIndex,float x, float y, Object data) {
+    public Entry(float x, float y, Object data) {
         super(y, data);
-        this.mXIndex = mXIndex;
         this.x = x;
     }
 
@@ -59,9 +55,8 @@ public class Entry extends BaseEntry implements Parcelable {
      * @param y    the y value (the actual value of the entry)
      * @param icon icon image
      */
-    public Entry(int mXIndex,float x, float y, Drawable icon) {
+    public Entry(float x, float y, Drawable icon) {
         super(y, icon);
-        this.mXIndex = mXIndex;
         this.x = x;
     }
 
@@ -73,9 +68,8 @@ public class Entry extends BaseEntry implements Parcelable {
      * @param icon icon image
      * @param data Spot for additional data this Entry represents.
      */
-    public Entry(int mXIndex,float x, float y, Drawable icon, Object data) {
+    public Entry(float x, float y, Drawable icon, Object data) {
         super(y, icon, data);
-        this.mXIndex = mXIndex;
         this.x = x;
     }
 
@@ -97,32 +91,13 @@ public class Entry extends BaseEntry implements Parcelable {
         this.x = x;
     }
 
-
-    /**
-     * returns the x-index the value of this object is mapped to
-     *
-     * @return
-     */
-    public int getXIndex() {
-        return mXIndex;
-    }
-
-    /**
-     * sets the x-index for the entry
-     *
-     * @param x
-     */
-    public void setXIndex(int x) {
-        this.mXIndex = x;
-    }
-
     /**
      * returns an exact copy of the entry
      *
      * @return
      */
     public Entry copy() {
-        Entry e = new Entry(mXIndex,x, getY(), getData());
+        Entry e = new Entry(x, getY(), getData());
         return e;
     }
 
@@ -156,7 +131,7 @@ public class Entry extends BaseEntry implements Parcelable {
      */
     @Override
     public String toString() {
-        return "Entry, mXIndex:"+mXIndex+"x: " + x + " y: " + getY();
+        return "Entry, x: " + x + " y: " + getY();
     }
 
     @Override
@@ -166,7 +141,6 @@ public class Entry extends BaseEntry implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mXIndex);
         dest.writeFloat(this.x);
         dest.writeFloat(this.getY());
         if (getData() != null) {
@@ -182,7 +156,6 @@ public class Entry extends BaseEntry implements Parcelable {
     }
 
     protected Entry(Parcel in) {
-        this.mXIndex = in.readInt();
         this.x = in.readFloat();
         this.setY(in.readFloat());
         if (in.readInt() == 1) {

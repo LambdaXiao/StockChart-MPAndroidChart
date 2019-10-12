@@ -20,7 +20,7 @@ public interface ICandleDataSet extends ILineScatterCandleRadarDataSet<CandleEnt
     /**
      * Returns whether the candle bars should show?
      * When false, only "ticks" will show
-     * <p>
+     *
      * - default: true
      *
      * @return

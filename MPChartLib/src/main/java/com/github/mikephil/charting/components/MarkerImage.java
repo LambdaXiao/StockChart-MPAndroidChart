@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 import androidx.core.content.ContextCompat;
 
@@ -41,7 +42,15 @@ public class MarkerImage implements IMarker {
      */
     public MarkerImage(Context context, int drawableResourceId) {
         mContext = context;
-        mDrawable = ContextCompat.getDrawable(mContext, drawableResourceId);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            mDrawable = mContext.getResources().getDrawable(drawableResourceId, null);
+        }
+        else
+        {
+            mDrawable = mContext.getResources().getDrawable(drawableResourceId);
+        }
     }
 
     public void setOffset(MPPointF offset) {

@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 /**
  * 坐标label格式化
  */
-public class VolFormatter implements IAxisValueFormatter {
+public class VolFormatter extends ValueFormatter {
 
     private int unit;
     private DecimalFormat mFormat;
@@ -24,7 +24,7 @@ public class VolFormatter implements IAxisValueFormatter {
         this.assetId = assetId;
     }
     @Override
-    public String getFormattedValue(float value, AxisBase axis) {
+    public String getAxisLabel(float value, AxisBase axis) {
         int e = (int) Math.floor(Math.log10(value));
         if (e >= 8) {
             unit = 8;

@@ -35,7 +35,7 @@ import java.util.List;
 public class KLineDataManage {
     private Context mContext;
     private ArrayList<KLineDataModel> kDatas = new ArrayList<>();
-    private float offSet = 0.99f;//K线图最右边偏移量
+    private float offSet = 0f;//K线图最右边偏移量
     private String assetId;
     private boolean landscape = false;//横屏还是竖屏
 
@@ -138,14 +138,14 @@ public class KLineDataManage {
                     kDatas.add(klineDatamodel);
 
                     xVal.add(DataTimeUtil.secToDate(getKLineDatas().get(i).getDateMills()));
-                    candleEntries.add(new CandleEntry(i, i + offSet, (float) getKLineDatas().get(i).getHigh(), (float) getKLineDatas().get(i).getLow(), (float) getKLineDatas().get(i).getOpen(), (float) getKLineDatas().get(i).getClose()));
+                    candleEntries.add(new CandleEntry(i + offSet, (float) getKLineDatas().get(i).getHigh(), (float) getKLineDatas().get(i).getLow(), (float) getKLineDatas().get(i).getOpen(), (float) getKLineDatas().get(i).getClose()));
 
                     float color = getKLineDatas().get(i).getOpen() > getKLineDatas().get(i).getClose() ? 0f : 1f;
-                    barEntries.add(new BarEntry(i, i + offSet, (float) getKLineDatas().get(i).getVolume(), color));
+                    barEntries.add(new BarEntry(i + offSet, (float) getKLineDatas().get(i).getVolume(), color));
 
-                    line5Entries.add(new Entry(i, i + offSet, (float) getKLineDatas().get(i).getMa5()));
-                    line10Entries.add(new Entry(i, i + offSet, (float) getKLineDatas().get(i).getMa10()));
-                    line20Entries.add(new Entry(i, i + offSet, (float) getKLineDatas().get(i).getMa20()));
+                    line5Entries.add(new Entry(i + offSet, (float) getKLineDatas().get(i).getMa5()));
+                    line10Entries.add(new Entry( i + offSet, (float) getKLineDatas().get(i).getMa10()));
+                    line20Entries.add(new Entry(i + offSet, (float) getKLineDatas().get(i).getMa20()));
                 }
                 candleDataSet = setACandle(candleEntries);
                 bollCandleDataSet = setBOLLCandle(candleEntries);
@@ -168,9 +168,9 @@ public class KLineDataManage {
         deaData = new ArrayList<>();
         difData = new ArrayList<>();
         for (int i = 0; i < macdEntity.getMACD().size(); i++) {
-            macdData.add(new BarEntry(i,i + offSet, macdEntity.getMACD().get(i), macdEntity.getMACD().get(i)));
-            deaData.add(new Entry(i, i + offSet, macdEntity.getDEA().get(i)));
-            difData.add(new Entry(i, i + offSet, macdEntity.getDIF().get(i)));
+            macdData.add(new BarEntry(i + offSet, macdEntity.getMACD().get(i), macdEntity.getMACD().get(i)));
+            deaData.add(new Entry(i + offSet, macdEntity.getDEA().get(i)));
+            difData.add(new Entry(i + offSet, macdEntity.getDIF().get(i)));
         }
         barDataMACD = setABar(macdData);
         lineDataMACD.add(setALine(ColorType.blue, deaData));
@@ -187,9 +187,9 @@ public class KLineDataManage {
         dData = new ArrayList<>();
         jData = new ArrayList<>();
         for (int i = 0; i < kdjEntity.getD().size(); i++) {
-            kData.add(new Entry(i, i + offSet, kdjEntity.getK().get(i)));
-            dData.add(new Entry(i, i + offSet, kdjEntity.getD().get(i)));
-            jData.add(new Entry(i, i + offSet, kdjEntity.getJ().get(i)));
+            kData.add(new Entry(i + offSet, kdjEntity.getK().get(i)));
+            dData.add(new Entry(i + offSet, kdjEntity.getD().get(i)));
+            jData.add(new Entry(i + offSet, kdjEntity.getJ().get(i)));
         }
         lineDataKDJ.add(setALine(ColorType.blue, kData, "KDJ" + N1, false));
         lineDataKDJ.add(setALine(ColorType.yellow, dData, "KDJ" + N2, false));
@@ -205,9 +205,9 @@ public class KLineDataManage {
         bollDataMB = new ArrayList<>();
         bollDataDN = new ArrayList<>();
         for (int i = 0; i < bollEntity.getUPs().size(); i++) {
-            bollDataUP.add(new Entry(i, i + offSet, bollEntity.getUPs().get(i)));
-            bollDataMB.add(new Entry(i, i + offSet, bollEntity.getMBs().get(i)));
-            bollDataDN.add(new Entry(i, i + offSet, bollEntity.getDNs().get(i)));
+            bollDataUP.add(new Entry(i + offSet, bollEntity.getUPs().get(i)));
+            bollDataMB.add(new Entry(i + offSet, bollEntity.getMBs().get(i)));
+            bollDataDN.add(new Entry(i + offSet, bollEntity.getDNs().get(i)));
         }
         lineDataBOLL.add(setALine(ColorType.blue, bollDataUP, false));
         lineDataBOLL.add(setALine(ColorType.yellow, bollDataMB, false));
@@ -225,9 +225,9 @@ public class KLineDataManage {
         rsiData12 = new ArrayList<>();
         rsiData24 = new ArrayList<>();
         for (int i = 0; i < rsiEntity6.getRSIs().size(); i++) {
-            rsiData6.add(new Entry(i, i + offSet, rsiEntity6.getRSIs().get(i)));
-            rsiData12.add(new Entry(i, i + offSet, rsiEntity12.getRSIs().get(i)));
-            rsiData24.add(new Entry(i, i + offSet, rsiEntity24.getRSIs().get(i)));
+            rsiData6.add(new Entry(i + offSet, rsiEntity6.getRSIs().get(i)));
+            rsiData12.add(new Entry(i + offSet, rsiEntity12.getRSIs().get(i)));
+            rsiData24.add(new Entry(i + offSet, rsiEntity24.getRSIs().get(i)));
         }
         lineDataRSI.add(setALine(ColorType.blue, rsiData6, "RSI" + RSIN1, true));
         lineDataRSI.add(setALine(ColorType.yellow, rsiData12, "RSI" + RSIN2, false));
@@ -456,19 +456,19 @@ public class KLineDataManage {
                 if (i >= N1) {
                     sum = 0;
                     float all5 = getSum(i - (N1 - 1), i) / N1;
-                    lineDataSet.addEntry(new Entry(i, i + offSet, all5));
+                    lineDataSet.addEntry(new Entry(i + offSet, all5));
                 }
             } else if (k == 1) {
                 if (i >= N2) {
                     sum = 0;
                     float all10 = getSum(i - (N2 - 1), i) / N2;
-                    lineDataSet.addEntry(new Entry(i, i + offSet, all10));
+                    lineDataSet.addEntry(new Entry(i + offSet, all10));
                 }
             } else if (k == 2) {
                 if (i >= N3) {
                     sum = 0;
                     float all20 = getSum(i - (N3 - 1), i) / N3;
-                    lineDataSet.addEntry(new Entry(i, i + offSet, all20));
+                    lineDataSet.addEntry(new Entry(i + offSet, all20));
                 }
             }
         }

@@ -6,7 +6,7 @@ import android.graphics.DashPathEffect;
 import android.util.Log;
 
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public abstract class AxisBase extends ComponentBase {
     /**
      * custom formatter that is used instead of the auto-formatter if set
      */
-    protected IAxisValueFormatter mAxisValueFormatter;
+    protected ValueFormatter mAxisValueFormatter;
 
     private int mGridColor = Color.GRAY;
 
@@ -111,6 +111,11 @@ public abstract class AxisBase extends ComponentBase {
      * flag indicating the limit lines layer depth
      */
     protected boolean mDrawLimitLineBehindData = false;
+
+    /**
+     * flag indicating the grid lines layer depth
+     */
+    protected boolean mDrawGridLinesBehindData = true;
 
     /**
      * Extra spacing for `axisMinimum` to be added to automatically calculated `axisMinimum`
@@ -310,12 +315,10 @@ public abstract class AxisBase extends ComponentBase {
      */
     public void setLabelCount(int count) {
 
-        if (count > 25) {
+        if (count > 25)
             count = 25;
-        }
-        if (count < 1) {
-            count = 1;
-        }
+        if (count < 2)
+            count = 2;
 
         mLabelCount = count;
         mForceLabels = false;
@@ -447,6 +450,18 @@ public abstract class AxisBase extends ComponentBase {
     }
 
     /**
+     * If this is set to false, the grid lines are draw on top of the actual data,
+     * otherwise behind. Default: true
+     *
+     * @param enabled
+     */
+    public void setDrawGridLinesBehindData(boolean enabled) { mDrawGridLinesBehindData = enabled; }
+
+    public boolean isDrawGridLinesBehindDataEnabled() {
+        return mDrawGridLinesBehindData;
+    }
+
+    /**
      * Returns the longest formatted label (in terms of characters), this axis
      * contains.
      *
@@ -469,11 +484,10 @@ public abstract class AxisBase extends ComponentBase {
 
     public String getFormattedLabel(int index) {
 
-        if (index < 0 || index >= mEntries.length) {
+        if (index < 0 || index >= mEntries.length)
             return "";
-        } else {
-            return getValueFormatter().getFormattedValue(mEntries[index], this);
-        }
+        else
+            return getValueFormatter().getAxisLabel(mEntries[index], this);
     }
 
     /**
@@ -485,7 +499,7 @@ public abstract class AxisBase extends ComponentBase {
      *
      * @param f
      */
-    public void setValueFormatter(IAxisValueFormatter f) {
+    public void setValueFormatter(ValueFormatter f) {
 
         if (f == null) {
             mAxisValueFormatter = new DefaultAxisValueFormatter(mDecimals);
@@ -499,7 +513,7 @@ public abstract class AxisBase extends ComponentBase {
      *
      * @return
      */
-    public IAxisValueFormatter getValueFormatter() {
+    public ValueFormatter getValueFormatter() {
 
         if (mAxisValueFormatter == null ||
                 (mAxisValueFormatter instanceof DefaultAxisValueFormatter &&

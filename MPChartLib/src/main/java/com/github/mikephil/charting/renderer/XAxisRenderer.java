@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -179,10 +178,6 @@ public class XAxisRenderer extends AxisRenderer {
      */
     protected void drawLabels(Canvas c, float pos, MPPointF anchor) {
 
-//        if(!isShowLabels()){
-//            return;
-//        }
-
         final float labelRotationAngleDegrees = mXAxis.getLabelRotationAngle();
         boolean centeringEnabled = mXAxis.isCenterAxisLabelsEnabled();
 
@@ -200,29 +195,33 @@ public class XAxisRenderer extends AxisRenderer {
 
         mTrans.pointValuesToPixel(positions);
 
-        for (int i = 0, j = 1; i < positions.length; i += 2, j += 1) {
+        for (int i = 0; i < positions.length; i += 2) {
+
             float x = positions[i];
 
             if (mViewPortHandler.isInBoundsX(x)) {
 
-                String label = mXAxis.getValueFormatter().getFormattedValue(mXAxis.mEntries[i / 2], mXAxis);
+                String label = mXAxis.getValueFormatter().getAxisLabel(mXAxis.mEntries[i / 2], mXAxis);
 
                 if (mXAxis.isAvoidFirstLastClippingEnabled()) {
 
-                    // avoid clipping of the last 0  2  4  6
-                    if (j == mXAxis.mEntryCount && mXAxis.mEntryCount > 1) {
+                    // avoid clipping of the last
+                    if (i / 2 == mXAxis.mEntryCount - 1 && mXAxis.mEntryCount > 1) {
                         float width = Utils.calcTextWidth(mAxisLabelPaint, label);
 
-                        if (width > mViewPortHandler.offsetRight() * 2 && x + width > mViewPortHandler.getChartWidth())
+                        if (width > mViewPortHandler.offsetRight() * 2
+                                && x + width > mViewPortHandler.getChartWidth())
                             x -= width / 2;
 
                         // avoid clipping of the first
-                    } else if (j == 1) {
+                    } else if (i == 0) {
+
                         float width = Utils.calcTextWidth(mAxisLabelPaint, label);
                         x += width / 2;
                     }
                 }
-                drawLabel(c, label, (int) (x + 0.5), pos, anchor, labelRotationAngleDegrees);//处理坐标抖动
+
+                drawLabel(c, label, x, pos, anchor, labelRotationAngleDegrees);
             }
         }
     }

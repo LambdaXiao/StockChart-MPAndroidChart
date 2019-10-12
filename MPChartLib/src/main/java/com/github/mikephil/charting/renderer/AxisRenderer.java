@@ -49,16 +49,6 @@ public abstract class AxisRenderer extends Renderer {
      */
     protected Paint mLimitLinePaint;
 
-//    private boolean isShowLabels = true;
-
-//    public boolean isShowLabels() {
-//        return isShowLabels;
-//    }
-
-//    public void setShowLabels(boolean showLabels) {
-//        isShowLabels = showLabels;
-//    }
-
     public AxisRenderer(ViewPortHandler viewPortHandler, Transformer trans, AxisBase axis) {
         super(viewPortHandler);
 

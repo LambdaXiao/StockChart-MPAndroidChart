@@ -21,6 +21,8 @@
         <activity android:name=".ui.market.activity.StockDetailLandActivity"
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>
+
+        <activity android:name=".ui.main.BarChartActivity" />
     </application>
 
 </manifest>
