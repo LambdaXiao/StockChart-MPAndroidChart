@@ -235,7 +235,7 @@ public class KLineDataManage {
     }
 
     private CandleDataSet setACandle(ArrayList<CandleEntry> candleEntries) {
-        CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "KLine");
+        CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "蜡烛线");
         candleDataSet.setDrawHorizontalHighlightIndicator(landscape);
         candleDataSet.setHighlightEnabled(landscape);
         candleDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
@@ -253,7 +253,7 @@ public class KLineDataManage {
     }
 
     private CandleDataSet setBOLLCandle(ArrayList<CandleEntry> candleEntries) {
-        CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "KLine");
+        CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "BOLL叠加蜡烛线");
         candleDataSet.setDrawHorizontalHighlightIndicator(false);
         candleDataSet.setHighlightEnabled(landscape);
         candleDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
@@ -264,6 +264,7 @@ public class KLineDataManage {
         candleDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
         candleDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
         candleDataSet.setDrawValues(false);
+        candleDataSet.setDrawIcons(false);
         candleDataSet.setShowCandleBar(false);
         return candleDataSet;
     }

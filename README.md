@@ -1,14 +1,20 @@
 # StockChart-MPAndroidChart
 
-**基于MPAndroidChart3.0+的专业分时图和K线图**
+**基于MPAndroidChart 最新3.1.0版本的专业分时图和K线图**
 
 先上效果图：
 
-![Image text](screenshot/stockChart.gif)
+![Image text](screenshot/record.mp4)
 
-![Image text](screenshot/main.png)
+![Image text](screenshot/oneday.jpg)
 
-![Image text](screenshot/day_night.png)
+![Image text](screenshot/fiveday.jpg)
+
+![Image text](screenshot/kline.jpg)
+
+![Image text](screenshot/oneday-land.jpg)
+
+![Image text](screenshot/kline-land.jpg)
 
 ## 简介
 
