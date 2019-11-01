@@ -1,21 +1,37 @@
 # StockChart-MPAndroidChart
 
+[![](https://jitpack.io/v/LambdaXiao/StockChart-MPAndroidChart.svg)](https://jitpack.io/#LambdaXiao/StockChart-MPAndroidChart)
+
 **基于MPAndroidChart 最新3.1.0版本的专业分时图和K线图**
 
 先上效果图：
 <video controls="controls">
-  <source type="video/mp4" src="screenshot/record.mp4"></source>
+  <source type="video/mp4" src="https://github.com/LambdaXiao/StockChart-MPAndroidChart/raw/master/screenshot/record.mp4"></source>
 </video>
 
-![Image text](screenshot/oneday.jpg)
+![Image text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/raw/master/screenshot/oneday.jpg)
 
-![Image text](screenshot/fiveday.jpg)
+![Image text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/raw/master/screenshot/fiveday.jpg)
 
-![Image text](screenshot/kline.jpg)
+![Image text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/raw/master/screenshot/kline.jpg)
 
-![Image text](screenshot/oneday-land.jpg)
+![Image text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/raw/master/screenshot/oneday-land.jpg)
 
-![Image text](screenshot/kline-land.jpg)
+![Image text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/raw/master/screenshot/kline-land.jpg)
+## 快速开始
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+```
+ implementation 'com.github.LambdaXiao:StockChart-MPAndroidChart:1.0'
+```
+如果需要根据不同业务修改代码，请直接依赖项目中的MPChartLib库。
+
 
 ## 简介
 
@@ -32,7 +48,7 @@ StockApp是Android平台的金融图表库，包括**分时图**和**K线图**�
 
 ## apk体验
 
-   ![Image text](screenshot/stockChart.png)
+   ![Image text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/raw/master/screenshot/stockChart.png)
 
 ## 反馈
 
