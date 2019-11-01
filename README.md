@@ -3,8 +3,9 @@
 **基于MPAndroidChart 最新3.1.0版本的专业分时图和K线图**
 
 先上效果图：
-
-![Image text](screenshot/record.mp4)
+<video controls="controls">
+  <source type="video/mp4" src="screenshot/record.mp4"></source>
+</video>
 
 ![Image text](screenshot/oneday.jpg)
 
