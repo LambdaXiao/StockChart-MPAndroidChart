@@ -6,18 +6,18 @@
 
 先上效果图：
 <video controls="controls">
-  <source type="video/mp4" src="https://raw.github.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/record.mp4"></source>
+  <source type="video/mp4" src="https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/record.mp4"></source>
 </video>
 
-![Alt text](https://https://raw.github.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/oneday.jpg)
+![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/oneday.jpg)
 
-![Alt text](https://raw.github.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/fiveday.jpg)
+![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/fiveday.jpg)
 
-![Alt text](https://raw.github.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/kline.jpg)
+![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/kline.jpg)
 
-![Alt text](https://raw.github.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/oneday-land.jpg)
+![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/oneday-land.jpg)
 
-![Alt text](https://raw.github.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/kline-land.jpg)
+![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/kline-land.jpg)
 ## 快速开始
 ```
 allprojects {
@@ -48,7 +48,7 @@ StockApp是Android平台的金融图表库，包括**分时图**和**K线图**�
 
 ## apk体验
 
-   ![Alt text](https://raw.github.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/stockChart.png)
+   ![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/stockChart.png)
 
 ## 反馈
 
