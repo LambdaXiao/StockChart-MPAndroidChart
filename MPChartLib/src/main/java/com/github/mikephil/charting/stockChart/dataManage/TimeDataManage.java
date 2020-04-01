@@ -28,8 +28,7 @@ public class TimeDataManage {
     private double perVolMaxTimeLine = 0;
     private SparseArray<String> fiveDayXLabels = new SparseArray<String>();//专用于五日分时横坐标轴刻度
     private List<Integer> fiveDayXLabelKey = new ArrayList<Integer>();//专用于五日分时横坐标轴刻度
-    private String assetId;
-    private SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    private String assetId;//股票代号
     private double preClose;//昨收价
 
     /**
@@ -155,6 +154,7 @@ public class TimeDataManage {
     public SparseArray<String> getOneDayXLabels(boolean landscape) {
         SparseArray<String> xLabels = new SparseArray<String>();
         if (assetId.endsWith(".HK")) {
+            //港股横坐标刻度
             if (landscape) {
                 xLabels.put(0, "09:30");
                 xLabels.put(60, "10:30");
@@ -170,12 +170,6 @@ public class TimeDataManage {
                 xLabels.put(240, "");
                 xLabels.put(330, "16:00");
             }
-        } else if (assetId.endsWith(".US")) {
-            xLabels.put(0, "09:30");
-            xLabels.put(120, "11:30");
-            xLabels.put(210, "13:00");
-            xLabels.put(300, "14:30");
-            xLabels.put(390, "16:00");
         } else {
             xLabels.put(0, "09:30");
             xLabels.put(60, "10:30");
@@ -201,6 +195,7 @@ public class TimeDataManage {
     private List<Integer> getFiveDayXLabelKey(String assetId) {
         fiveDayXLabelKey.clear();
         if (assetId.endsWith(".HK")) {
+            //港股横坐标刻度
             fiveDayXLabelKey.add(0);
             fiveDayXLabelKey.add(82);
             fiveDayXLabelKey.add(165);

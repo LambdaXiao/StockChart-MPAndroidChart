@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class BaseChart extends LinearLayout {
 
-    public boolean landscape = false;//是否横屏模式
+    public boolean landscape = false;//横屏还是竖屏
     public int precision = 3;//小数精度
     public Paint mPaint;
 

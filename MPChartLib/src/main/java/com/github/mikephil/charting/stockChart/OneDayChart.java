@@ -105,8 +105,8 @@ public class OneDayChart extends BaseChart {
     public void initChart(boolean landscape) {
         this.landscape = landscape;
         //主图
-        lineChart.setScaleEnabled(false);
-        lineChart.setDrawBorders(true);
+        lineChart.setScaleEnabled(false);//是否可以缩放
+        lineChart.setDrawBorders(true);//是否画外框线
         lineChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
         lineChart.setBorderWidth(0.7f);
         lineChart.setNoDataText(getResources().getString(R.string.loading));
@@ -127,18 +127,19 @@ public class OneDayChart extends BaseChart {
         xAxisLine = (TimeXAxis) lineChart.getXAxis();
         xAxisLine.setDrawAxisLine(false);
         xAxisLine.setTextColor(ContextCompat.getColor(mContext, R.color.label_text));
-        xAxisLine.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxisLine.setPosition(XAxis.XAxisPosition.BOTTOM);//x轴刻度值显示在底部
         xAxisLine.setAvoidFirstLastClipping(true);
         xAxisLine.setGridColor(ContextCompat.getColor(mContext, R.color.grid_color));
         xAxisLine.setGridLineWidth(0.7f);
 
         //主图左Y轴
         axisLeftLine = lineChart.getAxisLeft();
-        axisLeftLine.setLabelCount(5, true);
+        axisLeftLine.setLabelCount(5, true);//Y轴左边分多少个刻度
         axisLeftLine.setDrawGridLines(false);
         axisLeftLine.setValueLineInside(true);
         axisLeftLine.setDrawTopBottomGridLine(false);
         axisLeftLine.setDrawAxisLine(false);
+        //刻度值在图形里面还是外面
         axisLeftLine.setPosition(landscape ? YAxis.YAxisLabelPosition.OUTSIDE_CHART : YAxis.YAxisLabelPosition.INSIDE_CHART);
         axisLeftLine.setTextColor(ContextCompat.getColor(mContext, R.color.axis_text));
         axisLeftLine.setValueFormatter(new ValueFormatter() {
@@ -150,10 +151,11 @@ public class OneDayChart extends BaseChart {
 
         //主图右Y轴
         axisRightLine = lineChart.getAxisRight();
-        axisRightLine.setLabelCount(5, true);
+        axisRightLine.setLabelCount(5, true);//Y轴右边分多少个刻度
         axisRightLine.setDrawTopBottomGridLine(false);
         axisRightLine.setDrawGridLines(true);
         axisRightLine.setGridLineWidth(0.7f);
+        //虚线
         axisRightLine.enableGridDashedLine(CommonUtil.dip2px(mContext, 4), CommonUtil.dip2px(mContext, 3), 0);
         axisRightLine.setDrawAxisLine(false);
         axisRightLine.setValueLineInside(true);
@@ -265,7 +267,7 @@ public class OneDayChart extends BaseChart {
      */
     public void setDataToChart(TimeDataManage mData) {
         this.mData = mData;
-        cirCleView.setVisibility(landscape ? View.VISIBLE : View.GONE);
+//        cirCleView.setVisibility(landscape ? View.VISIBLE : View.GONE);
         if (mData.getDatas().size() == 0) {
             cirCleView.setVisibility(View.GONE);
             lineChart.setNoDataText(getResources().getString(R.string.no_data));
@@ -311,13 +313,6 @@ public class OneDayChart extends BaseChart {
             if (mData.getAssetId().endsWith(".HK")) {
                 setPrecision(mData.getAssetId().contains("IDX") ? 2 : 3);
                 setMaxCount(ChartType.HK_ONE_DAY.getPointNum());
-            } else if (mData.getAssetId().endsWith(".US")) {
-                if (Math.abs(mData.getMax()) < 1) {
-                    setPrecision(4);
-                } else {
-                    setPrecision(2);
-                }
-                setMaxCount(ChartType.US_ONE_DAY.getPointNum());
             } else {
                 setPrecision(2);
                 setMaxCount(ChartType.ONE_DAY.getPointNum());
@@ -368,7 +363,7 @@ public class OneDayChart extends BaseChart {
             Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.fade_fill_color);
             d1.setFillDrawable(drawable);
             d1.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
-            d1.setHighlightEnabled(landscape);
+            d1.setHighlightEnabled(true);//是否显示高亮十字线
             d2.setHighlightEnabled(false);
             d1.setDrawCircles(false);
             d2.setDrawCircles(false);
@@ -384,7 +379,7 @@ public class OneDayChart extends BaseChart {
 
             barDataSet = new BarDataSet(barEntries, "成交量");
             barDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
-            barDataSet.setHighlightEnabled(landscape);
+            barDataSet.setHighlightEnabled(true);//是否显示高亮十字线
             barDataSet.setDrawValues(false);
             barDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
             barDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
@@ -405,7 +400,7 @@ public class OneDayChart extends BaseChart {
                 barChart.setViewPortOffsets(left, 0, right, CommonUtil.dip2px(mContext, 15));
             } else {
                 lineChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
-                barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), 0, CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5));
+                barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), 0, CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
             }
 
             axisLeftLine.setAxisMinimum(mData.getMin());

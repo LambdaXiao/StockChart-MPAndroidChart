@@ -36,7 +36,7 @@ public class KLineDataManage {
     private Context mContext;
     private ArrayList<KLineDataModel> kDatas = new ArrayList<>();
     private float offSet = 0f;//K线图最右边偏移量
-    private String assetId;
+    private String assetId;//股票代号
     private boolean landscape = false;//横屏还是竖屏
 
     //MA参数
@@ -236,8 +236,8 @@ public class KLineDataManage {
 
     private CandleDataSet setACandle(ArrayList<CandleEntry> candleEntries) {
         CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "蜡烛线");
-        candleDataSet.setDrawHorizontalHighlightIndicator(landscape);
-        candleDataSet.setHighlightEnabled(landscape);
+        candleDataSet.setDrawHorizontalHighlightIndicator(true);
+        candleDataSet.setHighlightEnabled(true);
         candleDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
         candleDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         candleDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
@@ -255,7 +255,7 @@ public class KLineDataManage {
     private CandleDataSet setBOLLCandle(ArrayList<CandleEntry> candleEntries) {
         CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "BOLL叠加蜡烛线");
         candleDataSet.setDrawHorizontalHighlightIndicator(false);
-        candleDataSet.setHighlightEnabled(landscape);
+        candleDataSet.setHighlightEnabled(true);
         candleDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
         candleDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         candleDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
@@ -283,13 +283,13 @@ public class KLineDataManage {
         boolean highlightEnable = false;
         return setALine(ma, lineEntries, label, highlightEnable);
     }
-
+    //行情走势线属性设置
     private LineDataSet setALine(ColorType colorType, ArrayList<Entry> lineEntries, String label, boolean highlightEnable) {
         LineDataSet lineDataSetMa = new LineDataSet(lineEntries, label);
         lineDataSetMa.setDrawHorizontalHighlightIndicator(false);
-        lineDataSetMa.setHighlightEnabled(landscape?highlightEnable:landscape);
-        lineDataSetMa.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
-        lineDataSetMa.setDrawValues(false);
+        lineDataSetMa.setHighlightEnabled(highlightEnable);//是否画高亮十字线
+        lineDataSetMa.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));//高亮十字线颜色
+        lineDataSetMa.setDrawValues(false);//是否画出每个蜡烛线的数值
         if (colorType == ColorType.blue) {
             lineDataSetMa.setColor(ContextCompat.getColor(mContext, R.color.ma5));
         } else if (colorType == ColorType.yellow) {
@@ -308,16 +308,17 @@ public class KLineDataManage {
         return setABar(barEntries, label);
     }
 
+    //蜡烛线属性设置
     private BarDataSet setABar(ArrayList<BarEntry> barEntries, String label) {
         BarDataSet barDataSet = new BarDataSet(barEntries, label);
-        barDataSet.setHighlightEnabled(landscape);
-        barDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
+        barDataSet.setHighlightEnabled(true);//是否画高亮十字线
+        barDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));//高亮十字线颜色
         barDataSet.setValueTextSize(10);
-        barDataSet.setDrawValues(false);
-        barDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
-        barDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
-        barDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
-        barDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
+        barDataSet.setDrawValues(false);//是否画出每个蜡烛线的数值
+        barDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));//行情平势时蜡烛的标识颜色
+        barDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));//行情涨势时蜡烛的标识颜色
+        barDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));//行情跌势时蜡烛的标识颜色
+        barDataSet.setIncreasingPaintStyle(Paint.Style.FILL);//蜡烛实心或空心
         barDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
         return barDataSet;
     }

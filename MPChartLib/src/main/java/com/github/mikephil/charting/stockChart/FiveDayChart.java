@@ -266,7 +266,7 @@ public class FiveDayChart extends BaseChart {
      */
     public void setDataToChart(TimeDataManage mData) {
         this.mData = mData;
-        cirCleView.setVisibility(landscape?View.VISIBLE:View.GONE);
+//        cirCleView.setVisibility(landscape?View.VISIBLE:View.GONE);
         if (mData.getDatas().size() == 0) {
             cirCleView.setVisibility(View.GONE);
             lineChart.setNoDataText(getResources().getString(R.string.no_data));
@@ -364,7 +364,7 @@ public class FiveDayChart extends BaseChart {
             Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.fade_fill_color);
             d1.setFillDrawable(drawable);
             d1.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
-            d1.setHighlightEnabled(landscape);
+            d1.setHighlightEnabled(true);
             d2.setHighlightEnabled(false);
             d1.setDrawCircles(false);
             d2.setDrawCircles(false);
@@ -381,7 +381,7 @@ public class FiveDayChart extends BaseChart {
             barDataSet = new BarDataSet(barEntries, "成交量");
             barDataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.highLight_Color));
             barDataSet.setDrawValues(false);
-            barDataSet.setHighlightEnabled(landscape);
+            barDataSet.setHighlightEnabled(true);
             barDataSet.setNeutralColor(ContextCompat.getColor(mContext, R.color.equal_color));
             barDataSet.setIncreasingColor(ContextCompat.getColor(mContext, R.color.up_color));
             barDataSet.setDecreasingColor(ContextCompat.getColor(mContext, R.color.down_color));
@@ -401,7 +401,7 @@ public class FiveDayChart extends BaseChart {
                 barChart.setViewPortOffsets(left, 0, right, CommonUtil.dip2px(mContext, 15));
             } else {
                 lineChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
-                barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), 0, CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 5));
+                barChart.setViewPortOffsets(CommonUtil.dip2px(mContext, 5), 0, CommonUtil.dip2px(mContext, 5), CommonUtil.dip2px(mContext, 15));
             }
 
             axisLeftLine.setAxisMinimum(mData.getMin());

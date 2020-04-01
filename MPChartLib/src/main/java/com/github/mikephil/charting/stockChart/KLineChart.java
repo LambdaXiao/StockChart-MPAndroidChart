@@ -97,12 +97,13 @@ public class KLineChart extends BaseChart {
         candleChart.setDrawBorders(true);
         candleChart.setBorderWidth(0.7f);
         candleChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
-        candleChart.setDragEnabled(landscape);
-        candleChart.setScaleXEnabled(landscape);
-        candleChart.setScaleYEnabled(false);
+        candleChart.setDragEnabled(true);//是否可拖动
+        candleChart.setScaleXEnabled(true);//x轴方向是否可放大缩小
+        candleChart.setScaleYEnabled(false);//Y轴方向是否可放大缩小
         candleChart.setHardwareAccelerationEnabled(true);
         Legend mChartKlineLegend = candleChart.getLegend();
         mChartKlineLegend.setEnabled(false);
+        //k线滚动系数设置，控制滚动惯性
         candleChart.setDragDecelerationEnabled(true);
         candleChart.setDragDecelerationFrictionCoef(0.6f);//0.92持续滚动时的速度快慢，[0,1) 0代表立即停止。
         candleChart.setDoubleTapToZoomEnabled(false);
@@ -112,8 +113,8 @@ public class KLineChart extends BaseChart {
         barChart.setDrawBorders(true);
         barChart.setBorderWidth(0.7f);
         barChart.setBorderColor(ContextCompat.getColor(mContext, R.color.border_color));
-        barChart.setDragEnabled(landscape);
-        barChart.setScaleXEnabled(landscape);
+        barChart.setDragEnabled(true);
+        barChart.setScaleXEnabled(true);
         barChart.setScaleYEnabled(false);
         barChart.setHardwareAccelerationEnabled(true);
         Legend mChartChartsLegend = barChart.getLegend();
@@ -266,12 +267,6 @@ public class KLineChart extends BaseChart {
 
         if (data.getAssetId().endsWith(".HK") && !data.getAssetId().contains("IDX")) {
             setPrecision(3);
-        } else if (data.getAssetId().endsWith(".US")) {
-            if (Math.abs(data.getPreClosePrice()) < 1) {
-                setPrecision(4);
-            } else {
-                setPrecision(2);
-            }
         } else {
             setPrecision(2);
         }

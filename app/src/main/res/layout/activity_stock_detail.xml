@@ -32,7 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:lineSpacingExtra="8dp"
-        android:text="说明：\n1，竖屏只做展示，不做滑动和放缩等，更多操作请前往横屏页面。\n
-2，单击竖屏图表可进入横屏页面，横屏支持缩放，滑动，长按出现高亮十字线，K线副图可以单击切换不同指标。\n
+        android:text="说明：\n1，支持缩放，滑动，长按出现高亮十字线。\n
+2，单击竖屏图表可进入横屏页面。\n
+3，K线副图可以单击切换不同指标。\n
 3，支持夜间模式。"/>
 </LinearLayout>
