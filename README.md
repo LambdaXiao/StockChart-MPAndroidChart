@@ -9,7 +9,7 @@
   <source type="video/mp4" src="https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/record.mp4"></source>
 </video>
 
-![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/oneday.jpg)
+![](https://raw.githubusercontent.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/oneday.jpg)
 
 ![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/fiveday.jpg)
 
