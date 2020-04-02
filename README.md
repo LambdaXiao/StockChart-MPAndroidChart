@@ -47,9 +47,11 @@ StockApp是Android平台的金融图表库，包括**分时图**和**K线图**�
 - 支持夜间模式的展示
 
 ## apk体验
-    点击下载 http://d.6short.com/StockChart
-    或扫码下载
-   ![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/stockChart.png)
+点击下载 http://d.6short.com/StockChart
+
+或扫码下载
+
+![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/stockChart.png)
 
 ## 反馈
 
