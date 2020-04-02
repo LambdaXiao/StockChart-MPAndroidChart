@@ -280,17 +280,23 @@ public class OneDayChart extends BaseChart {
         ArrayList<Entry> lineCJEntries = new ArrayList<>();
         ArrayList<Entry> lineJJEntries = new ArrayList<>();
         ArrayList<BarEntry> barEntries = new ArrayList<>();
+        float color;//成交量柱状图的颜色
         for (int i = 0, j = 0; i < mData.getDatas().size(); i++, j++) {
             TimeDataModel t = mData.getDatas().get(j);
             if (t == null) {
                 lineCJEntries.add(new Entry( i, Float.NaN));
                 lineJJEntries.add(new Entry( i, Float.NaN));
-                barEntries.add(new BarEntry( i, Float.NaN));
+                barEntries.add(new BarEntry( i, Float.NaN,0f));
                 continue;
             }
             lineCJEntries.add(new Entry( i, (float) mData.getDatas().get(i).getNowPrice()));
             lineJJEntries.add(new Entry( i, (float) mData.getDatas().get(i).getAveragePrice()));
-            barEntries.add(new BarEntry( i, mData.getDatas().get(i).getVolume()));
+            if (i == 0) {
+                color = mData.getDatas().get(i).getNowPrice() == mData.getPreClose() ? 0f : mData.getDatas().get(i).getNowPrice() > mData.getPreClose() ? 1f : -1f;
+            } else {
+                color = mData.getDatas().get(i).getNowPrice() == mData.getDatas().get(i - 1).getNowPrice() ? 0f : mData.getDatas().get(i).getNowPrice() > mData.getDatas().get(i - 1).getNowPrice() ? 1f : -1f;
+            }
+            barEntries.add(new BarEntry(i, mData.getDatas().get(i).getVolume(),color));
         }
 
         if(lineChart.getData() != null &&lineChart.getData().getDataSetCount() > 0
@@ -433,7 +439,8 @@ public class OneDayChart extends BaseChart {
 
         BarData barData = barChart.getData();
         IBarDataSet barDataSet = barData.getDataSetByIndex(0);
-        barDataSet.addEntry(new BarEntry(index, timeDatamodel.getVolume()));
+        float color = timeDatamodel.getNowPrice() == d1.getEntryForIndex(index - 1).getY() ? 0f : timeDatamodel.getNowPrice() > d1.getEntryForIndex(index - 1).getY() ? 1f : -1f;
+        barDataSet.addEntry(new BarEntry(index, timeDatamodel.getVolume(),color));
         lineData.notifyDataChanged();
         lineChart.notifyDataSetChanged();
         barData.notifyDataChanged();
@@ -466,7 +473,8 @@ public class OneDayChart extends BaseChart {
         BarData barData = barChart.getData();
         IBarDataSet barDataSet = barData.getDataSetByIndex(0);
         barDataSet.removeEntry(index);
-        barDataSet.addEntry(new BarEntry(index, timeDatamodel.getVolume()));
+        float color = timeDatamodel.getNowPrice() == d1.getEntryForIndex(index - 1).getY() ? 0f : timeDatamodel.getNowPrice() > d1.getEntryForIndex(index - 1).getY() ? 1f : -1f;
+        barDataSet.addEntry(new BarEntry(index, timeDatamodel.getVolume(),color));
 
         lineData.notifyDataChanged();
         lineChart.notifyDataSetChanged();

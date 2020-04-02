@@ -552,7 +552,7 @@ public class KLineChart extends BaseChart {
             if (barDataSet == null) {//当没有数据时
                 return;
             }
-            float color = kLineData.getKLineDatas().get(i).getOpen() > kLineData.getKLineDatas().get(i).getClose() ? 0f : 1f;
+            float color = kLineData.getKLineDatas().get(i).getOpen() == kLineData.getKLineDatas().get(i).getClose()?0f:kLineData.getKLineDatas().get(i).getOpen() > kLineData.getKLineDatas().get(i).getClose() ? -1f : 1f;
             BarEntry barEntry = new BarEntry(i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getVolume(), color);
 
             barDataSet.addEntry(barEntry);
@@ -591,7 +591,7 @@ public class KLineChart extends BaseChart {
             CombinedData barChartData = barChart.getData();
             IBarDataSet barDataSet = barChartData.getBarData().getDataSetByIndex(0);
             barDataSet.removeEntry(i);
-            float color = kLineData.getKLineDatas().get(i).getOpen() > kLineData.getKLineDatas().get(i).getClose() ? 0f : 1f;
+            float color = kLineData.getKLineDatas().get(i).getOpen() == kLineData.getKLineDatas().get(i).getClose()?0f:kLineData.getKLineDatas().get(i).getOpen() > kLineData.getKLineDatas().get(i).getClose() ? -1f : 1f;
             BarEntry barEntry = new BarEntry(i + kLineData.getOffSet(), (float) kLineData.getKLineDatas().get(i).getVolume(), color);
             barDataSet.addEntry(barEntry);
         } else {//副图是其他技术指标

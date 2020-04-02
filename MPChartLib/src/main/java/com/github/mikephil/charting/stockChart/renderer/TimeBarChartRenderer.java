@@ -105,46 +105,26 @@ public class TimeBarChartRenderer extends BarChartRenderer {
 
 
             int i = j / 4;
-//                if (i > 0) {
+
             Object openClose = dataSet.getEntryForIndex(i).getData();
-            if (openClose == null) {
-                if (i > 0) {
-                    if (dataSet.getEntryForIndex(i).getY() > dataSet.getEntryForIndex(i - 1).getY()) {
-                        mRenderPaint.setColor(dataSet.getIncreasingColor() == ColorTemplate.COLOR_NONE ?
-                                dataSet.getColor(j) :
-                                dataSet.getIncreasingColor());
-                        mRenderPaint.setStyle(dataSet.getIncreasingPaintStyle());
-                    } else {
-                        mRenderPaint.setColor(dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE ?
-                                dataSet.getColor(j) :
-                                dataSet.getDecreasingColor());
-                        mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
-                    }
-                } else {
-                    mRenderPaint.setColor(dataSet.getIncreasingColor() == ColorTemplate.COLOR_NONE ?
-                            dataSet.getColor(j) :
-                            dataSet.getIncreasingColor());
-                    mRenderPaint.setStyle(dataSet.getIncreasingPaintStyle());
-                }
-            } else {//根据开平判断柱状图的颜色填充
+            if (openClose != null) {//根据开平判断柱状图的颜色填充
                 float value = (Float) openClose;
                 if (value > 0) {//表示增加
                     mRenderPaint.setColor(dataSet.getIncreasingColor() == ColorTemplate.COLOR_NONE ?
                             dataSet.getColor(j) :
                             dataSet.getIncreasingColor());
                     mRenderPaint.setStyle(dataSet.getIncreasingPaintStyle());
-                } else if (value <= 0) {
+                } else if (value < 0) {
                     mRenderPaint.setColor(dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE ?
                             dataSet.getColor(j) :
                             dataSet.getDecreasingColor());
                     mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
+                }else if (value == 0) {
+                    mRenderPaint.setColor(dataSet.getNeutralColor() == ColorTemplate.COLOR_NONE ?
+                            dataSet.getColor(j) :
+                            dataSet.getNeutralColor());
+                    mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
                 }
-//                else if (value == 0) {
-//                    mRenderPaint.setColor(dataSet.getNeutralColor() == ColorTemplate.COLOR_NONE ?
-//                            dataSet.getColor(j) :
-//                            dataSet.getNeutralColor());
-//                    mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
-//                }
             }
 
 

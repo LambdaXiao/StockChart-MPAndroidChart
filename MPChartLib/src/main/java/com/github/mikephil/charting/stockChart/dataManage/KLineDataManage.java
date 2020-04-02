@@ -140,7 +140,7 @@ public class KLineDataManage {
                     xVal.add(DataTimeUtil.secToDate(getKLineDatas().get(i).getDateMills()));
                     candleEntries.add(new CandleEntry(i + offSet, (float) getKLineDatas().get(i).getHigh(), (float) getKLineDatas().get(i).getLow(), (float) getKLineDatas().get(i).getOpen(), (float) getKLineDatas().get(i).getClose()));
 
-                    float color = getKLineDatas().get(i).getOpen() > getKLineDatas().get(i).getClose() ? 0f : 1f;
+                    float color = getKLineDatas().get(i).getOpen() == getKLineDatas().get(i).getClose() ? 0f : getKLineDatas().get(i).getOpen() > getKLineDatas().get(i).getClose() ? -1f : 1f;
                     barEntries.add(new BarEntry(i + offSet, (float) getKLineDatas().get(i).getVolume(), color));
 
                     line5Entries.add(new Entry(i + offSet, (float) getKLineDatas().get(i).getMa5()));
@@ -211,7 +211,7 @@ public class KLineDataManage {
         }
         lineDataBOLL.add(setALine(ColorType.blue, bollDataUP, false));
         lineDataBOLL.add(setALine(ColorType.yellow, bollDataMB, false));
-        lineDataBOLL.add(setALine(ColorType.purple, bollDataDN, false));
+        lineDataBOLL.add(setALine(ColorType.purple, bollDataDN, true));
     }
     /**
      * 初始化自己计算RSI
@@ -229,9 +229,9 @@ public class KLineDataManage {
             rsiData12.add(new Entry(i + offSet, rsiEntity12.getRSIs().get(i)));
             rsiData24.add(new Entry(i + offSet, rsiEntity24.getRSIs().get(i)));
         }
-        lineDataRSI.add(setALine(ColorType.blue, rsiData6, "RSI" + RSIN1, true));
+        lineDataRSI.add(setALine(ColorType.blue, rsiData6, "RSI" + RSIN1, false));
         lineDataRSI.add(setALine(ColorType.yellow, rsiData12, "RSI" + RSIN2, false));
-        lineDataRSI.add(setALine(ColorType.purple, rsiData24, "RSI" + RSIN3, false));
+        lineDataRSI.add(setALine(ColorType.purple, rsiData24, "RSI" + RSIN3, true));
     }
 
     private CandleDataSet setACandle(ArrayList<CandleEntry> candleEntries) {
