@@ -1,6 +1,6 @@
 # StockChart-MPAndroidChart
 
-[![](https://jitpack.io/v/LambdaXiao/StockChart-MPAndroidChart.svg)](https://jitpack.io/#LambdaXiao/StockChart-MPAndroidChart)
+[![](https://www.jitpack.io/v/LambdaXiao/StockChart-MPAndroidChart.svg)](https://www.jitpack.io/#LambdaXiao/StockChart-MPAndroidChart)
 
 **基于MPAndroidChart 最新3.1.0版本的专业分时图和K线图**
 
@@ -28,7 +28,7 @@ allprojects {
 	}
 ```
 ```
- implementation 'com.github.LambdaXiao:StockChart-MPAndroidChart:1.0'
+ implementation 'com.github.LambdaXiao:StockChart-MPAndroidChart:1.1'
 ```
 如果需要根据不同业务修改代码，请直接依赖项目中的MPChartLib库。
 
@@ -47,7 +47,8 @@ StockApp是Android平台的金融图表库，包括**分时图**和**K线图**�
 - 支持夜间模式的展示
 
 ## apk体验
-
+    点击下载 http://d.6short.com/StockChart
+    或扫码下载
    ![Alt text](https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/stockChart.png)
 
 ## 反馈
