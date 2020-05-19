@@ -5,9 +5,8 @@
 **基于MPAndroidChart 最新3.1.0版本的专业分时图和K线图**
 
 先上效果图：
-<video controls="controls">
-  <source type="video/mp4" src="https://github.com/LambdaXiao/StockChart-MPAndroidChart/blob/master/screenshot/record.mp4"></source>
-</video>
+
+![](https://raw.githubusercontent.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/record.gif)
 
 ![](https://raw.githubusercontent.com/LambdaXiao/StockChart-MPAndroidChart/master/screenshot/oneday.jpg)
 
